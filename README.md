@@ -8,9 +8,11 @@ ember install:addon ui-button
 ````
 
 ## Usage ##
+![ ](vendor/ui-button/screen-shot.png)
+
 
 ````hbs
-  {{ui-button icon='smile-o'}}
+  {{ui-button title='press me'}}
 ````
 
 For more details on the syntax check out the interactive demo:
