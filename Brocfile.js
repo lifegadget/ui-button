@@ -22,7 +22,7 @@ app.import('bower_components/fontawesome/fonts/fontawesome-webfont.svg',{destDir
 app.import('bower_components/fontawesome/fonts/fontawesome-webfont.ttf',{destDir: 'fonts'});
 app.import('bower_components/fontawesome/fonts/fontawesome-webfont.woff',{destDir: 'fonts'});
 app.import('bower_components/fontawesome/fonts/fontawesome-webfont.woff2',{destDir: 'fonts'});
-app.import('bower_components/fontawesome/fonts/FontAwesome.otf');
+app.import('bower_components/fontawesome/fonts/FontAwesome.otf',{destDir: 'fonts'});
 
 app.import('vendor/ui-button/ui-button.css');
 

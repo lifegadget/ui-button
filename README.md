@@ -19,7 +19,22 @@ For more details on the syntax check out the interactive demo:
 
 ## Dependencies ##
 
-FontAwesome is the sole dependency for this repo to work but it was designed to play nicely with Twitter's Bootstrap as well.
+The only forced dependency that this introduces is a very small amount of CSS from the great Animate.CSS repo. We only include the *attention grabbers* transitions; the rest is available to be added manually if you choose (aka, adding manually in your Brocfile).
+
+In addition though you should include the following:
+
+- Autoprefixer
+
+    Install the Ember CLI Autoprefixer ... this will ensure that the CSS animations are transformed to the appropriate browser syntax. It's also just a really good idea to have this installed anyway. Install it by:
+
+    ````bash
+    ember install:addon ember-cli-autoprefixer
+    ````
+
+- Twitter Bootstrap
+
+    You'll want Twitter Bootstrap (SASS or otherwise) around to make everything look nice. You could style things yourself but this addon assumes a styling naming convention borrowed from Twitter. 
+
 
 ## Version Compatibility
 
