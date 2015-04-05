@@ -1,0 +1,6 @@
+.btn-huge, .btn-group-huge > .btn {
+    padding: 14px 20px;
+    font-size: 24px;
+    line-height: 1.6;
+    border-radius: 8px;
+}

@@ -1,3 +1,202 @@
-<h2 id="title">Welcome to Ember.js</h2>
+<div class="container">
+    <h1 id="title">ui-button</h1>
+    <h2>a simple button component which leverages Bootstrap styling</h2>
+    
+    <h3>Bootstrap Styles</h3>
+    <div class="row">
+        <p class="descriptive col-xs-12 col-sm-8 col-lg-6">
+            It's easy to use the Twitter Bootstrap styles you're used to using. The 'default' style is used by default.
+        </p>        
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-2">
+            {{#ui-button}}press me{{/ui-button}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{#ui-button}}press me\{{/ui-button}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{#ui-button style="primary"}}press me{{/ui-button}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{#ui-button style="primary"}}press me\{{/ui-button}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{#ui-button style="warning"}}press me{{/ui-button}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{#ui-button style="warning"}}press me\{{/ui-button}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{#ui-button style="success"}}press me{{/ui-button}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{#ui-button style="success"}}press me\{{/ui-button}}
+        </div>
+    </div>
 
-{{outlet}}
+    <h3>Enable/Disable</h3>
+    <div class="row">
+        <p class="descriptive col-xs-12 col-sm-8 col-lg-6">
+            A button can be bound to static value, a bound property or even a function to 
+            specify whether the button should be pressable.
+        </p>        
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-2">
+            {{#ui-button disabled=false}}uninhibited{{/ui-button}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{#ui-button disabled=false}}uninhibited\{{/ui-button}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{#ui-button disabled=true}}suppress me{{/ui-button}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{#ui-button disabled=true}}suppress me\{{/ui-button}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{#ui-button disabled=isRepressed}}repress me{{/ui-button}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{#ui-button disabled=isRepressed}}repress me\{{/ui-button}} -- {{ui-button title="toggle repression" action="toggleRepression" size="tiny"}}
+        </div>
+    </div>
+    
+    <h3>Size Matters</h3>
+    <div class="row">
+        <p class="descriptive col-xs-12 col-sm-8 col-lg-6">
+            Get a variety of sizes which leverage the Bootstrap 'btn-xx' classes but with a simpler syntax (aka, size="small").
+        </p>        
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-2">
+            {{#ui-button size='tiny'}}Tiny{{/ui-button}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{#ui-button size='tiny'}}Tiny\{{/ui-button}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{#ui-button size='small'}}Small{{/ui-button}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{#ui-button size='small'}}Small\{{/ui-button}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{#ui-button}}Normal{{/ui-button}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{#ui-button}}Normal\{{/ui-button}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{#ui-button size='large'}}Large{{/ui-button}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{#ui-button size='large'}}Large\{{/ui-button}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{#ui-button size='huge'}}Huge{{/ui-button}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{#ui-button size='huge'}}Huge\{{/ui-button}}
+        </div>
+    </div>
+    
+    <h3>Inline Goodies</h3>
+    <div class="row">
+        <p class="descriptive col-xs-12 col-sm-8 col-lg-6">
+            All the examples so far have been using the <i>block</i> form of the control but it can be used inline and regardless 
+            of which form you use there are some little visual flurishes that make life easier.
+        </p>        
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-2">
+            {{ui-button title="inline button"}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{ui-button title="inline button"}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{ui-button title="tooltip" tooltip="additional info"}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{ui-button title="tooltip" tooltip="additional info"}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{ui-button title="tooltip right" tooltip="additional info" tooltipPlacement='right'}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{ui-button title="tooltip right" tooltip="additional info" tooltipPlacement='right'}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{ui-button icon="sitemap"}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{ui-button icon="sitemap"}}
+        </div>
+    </div>
+    
+    
+    <h3>Effects</h3>
+    <div class="row">
+        <p class="descriptive col-xs-12 col-sm-8 col-lg-6">
+            On certain key button events -- click, enabled, disabled -- you can attach a visual  
+            effect to highlight this state change.
+        </p>        
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-2">
+            {{ui-button title="Click" clickEffect='tada'}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{ui-button title="Click" clickEffect='tada'}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{ui-button title="Focus" focusEffect='tada'}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{ui-button title="Focus" focusEffect='tada'}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{ui-button title="Enable / Disable" disabled=toggledEnablement enabledEffect='pulse' disabledEffect='shake'}} 
+        </div>
+        <div class="snippet col-xs-10">
+            \{{ui-button title="Enable Effect" disabled=toggledEnablement enabledEffect='pulse' disabledEffect='shake'}} -- {{ui-button title="toggle" action="toggleEnablement" size="tiny"}}
+        </div>
+    </div>
+    
+
+</div>
