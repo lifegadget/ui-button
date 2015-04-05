@@ -3,6 +3,7 @@
 # compiled output
 /dist
 /tmp
+/.divshot-cache/*
 
 # dependencies
 /node_modules
