@@ -17,7 +17,7 @@ ember install:addon ui-button
 
 For more details on the syntax check out the interactive demo:
 
-> [ui-button demo](http://v4.development.ui-button.divshot.io)
+> [ui-button demo](http://current.development.ui-button.divshot.io)
 
 ## Dependencies ##
 
