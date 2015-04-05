@@ -27,10 +27,10 @@
     </div>
     <div class="row">
         <div class="col-xs-2">
-            {{#ui-button style="warning"}}press me{{/ui-button}}
+            {{#ui-button style="info"}}press me{{/ui-button}}
         </div>
         <div class="snippet col-xs-10">
-            \{{#ui-button style="warning"}}press me\{{/ui-button}}
+            \{{#ui-button style="info"}}press me\{{/ui-button}}
         </div>
     </div>
     <div class="row">
@@ -39,6 +39,22 @@
         </div>
         <div class="snippet col-xs-10">
             \{{#ui-button style="success"}}press me\{{/ui-button}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{#ui-button style="warning"}}press me{{/ui-button}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{#ui-button style="warning"}}press me\{{/ui-button}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{#ui-button style="danger"}}press me{{/ui-button}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{#ui-button style="danger"}}press me\{{/ui-button}}
         </div>
     </div>
 
@@ -108,6 +124,14 @@
     </div>
     <div class="row">
         <div class="col-xs-2">
+            {{#ui-button width='140px'}}Fixed Width{{/ui-button}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{#ui-button width='140px'}}Fixed Width\{{/ui-button}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
             {{#ui-button size='large'}}Large{{/ui-button}}
         </div>
         <div class="snippet col-xs-10">
@@ -163,7 +187,22 @@
             \{{ui-button icon="sitemap"}}
         </div>
     </div>
-    
+    <div class="row">
+        <div class="col-xs-2">
+            {{ui-button title='plus text' icon="sitemap"}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{ui-button title='plus text' icon="sitemap"}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{ui-button title="keep da focus" keepFocus=true}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{ui-button title="keep da focus" keepFocus=true}}
+        </div>
+    </div>
     
     <h3>Effects</h3>
     <div class="row">
@@ -183,18 +222,71 @@
     </div>
     <div class="row">
         <div class="col-xs-2">
-            {{ui-button title="Focus" focusEffect='tada'}}
-        </div>
-        <div class="snippet col-xs-10">
-            \{{ui-button title="Focus" focusEffect='tada'}}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-2">
             {{ui-button title="Enable / Disable" disabled=toggledEnablement enabledEffect='pulse' disabledEffect='shake'}} 
         </div>
         <div class="snippet col-xs-10">
             \{{ui-button title="Enable Effect" disabled=toggledEnablement enabledEffect='pulse' disabledEffect='shake'}} -- {{ui-button title="toggle" action="toggleEnablement" size="tiny"}}
+        </div>
+    </div>
+    
+    
+    <h3>Toggle Buttons</h3>
+    <div class="row">
+        <p class="descriptive col-xs-12 col-sm-8 col-lg-6">
+            Toggle buttons inherit all the goodness of buttons but have an internal state mechanism which toggles between two 
+            states. Note, however, that a default toggleEffect of 'pulse' is set. 
+        </p>        
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-2">
+            {{ui-toggle-button}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{ui-toggle-button}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{ui-toggle-button on="Yes" off='No'}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{ui-toggle-button on="Yes" off='No'}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{ui-toggle-button value=true onStyle='success' toggleEffect='swing'}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{ui-toggle-button value=true onStyle='success' toggleEffect='swing'}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{ui-toggle-button onStyle='success' offStyle='danger' width='50px'}} 
+            {{ui-toggle-button value=true onStyle='success' offStyle='danger' width='50px'}} 
+        </div>
+        <div class="snippet col-xs-10">
+            \{{ui-toggle-button onStyle='success' offStyle='danger' width='50px'}} <br/>
+            \{{ui-toggle-button value=true onStyle='success' offStyle='danger' width='50px'}} 
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-2">
+            {{ui-toggle-button onStyle='success' icon='dot-circle-o'}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{ui-toggle-button onStyle='success' icon='dot-circle-o'}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{ui-toggle-button onStyle='success' offIcon='circle-thin' onIcon='dot-circle-o'}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{ui-toggle-button onStyle='success' offIcon='circle-thin' onIcon='dot-circle-o'}}
         </div>
     </div>
     

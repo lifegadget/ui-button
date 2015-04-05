@@ -4,3 +4,7 @@
     line-height: 1.6;
     border-radius: 8px;
 }
+
+.ui-button {
+    text-align: center;
+}

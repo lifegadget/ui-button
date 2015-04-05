@@ -4,7 +4,7 @@ import layout from '../templates/components/ui-button';
 export default Ember.Component.extend({
   layout: layout,
 	tagName: 'button',
-	attributeBindings: ['disabled:disabled', 'type'],
+	attributeBindings: ['disabled:disabled', 'type', '_width:style'],
 	classNameBindings: ['prefixedStyle','prefixedSize'],
 	classNames: ['btn'],
 	disabled: false,
@@ -30,6 +30,14 @@ export default Ember.Component.extend({
 		return 'btn-' + this.get('style');
 	}),
   size: 'normal',
+  width: null,
+  _width: Ember.computed('width', function() {
+    let width = this.get('width');
+    if(!/[a-z]/.test(width)) {
+      width = String(width) + 'px';
+    }
+    return width ? `width:${width}` : null;
+  }),
   keepFocus: false, // keep focus on button after clicking?
 	prefixedSize: Ember.computed('style', function() {
     let size = this.get('size');
