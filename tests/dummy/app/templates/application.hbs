@@ -208,10 +208,19 @@
     <div class="row">
         <p class="descriptive col-xs-12 col-sm-8 col-lg-6">
             On certain key button events -- click, enabled, disabled -- you can attach a visual  
-            effect to highlight this state change.
+            effect to highlight this state change. You can also remove the default "delay/transition" 
+            by flagging it to off (this would make it more like default bootstrap).
         </p>        
     </div>
     
+    <div class="row">
+        <div class="col-xs-2">
+            {{ui-button title="Instant Hover" delayedHover=false}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{ui-button title="Instant Hover" delayedHover=false}}
+        </div>
+    </div>
     <div class="row">
         <div class="col-xs-2">
             {{ui-button title="Click" clickEffect='tada'}}

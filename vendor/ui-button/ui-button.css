@@ -8,3 +8,7 @@
 .ui-button {
     text-align: center;
 }
+
+button.delayed-hover {
+    transition: background-color 0.5s;
+}

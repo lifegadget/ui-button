@@ -5,8 +5,8 @@ export default Ember.Component.extend({
   layout: layout,
 	tagName: 'button',
 	attributeBindings: ['disabled:disabled', 'type', '_width:style'],
-	classNameBindings: ['prefixedStyle','prefixedSize'],
-	classNames: ['btn'],
+	classNameBindings: ['prefixedStyle','prefixedSize','delayedHover:delayed-hover'],
+	classNames: ['btn','ui-button'],
 	disabled: false,
   _disabled: Ember.observer('disabled', function() {
     const disabledEffect = this.get('disabledEffect');
@@ -29,6 +29,7 @@ export default Ember.Component.extend({
 	prefixedStyle: Ember.computed('style', function() {
 		return 'btn-' + this.get('style');
 	}),
+  delayedHover: true,
   size: 'normal',
   width: null,
   _width: Ember.computed('width', function() {
