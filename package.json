@@ -1,7 +1,7 @@
 {
   "name": "ui-button",
-  "version": "0.0.3",
-  "description": "A simple button with Bootstrap styling.",
+  "version": "0.0.5",
+  "description": "Dancing, shiny buttons with Bootstrap styling.",
   "directories": {
     "doc": "doc",
     "test": "tests"
