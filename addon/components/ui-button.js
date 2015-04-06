@@ -65,13 +65,6 @@ export default Ember.Component.extend({
   clickEffect: null,
   enabledEffect: null,
   disabledEffect: null,
-  focusEffect: null,
-  
-  focused: function() {
-    if(this.focusEffect) {
-      this.applyEffect(this.focusEffect);
-    }
-  },
 	click: function() {
 		this.sendAction('action', this.get('value'));
     if(!this.get('keepFocus')) {

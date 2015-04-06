@@ -1,5 +1,5 @@
 # ui-button ![ ](https://travis-ci.org/lifegadget/ui-button.svg)
-> Simple buttons with Ember flare (and Bootstrap friendliness)
+> Dancing, shiny buttons with Bootstrap styling.
 
 ## Install ##
 
