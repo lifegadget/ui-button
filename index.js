@@ -6,6 +6,8 @@ module.exports = {
 	description: 'a simple button component which leverages Bootstrap styling',
 	included: function(app) {
 		this._super.included(app);
+    app.import('vendor/ui-button/ui-button.css');
+    
     app.import('bower_components/animate.css/source/_base.css');
     app.import('bower_components/animate.css/source/attention_seekers/bounce.css');
     app.import('bower_components/animate.css/source/attention_seekers/flash.css');
