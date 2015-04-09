@@ -95,7 +95,7 @@ export default Ember.Component.extend({
         try {
           this.$().tooltip({
             title: tooltip,
-            delay: delay,
+            delay: {"show": delay, "hide": 200},
             html: html,
             trigger: trigger,
             placement: placement,

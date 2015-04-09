@@ -181,6 +181,14 @@
     </div>
     <div class="row">
         <div class="col-xs-2">
+            {{ui-button title="tooltip delayed" tooltip="additional info" tooltipDelay=5000}}
+        </div>
+        <div class="snippet col-xs-10">
+            \{{ui-button title="tooltip delayed" tooltip="additional info" tooltipDelay=5000}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
             {{ui-button icon="sitemap"}}
         </div>
         <div class="snippet col-xs-10">
@@ -298,6 +306,34 @@
             \{{ui-toggle-button onStyle='success' offIcon='circle-thin' onIcon='dot-circle-o'}}
         </div>
     </div>
+    
+    
+    <h3>Random Tests</h3>
+    <div class="row">
+        <p class="descriptive col-xs-12 col-sm-8 col-lg-6">
+            Oh don't get so upset, the world depends on randomness. Get over it. 
+        </p>        
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-2">
+            {{#ui-button title='Title, '}}da body{{/ui-button}}
+        </div>
+        <div class="snippet col-xs-10">
+            Testing what happens when both <b>title</b> set and block text is present:<br/>
+            \{{#ui-button title='Title, '}}Da body\{{/ui-button}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            {{#ui-button title='Title, ' icon='plus'}}da body{{/ui-button}}
+        </div>
+        <div class="snippet col-xs-10">
+            Testing what happens when <b>title</b> and <b>icon</b> are set and block text is present:<br/>
+            \{{#ui-button title='Title, ' icon='plus'}}Da body\{{/ui-button}}
+        </div>
+    </div>
+    
     
 
 </div>
