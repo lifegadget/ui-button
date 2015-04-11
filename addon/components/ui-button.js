@@ -1,6 +1,8 @@
 import Ember from 'ember';
 import layout from '../templates/components/ui-button';
 
+var isNumber = function(obj) { return !isNaN(parseFloat(obj)) };
+
 export default Ember.Component.extend({
   layout: layout,
 	tagName: 'button',
@@ -23,6 +25,25 @@ export default Ember.Component.extend({
   }),
 	name: 'Submit',
 	value: 'submit',
+  param: Ember.computed.alias('value'),
+  _value: Ember.computed('value', function() {
+    let value = this.get('value');
+    if(!value) {
+      return value;
+    }
+    if(String(value).slice(0,1) === '{' && String(value).slice(-1) === '}') {
+      let object = {};
+      try {
+         object = JSON.parse(value);
+      } catch (e) {
+        console.warn('The value for ' + this.get('elementId') + ' looked like JSON but was malformed. Returning string instead. %o', e);
+        return value;
+      }
+      return object;
+    }
+    
+    return value;
+  }),
   icon: null,
 	type: 'button',
 	style: 'default',
@@ -67,7 +88,7 @@ export default Ember.Component.extend({
   enabledEffect: null,
   disabledEffect: null,
 	click: function() {
-		this.sendAction('action', this.get('value'));
+		this.sendAction('action', this.get('_value'));
     if(!this.get('keepFocus')) {
       this.$().blur();
     }

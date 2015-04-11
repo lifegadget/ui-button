@@ -13,6 +13,13 @@ export default Ember.Controller.extend({
     toggleEnablement: function() {
       console.log('toggling');
       this.toggleProperty('toggledEnablement');
+    },
+    buttonAction: function(param) {
+      let type = Ember.typeOf(param);
+      if(type === 'object') {
+        param = JSON.stringify(param);
+      }
+      alert('Button pressed with a parameter of type "' + type + '": ' + param);
     }
   }
 
