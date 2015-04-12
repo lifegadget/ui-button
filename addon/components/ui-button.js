@@ -1,8 +1,6 @@
 import Ember from 'ember';
 import layout from '../templates/components/ui-button';
 
-var isNumber = function(obj) { return !isNaN(parseFloat(obj)) };
-
 export default Ember.Component.extend({
   layout: layout,
 	tagName: 'button',
