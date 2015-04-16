@@ -59,7 +59,7 @@ export default Ember.Component.extend({
     return width ? `width:${width}` : null;
   }),
   keepFocus: false, // keep focus on button after clicking?
-	prefixedSize: Ember.computed('style', function() {
+	prefixedSize: Ember.computed('style','size', function() {
     let size = this.get('size');
     if(!size) {
       size = 'normal';
