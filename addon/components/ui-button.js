@@ -53,10 +53,10 @@ export default Ember.Component.extend({
   width: null,
   _width: Ember.computed('width', function() {
     let width = this.get('width');
-    if(!/[a-z]/.test(width)) {
+    if(/[a-z]/.test(width)) {
       width = String(width) + 'px';
-    }
-    return width ? `width:${width}` : null;
+    } 
+    return width ? Ember.String.htmlSafe(`width:${width}`) : null;
   }),
   keepFocus: false, // keep focus on button after clicking?
 	prefixedSize: Ember.computed('style','size', function() {
