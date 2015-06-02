@@ -1,0 +1,345 @@
+<h3>Bootstrap Styles</h3>
+<div class="row">
+    <p class="descriptive col-xs-12 col-sm-8 col-lg-6">
+        It's easy to use the Twitter Bootstrap styles you're used to using. The 'default' style is used by default.
+    </p>
+</div>
+
+<div class="row">
+    <div class="col-xs-2">
+        {{#ui-button}}press me{{/ui-button}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{#ui-button}}press me\{{/ui-button}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{#ui-button style="primary"}}press me{{/ui-button}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{#ui-button style="primary"}}press me\{{/ui-button}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{#ui-button style="info"}}press me{{/ui-button}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{#ui-button style="info"}}press me\{{/ui-button}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{#ui-button style="success"}}press me{{/ui-button}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{#ui-button style="success"}}press me\{{/ui-button}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{#ui-button style="warning"}}press me{{/ui-button}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{#ui-button style="warning"}}press me\{{/ui-button}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{#ui-button style="danger"}}press me{{/ui-button}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{#ui-button style="danger"}}press me\{{/ui-button}}
+    </div>
+</div>
+
+<h3>Enable/Disable</h3>
+<div class="row">
+    <p class="descriptive col-xs-12 col-sm-8 col-lg-6">
+        A button can be bound to static value, a bound property or even a function to
+        specify whether the button should be pressable.
+    </p>
+</div>
+
+<div class="row">
+    <div class="col-xs-2">
+        {{#ui-button disabled=false}}uninhibited{{/ui-button}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{#ui-button disabled=false}}uninhibited\{{/ui-button}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{#ui-button disabled=true}}suppress me{{/ui-button}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{#ui-button disabled=true}}suppress me\{{/ui-button}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{#ui-button disabled=isRepressed}}repress me{{/ui-button}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{#ui-button disabled=isRepressed}}repress me\{{/ui-button}} -- {{ui-button title="toggle repression" action="toggleRepression" size="tiny"}}
+    </div>
+</div>
+
+<h3>Size Matters</h3>
+<div class="row">
+    <p class="descriptive col-xs-12 col-sm-8 col-lg-6">
+        Get a variety of sizes which leverage the Bootstrap 'btn-xx' classes but with a simpler syntax (aka, size="small").
+    </p>
+</div>
+
+<div class="row">
+    <div class="col-xs-2">
+        {{#ui-button size='tiny'}}Tiny{{/ui-button}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{#ui-button size='tiny'}}Tiny\{{/ui-button}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{#ui-button size='small'}}Small{{/ui-button}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{#ui-button size='small'}}Small\{{/ui-button}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{#ui-button}}Normal{{/ui-button}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{#ui-button}}Normal\{{/ui-button}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{#ui-button width='140px'}}Fixed Width{{/ui-button}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{#ui-button width='140px'}}Fixed Width\{{/ui-button}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{#ui-button width='60%'}}% Width{{/ui-button}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{#ui-button width='60%'}}% Width\{{/ui-button}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{#ui-button size='large'}}Large{{/ui-button}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{#ui-button size='large'}}Large\{{/ui-button}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{#ui-button size='huge'}}Huge{{/ui-button}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{#ui-button size='huge'}}Huge\{{/ui-button}}
+    </div>
+</div>
+
+<h3>Inline Goodies</h3>
+<div class="row">
+    <p class="descriptive col-xs-12 col-sm-8 col-lg-6">
+        All the examples so far have been using the <i>block</i> form of the control but it can be used inline and regardless
+        of which form you use there are some little visual flurishes that make life easier.
+    </p>
+</div>
+
+<div class="row">
+    <div class="col-xs-2">
+        {{ui-button title="inline button"}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{ui-button title="inline button"}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{ui-button title="tooltip" tooltip="additional info"}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{ui-button title="tooltip" tooltip="additional info"}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{ui-button title="tooltip right" tooltip="additional info" tooltipPlacement='right'}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{ui-button title="tooltip right" tooltip="additional info" tooltipPlacement='right'}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{ui-button title="tooltip delayed" tooltip="additional info" tooltipDelay=5000}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{ui-button title="tooltip delayed" tooltip="additional info" tooltipDelay=5000}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{ui-button icon="sitemap"}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{ui-button icon="sitemap"}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{ui-button title='plus text' icon="sitemap"}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{ui-button title='plus text' icon="sitemap"}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{ui-button title="keep da focus" keepFocus=true}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{ui-button title="keep da focus" keepFocus=true}}
+    </div>
+</div>
+
+<h3>Effects</h3>
+<div class="row">
+    <p class="descriptive col-xs-12 col-sm-8 col-lg-6">
+        On certain key button events -- click, enabled, disabled -- you can attach a visual
+        effect to highlight this state change. You can also remove the default "delay/transition"
+        by flagging it to off (this would make it more like default bootstrap).
+    </p>
+</div>
+
+<div class="row">
+    <div class="col-xs-2">
+        {{ui-button title="Instant Hover" delayedHover=false}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{ui-button title="Instant Hover" delayedHover=false}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{ui-button title="Click" clickEffect='tada'}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{ui-button title="Click" clickEffect='tada'}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{ui-button title="Enable / Disable" disabled=toggledEnablement enabledEffect='pulse' disabledEffect='shake'}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{ui-button title="Enable Effect" disabled=toggledEnablement enabledEffect='pulse' disabledEffect='shake'}} -- {{ui-button title="toggle" action="toggleEnablement" size="tiny"}}
+    </div>
+</div>
+
+<h3>Action Jackson</h3>
+<div class="row">
+    <p class="descriptive col-xs-12 col-sm-9 col-lg-7">
+        Pressing buttons is no fun unless something happens ...
+    </p>
+</div>
+
+<div class="row">
+    <div class="col-xs-2">
+        {{ui-button title='just do it' action='buttonAction' param='just do it'}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{ui-button action='buttonAction' param='just do it'}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{ui-button title='what\'s in a name?' action='buttonAction' value='just do it'}}
+    </div>
+    <div class="snippet col-xs-10">
+        <span class="descriptive">'value' and 'param' are the same thing (aka, param is an alias for value)</span><br/>
+        \{{ui-button action='buttonAction' value='just do it'}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{ui-button title='objectify me' action='buttonAction' param='{"id":"object", "value":"foobar"}' }}
+    </div>
+    <div class="snippet col-xs-10">
+        <span class="descriptive">JSON strings are converted to objects</span><br/>
+        \{{ui-button title='objectify me' action='buttonAction' param='{"id":"object", "value":"foobar"}'}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{ui-button title='bad juju' action='buttonAction' param='{id:"object", value:"foobar"}' }}
+    </div>
+    <div class="snippet col-xs-10">
+        <span class="descriptive">Passing in a string representation of a JS object but not a JSON representation doesn't work</span><br/>
+        <span class="snippet">
+            \{{ui-button title='bad juju' action='buttonAction' param='{id:"object", value:"foobar"}'}}
+        </span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{ui-button title='I am not a number' action='buttonAction' param='5' }}
+    </div>
+    <div class="snippet col-xs-10">
+        <span class="descriptive">Passing in a numeric string will be recognized as a string</span><br/>
+        <span class="snippet">
+            \{{ui-button title='I am not a number' action='buttonAction' param='5'}}
+        </span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{ui-button title='I AM a number' action='buttonAction' param=5 }}
+    </div>
+    <div class="snippet col-xs-10">
+        <span class="descriptive">Passing in a numeric value will be recognized as a number</span><br/>
+        <span class="snippet">
+            \{{ui-button title='I AM a number' action='buttonAction' param=5}}
+        </span>
+    </div>
+</div>
+
+
+<h3>Random Tests</h3>
+<div class="row">
+    <p class="descriptive col-xs-12 col-sm-8 col-lg-6">
+        Oh don't get so upset, the world depends on randomness. Get over it.
+    </p>
+</div>
+
+<div class="row">
+    <div class="col-xs-2">
+        {{#ui-button title='Title, '}}da body{{/ui-button}}
+    </div>
+    <div class="snippet col-xs-10">
+        Testing what happens when both <b>title</b> set and block text is present:<br/>
+        \{{#ui-button title='Title, '}}Da body\{{/ui-button}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{#ui-button title='Title, ' icon='plus'}}da body{{/ui-button}}
+    </div>
+    <div class="snippet col-xs-10">
+        Testing what happens when <b>title</b> and <b>icon</b> are set and block text is present:<br/>
+        \{{#ui-button title='Title, ' icon='plus'}}Da body\{{/ui-button}}
+    </div>
+</div>
