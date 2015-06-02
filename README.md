@@ -1,4 +1,4 @@
-# ui-button ![ ](https://travis-ci.org/lifegadget/ui-button.svg)
+# ui-button ![ ](https://travis-ci.org/lifegadget/ui-button.svg) [![npm version](https://badge.fury.io/js/ui-button.svg)](http://badge.fury.io/js/ui-button)
 > Dancing, shiny buttons with Bootstrap styling.
 
 ## Install ##
