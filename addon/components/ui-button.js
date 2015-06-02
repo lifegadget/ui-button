@@ -1,11 +1,12 @@
 import Ember from 'ember';
 import layout from '../templates/components/ui-button';
+import SharedStyle from 'ui-button/mixins/shared-style';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(SharedStyle,{
   layout: layout,
 	tagName: 'button',
-	attributeBindings: ['disabled:disabled', 'type', '_width:style'],
-	classNameBindings: ['prefixedStyle','prefixedSize','delayedHover:delayed-hover'],
+	attributeBindings: ['disabled:disabled', 'type', '_style:style'],
+	classNameBindings: ['_prefixedStyle','_prefixedSize','delayedHover:delayed-hover'],
 	classNames: ['btn','ui-button'],
 	disabled: false,
   _disabled: Ember.observer('disabled', function() {
@@ -39,27 +40,21 @@ export default Ember.Component.extend({
       }
       return object;
     }
-    
+
     return value;
   }),
   icon: null,
 	type: 'button',
 	style: 'default',
-	prefixedStyle: Ember.computed('style', function() {
-		return 'btn-' + this.get('style');
+	_prefixedStyle: Ember.computed('style', function() {
+    const style = this.get('style');
+		return `btn-${style}`;
 	}),
   delayedHover: true,
   size: 'normal',
   width: null,
-  _width: Ember.computed('width', function() {
-    let width = this.get('width');
-    if(/[a-z]/.test(width)) {
-      width = String(width) + 'px';
-    } 
-    return width ? Ember.String.htmlSafe(`width:${width}`) : null;
-  }),
   keepFocus: false, // keep focus on button after clicking?
-	prefixedSize: Ember.computed('style','size', function() {
+	_prefixedSize: Ember.computed('style','size', function() {
     let size = this.get('size');
     if(!size) {
       size = 'normal';
@@ -100,11 +95,11 @@ export default Ember.Component.extend({
       this.$().removeClass('animated ' + effect);
     });
   },
-  
+
   _didInsertElement: Ember.on('didInsertElement', function() {
     let tooltip = this.get('tooltip');
     if(tooltip) {
-      let { 
+      let {
         tooltipPlacement: placement,
         tooltipDelay: delay,
         tooltipHtml: html,
@@ -128,9 +123,9 @@ export default Ember.Component.extend({
   }),
   _willRemoveElement: Ember.on('willRemoveElement', function() {
     if(this.get('tooltip')){
-      this.$().tooltip('destroy');      
+      this.$().tooltip('destroy');
     }
   })
-  
-  
+
+
 });

@@ -6,4 +6,11 @@ var Router = Ember.Router.extend({
 });
 
 export default Router.map(function() {
+
+  this.route('button-demo');
+  this.route('toggle-button-demo');
+  this.route('radio-button-demo');
+  this.route('checkbox-button-demo');
+  this.route('buttons-demo');
+
 });
