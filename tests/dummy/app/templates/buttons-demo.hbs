@@ -1,0 +1,134 @@
+<h3><code>ui-buttons</code></h3>
+
+<h3>Buttons Component</h3>
+<desc>
+  The primary "grouping" components, it groups buttons together by wrapping them in the <code>div</code> of class <em>btn-group</em>. This naming convention is consistent with Bootstrap and leverages the CSS that comes with CSS to make everything look right. In a broader fashion, this component is about bringing "together" button widgets (of various types) that contextually are related and allowing them to behave in a coordinated fashion as well as visually to present themselves as a group entity.
+</desc>
+<desc>
+  <note>Note: this component is still a work in progress, feel free to contribute with a PR.</note>
+</desc>
+
+<h3>Basics</h3>
+<hr>
+<div class="row">
+  <div class="col-xs-4 col-sm-3 col-lg-2">
+    {{#ui-buttons}}
+      {{ui-button title='foo'}}
+      {{ui-button title='bar'}}
+      {{ui-button title='baz'}}
+    {{/ui-buttons}}
+  </div>
+  <div class="col-xs-4 col-sm-4 col-lg-5 monospace">
+  <b>\{{#ui-buttons}}</b><br/>
+    &nbsp;&nbsp;\{{ui-button title='foo'}}<br/>
+    &nbsp;&nbsp;\{{ui-button title='bar'}}<br/>
+    &nbsp;&nbsp;\{{ui-button title='baz'}}<br/>
+  <b>\{{/ui-buttons}}</b>
+  </div>
+  <div class="col-xs-4 col-sm-4 col-lg-5">
+    Illustrates the most basic usage of this component. Basically all you're getting here is some additional bootstrap styling which rounds the corners in a pleasing way.
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-xs-4 col-sm-3 col-lg-2">
+    {{#ui-buttons howMany=howMany disabled=isDisabled as |group|}}
+      {{ui-button title='foo' group=group}}
+      {{ui-button title='bar' group=group}}
+      {{ui-button title='baz' group=group}}
+    {{/ui-buttons}}<br/>
+    # registered: {{howMany}}
+  </div>
+  <div class="col-xs-4 col-sm-4 col-lg-5 monospace">
+  <b>\{{#ui-buttons howMany=howMany as |group|}}</b><br/>
+    &nbsp;&nbsp;\{{ui-button title='foo' group=group}}<br/>
+    &nbsp;&nbsp;\{{ui-button title='bar' group=group}}<br/>
+    &nbsp;&nbsp;\{{ui-button title='baz' group=group}}<br/>
+  <b>\{{/ui-buttons}}</b><br/>
+  # registered: \{{howMany}}
+  </div>
+  <div class="col-xs-4 col-sm-4 col-lg-5">
+    When a button detects its <code>group</code> property has been set then it uses this to register itself
+    with the group. Registration allows the <code>ui-buttons</code> component to orchestrate certain things like
+    sizing, enablement/disablement, etc.<br/>
+    <p class="downer">
+      {{ui-toggle-button on='enable the group' off='disable the group' value=isDisabled}}
+    </p>
+  </div>
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="col-xs-4 col-sm-3 col-lg-2">
+    {{#ui-buttons as |group2|}}
+      {{ui-radio-button title='foo' group=group2}}
+      {{ui-radio-button title='bar' group=group2}}
+      {{ui-radio-button title='baz' group=group2}}
+    {{/ui-buttons}}
+  </div>
+  <div class="col-xs-4 col-sm-4 col-lg-5 monospace">
+  <b>\{{#ui-buttons as |group2|}}</b><br/>
+    &nbsp;&nbsp;\{{ui-radio-button title='foo' group=group2}}<br/>
+    &nbsp;&nbsp;\{{ui-radio-button title='bar' group=group2}}<br/>
+    &nbsp;&nbsp;\{{ui-radio-button title='baz' group=group2}}<br/>
+  <b>\{{/ui-buttons}}</b><br/>
+  </div>
+  <div class="col-xs-4 col-sm-4 col-lg-5">
+    Up to now we were just using the regular old <code>ui-button</code> button but more often then not when're grouping buttons we're going to want to use either a <em>radio</em> or <em>checkbox</em> styled button which contains some "state". In the case of a
+    radio button, you can see that only one button at a time can be picked.
+  </div>
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="col-xs-4 col-sm-3 col-lg-2">
+    {{ui-buttons
+      type='radio'
+      buttons='Foo,Bar,Baz'
+    }}
+  </div>
+  <div class="col-xs-4 col-sm-4 col-lg-5 monospace">
+  <b>\{{ui-buttons </b><br/>
+  &nbsp;&nbsp;buttons='Foo,Bar,Baz' <br/>
+  &nbsp;&nbsp;type='radio'<br/>
+  }}
+  </div>
+  <div class="col-xs-4 col-sm-4 col-lg-5">
+    This should produce similar results but uses the more compact "inline" form. The only thing to pay attention to right now is that
+  </div>
+</div>
+<hr>
+
+<br/>
+
+<h3>Managing at Group Level</h3>
+<hr>
+<div class="row">
+  <div class="col-xs-4 col-sm-3 col-lg-2">
+    {{ui-buttons
+      type='radio'
+      buttons='Foo,Bar,Baz'
+      disabled='baz'
+      defaultValue='bar'
+    }}
+  </div>
+  <div class="col-xs-4 col-sm-4 col-lg-5 monospace">
+  <b>\{{ui-buttons </b><br/>
+  &nbsp;&nbsp;buttons='Foo,Bar,Baz' <br/>
+  &nbsp;&nbsp;type='radio'<br/>
+  &nbsp;&nbsp;disabled='baz'<br/>
+  &nbsp;&nbsp;defaultValue='bar'<br/>
+  }}
+  </div>
+  <div class="col-xs-4 col-sm-4 col-lg-5">
+    There are two things to notice:
+    <ul>
+      <li>buttons CSV</li>
+      <li>disabled array</li>
+    </ul>
+  </div>
+</div>
+
+<hr>

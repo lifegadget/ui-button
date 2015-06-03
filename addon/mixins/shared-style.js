@@ -30,14 +30,13 @@ var SharedStyle = Ember.Mixin.create({
       return styles[key];
     }).map( key => {
       return dasherize(key) + ': ' + stylist(get(this,key));
-      return `${snakeCase}: ${styles[key]}`;
     }).join('; '));
   }),
 
   _propertyRemapping: on('init', function() {
     const props = new A(this.get('_propertyUnset'));
     props.forEach( prop => {
-      A(this.get('attributeBindings')).removeObject(prop);
+      new A(this.get('attributeBindings')).removeObject(prop);
     });
   }),
 

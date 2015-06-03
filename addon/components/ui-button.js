@@ -1,15 +1,18 @@
 import Ember from 'ember';
+const { computed, observer, $, A, run, on, typeOf, debug, keys, get, set, inject } = Ember;    // jshint ignore:line
 import layout from '../templates/components/ui-button';
 import SharedStyle from 'ui-button/mixins/shared-style';
+import ItemMessaging from 'ui-button/mixins/item-messaging';
 
-export default Ember.Component.extend(SharedStyle,{
+export default Ember.Component.extend(SharedStyle,ItemMessaging,{
   layout: layout,
 	tagName: 'button',
+  group: null,
 	attributeBindings: ['disabled:disabled', 'type', '_style:style'],
-	classNameBindings: ['_prefixedStyle','_prefixedSize','delayedHover:delayed-hover'],
+	classNameBindings: ['_mood','_prefixedSize','delayedHover:delayed-hover'],
 	classNames: ['btn','ui-button'],
 	disabled: false,
-  _disabled: Ember.observer('disabled', function() {
+  _disabledObserver: Ember.observer('disabled', function() {
     const disabledEffect = this.get('disabledEffect');
     const enabledEffect = this.get('enabledEffect');
     if(this.get('disabled') && disabledEffect) {
@@ -23,7 +26,9 @@ export default Ember.Component.extend(SharedStyle,{
     return !this.get('template') && !this.get('icon') && !this.get('title');
   }),
 	name: 'Submit',
-	value: 'submit',
+  title: null,
+  _title: computed.alias('title'), // in some sub-classes this will be overwritten
+  value: 'submit',
   param: Ember.computed.alias('value'),
   _value: Ember.computed('value', function() {
     let value = this.get('value');
@@ -44,9 +49,10 @@ export default Ember.Component.extend(SharedStyle,{
     return value;
   }),
   icon: null,
+  _icon: computed.alias('icon'), // in some sub-classes this will be overwritten
 	type: 'button',
 	style: 'default',
-	_prefixedStyle: Ember.computed('style', function() {
+	_mood: Ember.computed('style', function() {
     const style = this.get('style');
 		return `btn-${style}`;
 	}),
@@ -96,8 +102,8 @@ export default Ember.Component.extend(SharedStyle,{
     });
   },
 
-  _didInsertElement: Ember.on('didInsertElement', function() {
-    let tooltip = this.get('tooltip');
+  _init: on('init', function() {
+    const tooltip = this.get('tooltip');
     if(tooltip) {
       let {
         tooltipPlacement: placement,
@@ -105,7 +111,7 @@ export default Ember.Component.extend(SharedStyle,{
         tooltipHtml: html,
         tooltipTrigger: trigger,
         tooltipTemplate: template} = this.getProperties('tooltipPlacement', 'tooltipDelay','tooltipHtml','tooltipTrigger','tooltipTemplate');
-      Ember.run.next( () => {
+      run.next( () => {
         try {
           this.$().tooltip({
             title: tooltip,
@@ -121,7 +127,7 @@ export default Ember.Component.extend(SharedStyle,{
       });
     }
   }),
-  _willRemoveElement: Ember.on('willRemoveElement', function() {
+  _willRemoveElement: on('willDestroyElement', function() {
     if(this.get('tooltip')){
       this.$().tooltip('destroy');
     }
