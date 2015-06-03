@@ -19,21 +19,42 @@ export default Ember.Component.extend(GroupMessaging,{
   tagName: 'div',
   classNames: ['ui-button', 'btn-group'],
   classNameBindings: ['disabled:disabled:enabled'],
-  selected: null, // used just for container binding purposes
-  _selected: computed.oneWay('selected'),
+  selected: null, // TODO: make this into a proper one-way binding
   selectedItem: computed('selected', function() {
     const { selected, _registeredItems} = this.getProperties('selected', '_registeredItems');
     return new A(_registeredItems).findBy('elementId', selected);
   }),
-  value: computed.oneWay('selectedItem.value'),
-  _value: computed.oneWay('value'),
+  selectedValue: computed('selected', function() {
+    const { selected, _registeredItems} = this.getProperties('selected', '_registeredItems');
+    const valueObject = new A(_registeredItems).findBy('elementId', selected);
+    return valueObject ? valueObject.get('value') : null;
+  }),
+  value: computed('selected', {
+    set: function() {
+      return this.get('selectedItem.value');
+    },
+    get: function() {
+      return this.get('selectedItem.value');
+    }
+  }),
+  defaultValue: null,
+  // set default after 'init' but before 'render'
+  _setDefaultValue: on('didInsertElement', function() {
+    const defaultValue = this.get('defaultValue');
+    const defaultButton = this.get('_registeredItems').findBy('value', defaultValue);
+    console.log('defaultButton: %o', defaultButton);
+    this.set('selected', defaultButton ? defaultButton.get('elementId') : null);
+  }),
   emptyNestObserver: on('init',observer('selected','canBeEmpty', function() {
-    const { selected, value, canBeEmpty, _registeredItems } = this.getProperties('selected', 'value', 'canBeEmpty', '_registeredItems' );
+    const { selected, canBeEmpty, _registeredItems } = this.getProperties('selected', 'value', 'canBeEmpty', '_registeredItems' );
     if (!canBeEmpty && !selected && _registeredItems.length > 0) {
-      _registeredItems[0]._tellItems('activate');
+      this._tellItem(_registeredItems[0].get('elementId'), 'activate');
     }
   })),
   canBeEmpty: true,
+  icon: null,
+  iconActive: null,
+  iconInactive: null,
   disabled: null,
   // Disable (false), Enable(true), by value (array/string), or ignore (null) Item's disablement state
   disabledObserver: on('didInsertElement',observer('disabled', function() {
@@ -61,9 +82,9 @@ export default Ember.Component.extend(GroupMessaging,{
       new A(props).forEach( prop => {
         const propValue = this.get(prop);
         if (propValue) {
-          obj[prop] = propValue
+          obj[prop] = propValue;
         }
-      })
+      });
       return obj;
     };
 
@@ -79,13 +100,25 @@ export default Ember.Component.extend(GroupMessaging,{
   buttonActions: {
     activate: function(self, item){
       self.set('selected', item.get('elementId'));
+      self.sendAction('activated', item); // specific action
+      self.sendAction('changed', item); // general action
+      return true;
     },
-    deactivate: function(self) {
+    deactivate: function(self, item) {
+      // reject single-item states which can not be empty
+      if(!self.get('canBeEmpty') && typeOf(self.selected) !== 'array') {
+        return false;
+      }
       self.set('selected', null);
+      self.sendAction('deactivated', item); // specific action gets the "deactivated item"
+      self.sendAction('changed', {}); // general action gets the value
+      return true;
     },
     registration: function(self,item) {
       const _registeredItems = self.get('_registeredItems');
       _registeredItems.pushObject(item);
+      self.sendAction('registered', item); // specific action only
     }
   },
+
 });

@@ -141,7 +141,6 @@ export default Ember.Component.extend(SharedStyle,ItemMessaging,{
 
   buttonActions: {
     disable: function(self, value, ifValue) {
-      console.log('disabling %s', value);
       if(ifValue) {
         const isContained = new A(ifValue).contains(self.get('value'));
         self.set('disabled', isContained);

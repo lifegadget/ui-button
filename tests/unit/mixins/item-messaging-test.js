@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import ItemMessagingMixin from '../../../mixins/item-messaging';
+import ItemMessagingMixin from 'ui-button/mixins/item-messaging';
 import { module, test } from 'qunit';
 
 module('Unit | Mixin | item messaging');
