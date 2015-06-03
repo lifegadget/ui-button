@@ -344,3 +344,7 @@ ul.components {
 .monospace {
   font-family: monospace;
 }
+
+.downer {
+  padding-top: 15px;
+}

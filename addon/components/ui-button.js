@@ -91,7 +91,7 @@ export default Ember.Component.extend(SharedStyle,ItemMessaging,{
   },
 	click: function() {
 		this.sendAction('action', this.get('_value')); // send generic action event (for non-grouped buttons)
-    this.activate(); // abstracted implementation of the "activation" approach
+    this._tellGroup('activate',this);
     if(!this.get('keepFocus')) {
       this.$().blur();
     }
@@ -106,7 +106,9 @@ export default Ember.Component.extend(SharedStyle,ItemMessaging,{
     });
   },
 
+
   _init: on('init', function() {
+    this._tellGroup('registration', this);
     const tooltip = this.get('tooltip');
     if(tooltip) {
       let {
@@ -135,7 +137,23 @@ export default Ember.Component.extend(SharedStyle,ItemMessaging,{
     if(this.get('tooltip')){
       this.$().tooltip('destroy');
     }
-  })
+  }),
+
+  buttonActions: {
+    disable: function(self, value, ifValue) {
+      console.log('disabling %s', value);
+      if(ifValue) {
+        const isContained = new A(ifValue).contains(self.get('value'));
+        self.set('disabled', isContained);
+      } else {
+        self.set('disabled', value);
+      }
+      if(!ifValue || new A(ifValue).contains(self.get('value'))) {
+        self.set('disabled', value);
+      }
+    }
+  }
+
 
 
 });

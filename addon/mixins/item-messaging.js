@@ -1,34 +1,29 @@
 import Ember from 'ember';
 const { computed, observer, $, A, run, on, typeOf, debug, keys, get, set, inject } = Ember;    // jshint ignore:line
+const camelize = Ember.String.camelize;
 
 export default Ember.Mixin.create({
-  _registration: function() {
-    this._tellGroup('registration', this);
-  },
+  /**
+   * Receive a message from the containing group
+   * @param  {string}   cmd   command to execute
+   * @param  {mixed}    args  whatever params are needed for command
+   * @return {boolean}
+   */
   _groupMessage: function(cmd, ...args) {
-    switch(cmd) {
-      case 'disabled':
-        this.set('disabled', args[0]);
-        break;
-      case 'activate':
-        if(this.activate) {
-          this.activate();
-        }
-        break;
+    const command = this.buttonActions[camelize(cmd)];
+    if (command) {
+      return command(this, ...args);
     }
+
+    return null;
   },
   _tellGroup: function(cmd, ...args) {
     const group = this.get('group');
     if(group) {
-      console.log('telling group [%s]: %o', cmd, args);
       this.group._itemMessage(cmd, this, ...args);
     } else {
-      this.sendAction(cmd, ...args);
+      this.sendAction('action', cmd, ...args);
     }
   },
-
-  _init: on('beforeRender', function() {
-    this._tellGroup('registration', this);
-  })
 
 });

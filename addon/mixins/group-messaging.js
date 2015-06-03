@@ -3,7 +3,9 @@ const { computed, observer, $, A, run, on, typeOf, debug, keys, get, set, inject
 const camelize = Ember.String.camelize;
 
 export default Ember.Mixin.create({
-  _registeredItems: new A([]),
+  _registeredItems: computed(function() {
+    return new A([]);
+  }),
   _registerItem: function(child) {
     console.log('registering %o with %o', child, this.get('elementId'), this.get('_registeredItems.length'));
     const _registeredItems = this.get('_registeredItems');
@@ -17,9 +19,10 @@ export default Ember.Mixin.create({
    * @return {void}
    */
   _itemMessage: function(cmd, item, ...args) {
+    console.log('received %s command from: %o', cmd, item);
     const command = this.buttonActions[camelize(cmd)];
     if (command) {
-        return command(this,item,args);
+      return command(this,item,args);
     }
 
     return null;
@@ -36,16 +39,17 @@ export default Ember.Mixin.create({
 
     const item = this.get('_registeredItems').findBy('elementId', id);
     if(item) {
-      item._groupMessage(cmd, args);
+      item._groupMessage(cmd, ...args);
     }
   },
   /** Send a specific command to ALL registered Items */
   _tellItems: function(cmd, ...args) {
+    console.log('telling all items: %s, %o', cmd, args);
     const itemIds = new A(this.get('_registeredItems').map(item => {
       return item.get('elementId');
     }));
     itemIds.forEach(id => {
-      this._tellItem(id, cmd, args);
+      this._tellItem(id, cmd, ...args);
     });
   },
 

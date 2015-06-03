@@ -106,28 +106,66 @@
 <h3>Managing at Group Level</h3>
 <hr>
 <div class="row">
-  <div class="col-xs-4 col-sm-3 col-lg-2">
+  <div class="col-xs-5 col-sm-4 col-lg-3">
     {{ui-buttons
       type='radio'
       buttons='Foo,Bar,Baz'
       disabled='baz'
+      moodActive='success'
       defaultValue='bar'
     }}
   </div>
-  <div class="col-xs-4 col-sm-4 col-lg-5 monospace">
+  <div class="col-xs-3 col-sm-3 col-lg-4 monospace">
   <b>\{{ui-buttons </b><br/>
   &nbsp;&nbsp;buttons='Foo,Bar,Baz' <br/>
   &nbsp;&nbsp;type='radio'<br/>
   &nbsp;&nbsp;disabled='baz'<br/>
+  &nbsp;&nbsp;moodActive='success'<br/>
   &nbsp;&nbsp;defaultValue='bar'<br/>
   }}
   </div>
   <div class="col-xs-4 col-sm-4 col-lg-5">
-    There are two things to notice:
+    Here we see the more compact yet highly capable inline form of the component. A things to take note of:
     <ul>
-      <li>buttons CSV</li>
-      <li>disabled array</li>
+      <li><b>CSV Loading</b> - for many properties which can take on multiple values you can obviously bind to an array in the container but you may also use a CSV string in the template to load the values. Here you see that in <code>buttons</code> and <code>disabled</code>.</li>
+      <li><b>Global Properties</b> - properties like <code>moodActive</code> (as well as <code>size</code> and others)</li>
     </ul>
+    More on these properties later ...
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-xs-5 col-sm-4 col-lg-3">
+    {{ui-buttons
+      type='radio'
+      buttons='Foo,Bar,Baz'
+      size='small'
+      moodActive='warning'
+      defaultValue='bar'
+    }}
+  </div>
+  <div class="col-xs-3 col-sm-3 col-lg-4 monospace">
+  <b>\{{ui-buttons </b><br/>
+  &nbsp;&nbsp;buttons='Foo,Bar,Baz' <br/>
+  &nbsp;&nbsp;type='radio'<br/>
+  &nbsp;&nbsp;disabled='baz'<br/>
+  &nbsp;&nbsp;moodActive='success'<br/>
+  &nbsp;&nbsp;defaultValue='bar'<br/>{{#if size}}
+  &nbsp;&nbsp;size='{{size}}'<br/>{{/if}}
+  <b>}}</b>
+  </div>
+  <div class="col-xs-4 col-sm-4 col-lg-5">
+    Now we'll give you a little playground to play around with a few other parameters:
+    <div class="row">
+      <div class="col-xs-3">size</div>
+      <div class="col-xs-9">
+        {{ui-buttons buttons=sizes size='small' type='radio' value=size}}
+      </div><br/>
+      <div class="col-xs-3 downer">canBeEmpty</div>
+      <div class="col-xs-9 downer">
+        {{ui-buttons buttons=canBeEmpty  size='small' type='radio'}}
+      </div><br/>
+    </div>
   </div>
 </div>
 

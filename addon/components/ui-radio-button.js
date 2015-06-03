@@ -29,7 +29,7 @@ export default UiButton.extend({
   }),
   // mood
   mood: 'default',
-  moodActive: 'success',
+  moodActive: null,
   moodInactive: null,
   _mood: computed('mood', 'moodActive', 'moodInactive', 'toggleState', function() {
     const { mood, moodActive, moodInactive , toggleState } = this.getProperties('mood', 'moodActive', 'moodInactive', 'toggleState');
@@ -39,6 +39,7 @@ export default UiButton.extend({
     } else {
       moodFamily = moodInactive ? moodInactive : mood;
     }
+    moodFamily = moodFamily ? moodFamily : 'default';
 
     return `btn-${moodFamily}`;
   }),
@@ -64,19 +65,16 @@ export default UiButton.extend({
   click: function() {
     const {elementId, selected, canBeEmpty} = this.getProperties('elementId', 'selected', 'canBeEmpty');
     if(elementId === selected && canBeEmpty ) {
-      this.deactivate();
+      this._tellGroup('deactivate', this);
     } else {
-      this.activate();
+      this._tellGroup('activate',this);
     }
-    this._super();
+    if(!this.get('keepFocus')) {
+      this.$().blur();
+    }
+    if(this.clickEffect) {
+      this.applyEffect(this.clickEffect);
+    }
   },
-  activate: function() {
-    // this.set('selected', this.get('elementId'));
-    // this.set('group.value', this.get('value'));
-    this._tellGroup('button-pressed',this);
-  },
-  deactivate: function() {
-    this.set('selected', null);
-  }
 
 });
