@@ -1,37 +1,36 @@
 import Ember from 'ember';
 const { computed, observer, $, A, run, on, typeOf, debug, keys, get, set, inject } = Ember;    // jshint ignore:line
 import layout from '../templates/components/ui-buttons';
+import GroupMessaging from 'ui-button/mixins/group-messaging';
 const dasherize = Ember.String.dasherize;
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(GroupMessaging,{
   layout: layout,
   tagName: 'div',
   classNames: ['ui-button', 'btn-group'],
   classNameBindings: ['disabled:disabled:enabled'],
-  _registeredItems: new A([]),
   selected: null,
   selectedItem: computed('selected', function() {
     const { selected, _registeredItems} = this.getProperties('selected', '_registeredItems');
     return new A(_registeredItems).findBy('elementId', selected);
   }),
-  value: computed.alias('selected'),
-  emptyNestObserver: on('afterRender',observer('selected','canBeEmpty', function() {
-    const { selected, canBeEmpty, _registeredItems } = this.getProperties('selected', 'canBeEmpty', '_registeredItems' );
+  value: null,
+  emptyNestObserver: on('init',observer('selected','canBeEmpty', function() {
+    const { selected, value, canBeEmpty, _registeredItems } = this.getProperties('selected', 'value', 'canBeEmpty', '_registeredItems' );
     if (!canBeEmpty && !selected && _registeredItems.length > 0) {
-      _registeredItems[0]._tellItem('activate');
+      _registeredItems[0]._tellItems('activate');
     }
   })),
   canBeEmpty: true,
-  _registerItem: function(child) {
-    console.log('registering %o with %o', child, this.get('elementId'), this.get('_registeredItems.length'));
-    this.get('_registeredItems').pushObject(child);
-  },
   disabled: false,
+  // Sends messages to some or all items to disable themselves
   disabledObserver: observer('disabled', function() {
     const { _registeredItems, disabled } = this.getProperties('_registeredItems','disabled');
-    _registeredItems.forEach( item => {
-      item._tellItem('disabled', disabled);
-    })
+    if(disabled === true) {
+      _registeredItems.forEach( item => {
+        item._tellItems('disabled', disabled);
+      });
+    }
   }),
   howMany: computed.alias('_registeredItems.length'),
   type: null,
@@ -42,8 +41,8 @@ export default Ember.Component.extend({
 
   // INLINE Functionality
   // --------------------
-  items: null,
   buttons: computed.alias('items'),
+  items: null,
   _items: computed('items', function() {
     let items = this.get('items');
     items = items ? items : [];
@@ -51,5 +50,11 @@ export default Ember.Component.extend({
     return new A(items.map( item => {
       return typeOf(item) === 'object' ? item : { value: dasherize(item), title: item };
     }));
-  })
+  }),
+
+  buttonActions: {
+    buttonPressed: function(self, item){
+      self.set('selected', item.get('elementId'));
+    }
+  }
 });

@@ -86,8 +86,12 @@ export default Ember.Component.extend(SharedStyle,ItemMessaging,{
   clickEffect: null,
   enabledEffect: null,
   disabledEffect: null,
+  activate: function() {
+    this._tellGroup('item-clicked',this);
+  },
 	click: function() {
-		this.sendAction('action', this.get('_value'));
+		this.sendAction('action', this.get('_value')); // send generic action event (for non-grouped buttons)
+    this.activate(); // abstracted implementation of the "activation" approach
     if(!this.get('keepFocus')) {
       this.$().blur();
     }

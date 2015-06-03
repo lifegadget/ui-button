@@ -71,7 +71,9 @@ export default UiButton.extend({
     this._super();
   },
   activate: function() {
-    this.set('selected', this.get('elementId'));
+    // this.set('selected', this.get('elementId'));
+    // this.set('group.value', this.get('value'));
+    this._tellGroup('button-pressed',this);
   },
   deactivate: function() {
     this.set('selected', null);
