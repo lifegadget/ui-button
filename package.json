@@ -1,6 +1,6 @@
 {
   "name": "ui-button",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Dancing, shiny buttons with Bootstrap styling.",
   "directories": {
     "doc": "doc",
@@ -16,6 +16,20 @@
     "node": ">= 0.10.0"
   },
   "author": "Ken Snyder <ken@ken.net>",
+  "files": [
+    "Brocfile.js",
+    "LICENSE.md",
+    "README.md",
+    "addon",
+    "app",
+    "bower.json",
+    "config",
+    "index.js",
+    "package.json",
+    "testem.json",
+    "vendor"
+  ],
+  "main": "index.js",
   "license": "MIT",
   "devDependencies": {
     "broccoli-asset-rev": "^2.0.2",
