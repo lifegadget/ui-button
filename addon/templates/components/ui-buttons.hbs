@@ -1,0 +1,16 @@
+{{#each _items as |item|}}
+  {{component _type
+    value=item.value
+    title=item.title
+    disabled=item.disabled
+    mood=item.mood
+    moodActive=item.moodActive
+    moodInactive=item.moodInactive
+    icon=item.icon
+    iconActive=item.iconActive
+    iconInactive=item.iconInactive
+    size=size
+    group=this
+  }}
+{{/each}}
+{{yield this this.items.length}}

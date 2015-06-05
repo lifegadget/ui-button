@@ -1,14 +1,18 @@
 import Ember from 'ember';
+const { computed, observer, $, A, run, on, typeOf, debug, keys, get, set, inject } = Ember;    // jshint ignore:line
 import layout from '../templates/components/ui-button';
+import SharedStyle from 'ui-button/mixins/shared-style';
+import ItemMessaging from 'ui-button/mixins/item-messaging';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(SharedStyle,ItemMessaging,{
   layout: layout,
 	tagName: 'button',
-	attributeBindings: ['disabled:disabled', 'type', '_width:style'],
-	classNameBindings: ['prefixedStyle','prefixedSize','delayedHover:delayed-hover'],
+  group: null,
+	attributeBindings: ['disabled:disabled', 'type', '_style:style'],
+	classNameBindings: ['_mood','_prefixedSize','delayedHover:delayed-hover'],
 	classNames: ['btn','ui-button'],
 	disabled: false,
-  _disabled: Ember.observer('disabled', function() {
+  _disabledObserver: Ember.observer('disabled', function() {
     const disabledEffect = this.get('disabledEffect');
     const enabledEffect = this.get('enabledEffect');
     if(this.get('disabled') && disabledEffect) {
@@ -22,7 +26,9 @@ export default Ember.Component.extend({
     return !this.get('template') && !this.get('icon') && !this.get('title');
   }),
 	name: 'Submit',
-	value: 'submit',
+  title: null,
+  _title: computed.alias('title'), // in some sub-classes this will be overwritten
+  value: 'submit',
   param: Ember.computed.alias('value'),
   _value: Ember.computed('value', function() {
     let value = this.get('value');
@@ -39,27 +45,22 @@ export default Ember.Component.extend({
       }
       return object;
     }
-    
+
     return value;
   }),
   icon: null,
+  _icon: computed.alias('icon'), // in some sub-classes this will be overwritten
 	type: 'button',
 	style: 'default',
-	prefixedStyle: Ember.computed('style', function() {
-		return 'btn-' + this.get('style');
+	_mood: Ember.computed('style', function() {
+    const style = this.get('style');
+		return `btn-${style}`;
 	}),
   delayedHover: true,
   size: 'normal',
   width: null,
-  _width: Ember.computed('width', function() {
-    let width = this.get('width');
-    if(/[a-z]/.test(width)) {
-      width = String(width) + 'px';
-    } 
-    return width ? Ember.String.htmlSafe(`width:${width}`) : null;
-  }),
   keepFocus: false, // keep focus on button after clicking?
-	prefixedSize: Ember.computed('style','size', function() {
+	_prefixedSize: Ember.computed('style','size', function() {
     let size = this.get('size');
     if(!size) {
       size = 'normal';
@@ -85,8 +86,12 @@ export default Ember.Component.extend({
   clickEffect: null,
   enabledEffect: null,
   disabledEffect: null,
+  activate: function() {
+    this._tellGroup('item-clicked',this);
+  },
 	click: function() {
-		this.sendAction('action', this.get('_value'));
+		this.sendAction('action', this.get('_value')); // send generic action event (for non-grouped buttons)
+    this._tellGroup('activate',this);
     if(!this.get('keepFocus')) {
       this.$().blur();
     }
@@ -100,17 +105,19 @@ export default Ember.Component.extend({
       this.$().removeClass('animated ' + effect);
     });
   },
-  
-  _didInsertElement: Ember.on('didInsertElement', function() {
-    let tooltip = this.get('tooltip');
+
+
+  _init: on('init', function() {
+    this._tellGroup('registration', this);
+    const tooltip = this.get('tooltip');
     if(tooltip) {
-      let { 
+      let {
         tooltipPlacement: placement,
         tooltipDelay: delay,
         tooltipHtml: html,
         tooltipTrigger: trigger,
         tooltipTemplate: template} = this.getProperties('tooltipPlacement', 'tooltipDelay','tooltipHtml','tooltipTrigger','tooltipTemplate');
-      Ember.run.next( () => {
+      run.next( () => {
         try {
           this.$().tooltip({
             title: tooltip,
@@ -126,11 +133,26 @@ export default Ember.Component.extend({
       });
     }
   }),
-  _willRemoveElement: Ember.on('willRemoveElement', function() {
+  _willRemoveElement: on('willDestroyElement', function() {
     if(this.get('tooltip')){
-      this.$().tooltip('destroy');      
+      this.$().tooltip('destroy');
     }
-  })
-  
-  
+  }),
+
+  buttonActions: {
+    disable: function(self, value, ifValue) {
+      if(ifValue) {
+        const isContained = new A(ifValue).contains(self.get('value'));
+        self.set('disabled', isContained);
+      } else {
+        self.set('disabled', value);
+      }
+      if(!ifValue || new A(ifValue).contains(self.get('value'))) {
+        self.set('disabled', value);
+      }
+    }
+  }
+
+
+
 });
