@@ -29,6 +29,12 @@ export default Ember.Controller.extend({
     const strategy = this.get('iconStrategy');
     return strategy === 'inactive' ? 'circle-o' : false;
   }),
-  iconStrategy: 'none'
+  iconStrategy: 'none',
+
+  actions: {
+    changed: function(newValue,oldValue) {
+      window.alert(`Value changed from "${oldValue}" to "${newValue}"`);
+    }
+  }
 
 });

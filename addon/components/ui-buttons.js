@@ -42,7 +42,7 @@ export default Ember.Component.extend(GroupMessaging,{
   _setDefaultValue: on('didInsertElement', function() {
     const defaultValue = this.get('defaultValue');
     const defaultButton = this.get('_registeredItems').findBy('value', defaultValue);
-    console.log('defaultButton: %o', defaultButton);
+
     this.set('selected', defaultButton ? defaultButton.get('elementId') : null);
   }),
   emptyNestObserver: on('init',observer('selected','canBeEmpty', function() {
@@ -99,9 +99,9 @@ export default Ember.Component.extend(GroupMessaging,{
 
   buttonActions: {
     activate: function(self, item){
+      self.sendAction('changed', item ? item.value : null, self.get('selectedValue'), item); // new value, old value, object
       self.set('selected', item.get('elementId'));
       self.sendAction('activated', item); // specific action
-      self.sendAction('changed', item); // general action
       return true;
     },
     deactivate: function(self, item) {
@@ -109,9 +109,9 @@ export default Ember.Component.extend(GroupMessaging,{
       if(!self.get('canBeEmpty') && typeOf(self.selected) !== 'array') {
         return false;
       }
+      self.sendAction('changed', null, self.get('selectedValue'), item); // general action gets the value
       self.set('selected', null);
       self.sendAction('deactivated', item); // specific action gets the "deactivated item"
-      self.sendAction('changed', {}); // general action gets the value
       return true;
     },
     registration: function(self,item) {

@@ -19,7 +19,7 @@ export default Ember.Mixin.create({
    * @return {void}
    */
   _itemMessage: function(cmd, item, ...args) {
-    console.log('received %s command from: %o', cmd, item);
+    // console.log('received %s command from: %o', cmd, item);
     const command = this.buttonActions[camelize(cmd)];
     if (command) {
       return command(this,item,args);
@@ -35,8 +35,7 @@ export default Ember.Mixin.create({
    * @return {boolean}
    */
   _tellItem: function(id, cmd, ...args) {
-    console.log('telling item [%s,%s]: %o', id, cmd, args);
-
+    // console.log('telling item [%s,%s]: %o', id, cmd, args);
     const item = this.get('_registeredItems').findBy('elementId', id);
     if(item) {
       item._groupMessage(cmd, ...args);
@@ -44,7 +43,7 @@ export default Ember.Mixin.create({
   },
   /** Send a specific command to ALL registered Items */
   _tellItems: function(cmd, ...args) {
-    console.log('telling all items: %s, %o', cmd, args);
+    // console.log('telling all items: %s, %o', cmd, args);
     const itemIds = new A(this.get('_registeredItems').map(item => {
       return item.get('elementId');
     }));
