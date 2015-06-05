@@ -4,7 +4,7 @@
 ## Install ##
 
 ````bash
-ember install:addon ui-button
+ember install ui-button
 ````
 
 ## Usage ##
