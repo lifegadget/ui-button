@@ -22,7 +22,7 @@ export default Ember.Mixin.create({
     if(group) {
       this.group._itemMessage(cmd, this, ...args);
     } else {
-      this.sendAction('action', cmd, ...args);
+      this.sendAction(cmd, ...args);
     }
   },
 

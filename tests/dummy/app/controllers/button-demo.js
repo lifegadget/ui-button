@@ -18,7 +18,7 @@ export default Ember.Controller.extend({
       if(type === 'object') {
         param = JSON.stringify(param);
       }
-      window.alert('Button pressed with a parameter of type "' + type + '": ' + param);
+      window.alert('Button[' +  this.get('elementId') + '] pressed with a parameter of type "' + type + '": ' + param);
     }
   }
 
