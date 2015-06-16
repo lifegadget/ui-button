@@ -1,7 +1,7 @@
 <h3><code>ui-toggle-button</code></h3>
 <h3>Toggle Buttons</h3>
 <desc>
-  Toggle buttons inherit all the goodness of buttons but have an internal state mechanism which toggles between two states. Note, however, that a default toggleEffect of 'pulse' is set.
+  Toggle buttons inherit all the goodness of buttons but have an internal state mechanism which toggles between two states. This internal state machine is exposed through the two-way binding to the <code>value</code> property. The value of the state is by default a boolean flag but that can be changed (see below) if you want to toggle between two other values.
 </desc>
 
 <div class="row">
@@ -34,8 +34,8 @@
         {{ui-toggle-button value=true onStyle='success' offStyle='danger' width='50px'}}
     </div>
     <div class="snippet col-xs-10">
-        \{{ui-toggle-button onStyle='success' offStyle='danger' width='50px'}} <br/>
-        \{{ui-toggle-button value=true onStyle='success' offStyle='danger' width='50px'}}
+        <span class="text-muted">\{{ui-toggle-button onStyle='success' offStyle='danger' width='50px'}}</span> <br/>
+        <span class="text-muted">\{{ui-toggle-button value=true onStyle='success' offStyle='danger' width='50px'}}</span>
     </div>
 </div>
 
@@ -44,7 +44,8 @@
         {{ui-toggle-button onStyle='success' icon='dot-circle-o'}}
     </div>
     <div class="snippet col-xs-10">
-        \{{ui-toggle-button onStyle='success' icon='dot-circle-o'}}
+      Static icon, dynamic mood <br/>
+      <span class="text-muted">\{{ui-toggle-button onStyle='success' icon='dot-circle-o'}}</span>
     </div>
 </div>
 <div class="row">
@@ -52,6 +53,17 @@
         {{ui-toggle-button onStyle='success' offIcon='circle-thin' onIcon='dot-circle-o'}}
     </div>
     <div class="snippet col-xs-10">
-            \{{ui-toggle-button onStyle='success' offIcon='circle-thin' onIcon='dot-circle-o'}}
+      Dynamic icon and mood <br/>
+      <span class="text-muted">\{{ui-toggle-button onStyle='success' offIcon='circle-thin' onIcon='dot-circle-o'}}</span>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-2">
+      {{ui-toggle-button on='Apple' onValue='apple' off="Orange" offValue='orange' value=fruit}}
+    </div>
+    <div class="snippet col-xs-10">
+      Toggling non-boolean values: {{fruit}}<br/>
+      <span class="text-muted">\{{ui-toggle-button on='Apple' onValue='apple' off="Orange" offValue='orange'}}</span>
     </div>
 </div>
