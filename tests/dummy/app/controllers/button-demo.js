@@ -2,9 +2,10 @@ import Ember from 'ember';
 
 export default Ember.Controller.extend({
 
-  isRepressed: false,
+  isRepressed: true,
   toggledEnablement: false,
-  actions: {
+  isEnabled: true,
+    actions: {
     toggleRepression: function() {
       console.log('toggling');
       this.toggleProperty('isRepressed');

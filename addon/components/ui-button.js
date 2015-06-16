@@ -12,7 +12,15 @@ export default Ember.Component.extend(SharedStyle,ItemMessaging,{
 	classNameBindings: ['_mood','_prefixedSize','delayedHover:delayed-hover'],
 	classNames: ['btn','ui-button'],
 	disabled: false,
+  enabled: true,
+  _enabledObserver: observer('enabled', function() {
+    const {enabled, disabled} = this.getProperties('enabled', 'disabled');
+    if(enabled === disabled) {
+      this.set('disabled', !enabled);
+    }
+  }),
   _disabledObserver: Ember.observer('disabled', function() {
+    const {enabled, disabled} = this.getProperties('enabled', 'disabled');
     const disabledEffect = this.get('disabledEffect');
     const enabledEffect = this.get('enabledEffect');
     if(this.get('disabled') && disabledEffect) {
@@ -20,6 +28,10 @@ export default Ember.Component.extend(SharedStyle,ItemMessaging,{
     }
     if(!this.get('disabled') && enabledEffect) {
       this.applyEffect(enabledEffect);
+    }
+    // keep 'enabled' in sync
+    if(enabled === disabled) {
+      this.set('enabled', !disabled);
     }
   }),
   hasNoContent: Ember.computed('template','icon','title', function() {

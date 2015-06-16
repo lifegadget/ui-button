@@ -56,7 +56,7 @@
     "button"
   ],
   "dependencies": {
-    "ember-cli-autoprefixer": "0.4.0",
+    "ember-cli-autoprefixer": "0.4.1",
     "ember-cli-babel": "^5.0.0",
     "ember-cli-htmlbars": "0.7.6"
   },
