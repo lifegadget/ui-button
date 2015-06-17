@@ -25,7 +25,6 @@ export default UiButton.extend({
   }),
   value: computed('toggleState', {
     set: function(index,value) {
-      console.log('setter:', value);
       return value;
     },
     get: function() {
@@ -34,9 +33,8 @@ export default UiButton.extend({
   }),
   // Listen to value changes to ensure toggleState has stayed in sync
   _valueObserver: observer('value', function() {
-    const {value,toggleState,onValue,offValue} = this.getProperties('value', 'toggleState', 'onValue', 'offValue');
+    const {value,toggleState,offValue} = this.getProperties('value', 'toggleState', 'offValue');
     const expected = value === offValue ? false : true;
-    console.log('observer %s,%s', expected,toggleState);
     if(toggleState !== expected) {
         this.refresh();
     }
