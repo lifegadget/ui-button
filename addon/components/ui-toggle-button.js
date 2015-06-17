@@ -9,7 +9,6 @@ import UiButton from 'ui-button/components/ui-button';
 
 export default UiButton.extend({
   layout: layout,
-
   on: 'On',
   onValue: true,
   off: 'Off',
@@ -26,10 +25,20 @@ export default UiButton.extend({
   }),
   value: computed('toggleState', {
     set: function(index,value) {
+      console.log('setter:', value);
       return value;
     },
     get: function() {
       return this.get('toggleState') ? this.get('onValue') :this.get('offValue');
+    }
+  }),
+  // Listen to value changes to ensure toggleState has stayed in sync
+  _valueObserver: observer('value', function() {
+    const {value,toggleState,onValue,offValue} = this.getProperties('value', 'toggleState', 'onValue', 'offValue');
+    const expected = value === offValue ? false : true;
+    console.log('observer %s,%s', expected,toggleState);
+    if(toggleState !== expected) {
+        this.refresh();
     }
   }),
   _toggleInit: Ember.on('didInsertElement', function() {
@@ -45,8 +54,11 @@ export default UiButton.extend({
   }),
   toggleEffect: Ember.computed.alias('clickEffect'),
 
-
   click: function() {
+    this.refresh();
+    this._super();
+  },
+  refresh: function() {
     let title = this.toggleProperty('toggleState') ? this.get('on') : this.get('off');
     let style = this.get('toggleState') ? this.get('onStyle') : this.get('offStyle');
     let icon = this.get('toggleState') ? this.get('onIcon') : this.get('offIcon');
@@ -54,7 +66,6 @@ export default UiButton.extend({
     if(icon) {
       this.set('icon',icon);
     }
-    this._super();
     this.set('style',style);
   }
 
