@@ -66,5 +66,4 @@ export default UiButton.extend({
     }
     this.set('style',style);
   }
-
 });

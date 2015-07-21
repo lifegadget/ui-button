@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const { computed, observer, $, A, run, on, typeOf, debug, keys, get, set, inject, run } = Ember;    // jshint ignore:line
+const { computed, observer, $, A, run, on, typeOf, debug, get, set, inject } = Ember;    // jshint ignore:line
 const camelize = Ember.String.camelize;
 
 export default Ember.Mixin.create({
