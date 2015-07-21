@@ -57,33 +57,30 @@
 <h3>Enable/Disable</h3>
 <div class="row">
     <p class="descriptive col-xs-12 col-sm-8 col-lg-6">
-        A button can be bound to static value, a bound property or even a function to
-        specify whether the button should be pressable.
+        A button can be "disabled" through use of the <code>disabled</code> or <code>enabled</code>
+        properties. While this is redundant -- and we'd never expect you to bind to both -- one versus
+        the other is often more convenient in your templates which don't have the benefit of conditional
+        logic.
     </p>
 </div>
 
 <div class="row">
     <div class="col-xs-2">
-        {{#ui-button disabled=false}}uninhibited{{/ui-button}}
+        {{#ui-button disabled=isRepressed}}disable me{{/ui-button}}
     </div>
     <div class="snippet col-xs-10">
-        \{{#ui-button disabled=false}}uninhibited\{{/ui-button}}
+        \{{#ui-button disabled={{isRepressed}} }}disable me\{{/ui-button}} -- {{ui-toggle-button on='disabled' off='not disabled' value=isRepressed size="tiny"}}
     </div>
 </div>
 <div class="row">
     <div class="col-xs-2">
-        {{#ui-button disabled=true}}suppress me{{/ui-button}}
+        {{#ui-button enabled=isEnabled}}enable me{{/ui-button}}
     </div>
     <div class="snippet col-xs-10">
-        \{{#ui-button disabled=true}}suppress me\{{/ui-button}}
-    </div>
-</div>
-<div class="row">
-    <div class="col-xs-2">
-        {{#ui-button disabled=isRepressed}}repress me{{/ui-button}}
-    </div>
-    <div class="snippet col-xs-10">
-        \{{#ui-button disabled=isRepressed}}repress me\{{/ui-button}} -- {{ui-button title="toggle repression" action="toggleRepression" size="tiny"}}
+      The opposite of <code>disabled</code> is available as the <code>enabled</code> property:
+      {{ui-toggle-button on='enabled' off='not enabled' size="tiny" value=isEnabled}}
+      <br/>
+      \{{#ui-button enabled={{isEnabled}} }}enable me\{{/ui-button}}
     </div>
 </div>
 
