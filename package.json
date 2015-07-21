@@ -1,6 +1,6 @@
 {
   "name": "ui-button",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Dancing, shiny buttons with Bootstrap styling.",
   "directories": {
     "doc": "doc",
@@ -48,7 +48,7 @@
     "ember-export-application-global": "^1.0.2",
     "ember-try": "0.0.6",
     "ui-icon": "0.0.17",
-    "ui-input": "0.0.2"
+    "ui-input": "0.0.3"
   },
   "keywords": [
     "ember-addon",
