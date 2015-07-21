@@ -1,8 +1,8 @@
 import Ember from 'ember';
 const {
-  computed, observer, $, A, run, on, typeOf, debug, ObjectProxy, // jshint ignore:line
-  defineProperty, keys, get, set, inject, isEmpty                // jshint ignore:line
-} = Ember;
+  computed, observer, $, A, run, on, typeOf, debug, ObjectProxy,
+  defineProperty, keys, get, set, inject, isEmpty
+} = Ember; // jshint ignore:line
 
 import layout from '../templates/components/ui-button';
 import UiButton from 'ui-button/components/ui-button';
