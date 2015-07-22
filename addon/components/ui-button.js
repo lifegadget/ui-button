@@ -1,14 +1,14 @@
 import Ember from 'ember';
 const { computed, observer, $, A, run, on, typeOf, debug, keys, get, set, inject } = Ember;    // jshint ignore:line
 import layout from '../templates/components/ui-button';
-import SharedStyle from 'ui-button/mixins/shared-style';
+import Sharedmood from 'ui-button/mixins/shared-style';
 import ItemMessaging from 'ui-button/mixins/item-messaging';
 
-export default Ember.Component.extend(SharedStyle,ItemMessaging,{
+export default Ember.Component.extend(Sharedmood,ItemMessaging,{
   layout: layout,
 	tagName: 'button',
   group: null,
-	attributeBindings: ['disabled:disabled', 'type', '_style:style'],
+	attributeBindings: ['disabled:disabled', 'type', '_mood:mood'],
 	classNameBindings: ['_mood','_prefixedSize','delayedHover:delayed-hover'],
 	classNames: ['btn','ui-button'],
 	disabled: false,
@@ -63,16 +63,16 @@ export default Ember.Component.extend(SharedStyle,ItemMessaging,{
   icon: null,
   _icon: computed.alias('icon'), // in some sub-classes this will be overwritten
 	type: 'button',
-	style: 'default',
-	_mood: Ember.computed('style', function() {
-    const style = this.get('style');
-		return `btn-${style}`;
+	mood: 'default',
+	_mood: Ember.computed('mood', function() {
+    const mood = this.get('mood');
+		return `btn-${mood}`;
 	}),
   delayedHover: true,
   size: 'normal',
   width: null,
   keepFocus: false, // keep focus on button after clicking?
-	_prefixedSize: Ember.computed('style','size', function() {
+	_prefixedSize: Ember.computed('mood','size', function() {
     let size = this.get('size');
     if(!size) {
       size = 'normal';
