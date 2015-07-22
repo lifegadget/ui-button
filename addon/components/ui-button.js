@@ -104,6 +104,7 @@ export default Ember.Component.extend(Sharedmood,ItemMessaging,{
 	click: function() {
 		this.sendAction('action', this.get('_value')); // send generic action event (for non-grouped buttons)
     this._tellGroup('activate',this);
+    this._tellGroup('btnEvent', 'click', this);
     if(!this.get('keepFocus')) {
       this.$().blur();
     }

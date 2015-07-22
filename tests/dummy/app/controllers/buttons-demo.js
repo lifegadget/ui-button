@@ -30,6 +30,8 @@ export default Ember.Controller.extend({
     return strategy === 'inactive' ? 'circle-o' : false;
   }),
   iconStrategy: 'none',
+  activeButtonMood: 'warning',
+  inactiveButtonMood: 'default',
 
   actions: {
     changed: function(newValue,oldValue) {

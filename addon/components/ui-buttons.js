@@ -30,7 +30,16 @@ export default Ember.Component.extend(GroupMessaging,{
     return valueObject ? valueObject.get('value') : null;
   }),
   value: computed('selected', {
-    set: function() {
+    set: function(prop,value) {
+      const items = this.get('_registeredItems');
+      let newSelected = items.findBy('value', value);
+
+      if(typeOf(newSelected) === 'instance') {
+        console.log('setting value to: %s', newSelected.value);
+        this.set('selected', newSelected.get('elementId'));
+      } else {
+        console.log('could not find value [%s] in registered items', value);
+      }
       return this.get('selectedItem.value');
     },
     get: function() {
@@ -61,10 +70,10 @@ export default Ember.Component.extend(GroupMessaging,{
     const disabled = this.get('disabled');
     const disabledItems = typeOf(disabled) === 'boolean' ? null : new A(typeOf(disabled) === 'array' ? disabled : String(disabled).split(','));
     if(disabled !== null) {
+      console.log('disabling: %o, %o, %o', disabled, disabledItems, this.get('_registeredItems'));
       this._tellItems('disable', disabled ? true : false, disabledItems);
     }
   })),
-  howMany: computed.alias('_registeredItems.length'),
   type: null,
   _type: computed('type', function() {
     const type = this.get('type');
@@ -117,7 +126,11 @@ export default Ember.Component.extend(GroupMessaging,{
     registration: function(self,item) {
       const _registeredItems = self.get('_registeredItems');
       _registeredItems.pushObject(item);
+      self.set('howMany', _registeredItems.length);
       self.sendAction('registered', item); // specific action only
+    },
+    btnEvent: function(self, evt, ...args) {
+      console.log('button event: %s: %o', evt,args);
     }
   },
 
