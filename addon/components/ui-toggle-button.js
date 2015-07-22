@@ -13,8 +13,8 @@ export default UiButton.extend({
   onValue: true,
   off: 'Off',
   offValue: false,
-  onStyle: 'default',
-  offStyle: 'default',
+  onMood: 'default',
+  offMood: 'default',
   onIcon: null,
   offIcon: null,
   clickEffect: 'pulse',
@@ -41,14 +41,14 @@ export default UiButton.extend({
   }),
   _toggleInit: Ember.on('didInsertElement', function() {
     let title = this.get('toggleState') ? this.get('on') : this.get('off');
-    let style = this.get('toggleState') ? this.get('onStyle') : this.get('offStyle');
+    let mood = this.get('toggleState') ? this.get('onMood') : this.get('offMood');
     let icon = this.get('toggleState') ? this.get('onIcon') : this.get('offIcon');
 
     this.set('title', title);
     if(icon) {
       this.set('icon',icon);
     }
-    this.set('style', style);
+    this.set('mood', mood);
   }),
   toggleEffect: Ember.computed.alias('clickEffect'),
 
@@ -58,12 +58,12 @@ export default UiButton.extend({
   },
   refresh: function() {
     let title = this.toggleProperty('toggleState') ? this.get('on') : this.get('off');
-    let style = this.get('toggleState') ? this.get('onStyle') : this.get('offStyle');
+    let mood = this.get('toggleState') ? this.get('onMood') : this.get('offMood');
     let icon = this.get('toggleState') ? this.get('onIcon') : this.get('offIcon');
     this.set('title',title);
     if(icon) {
       this.set('icon',icon);
     }
-    this.set('style',style);
+    this.set('mood',mood);
   }
 });

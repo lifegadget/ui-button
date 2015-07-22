@@ -1,14 +1,30 @@
-<h3><code>ui-buttons</code></h3>
+<div class="row">
+  <div class="col-xs-12">
+    <h3><code>ui-buttons</code></h3>
+    <h3>Buttons Component</h3>
+    <desc>
+      The primary "grouping" components, it groups buttons together by wrapping them in the <b>div</b> of class <em>btn-group</em>. This naming convention is consistent with Bootstrap and leverages the CSS that comes with CSS to make everything look right. In a broader fashion, this component is about bringing "together" button widgets (of various types) that contextually are related and allowing them to behave in a coordinated fashion as well as visually to present themselves as a group entity.
+    </desc>
+    <h4>Messaging API</h4>
+    <desc>
+      <p>
+        The buttons components is a wrapper around the various button types and therefore has a proscribed messaging API that is taken care of for you when using the inline style but is also managed for you if your button items pass the yielded block parameter into the button's
+        <code>group</code> property.
+        <br/>
+        <div class="row">
+          <img class="col-xs-12 col-sm-7" src="images/ui-buttons-to-buttons-messaging.png" alt="messaging API">
+          <span class="col-sm-5"></span>
+        </div>
+      </p>
+    </desc>
+    <desc>
+      <note>Note: this component is still a work in progress, feel free to contribute with a PR.</note>
+    </desc>
 
-<h3>Buttons Component</h3>
-<desc>
-  The primary "grouping" components, it groups buttons together by wrapping them in the <code>div</code> of class <em>btn-group</em>. This naming convention is consistent with Bootstrap and leverages the CSS that comes with CSS to make everything look right. In a broader fashion, this component is about bringing "together" button widgets (of various types) that contextually are related and allowing them to behave in a coordinated fashion as well as visually to present themselves as a group entity.
-</desc>
-<desc>
-  <note>Note: this component is still a work in progress, feel free to contribute with a PR.</note>
-</desc>
+  </div>
+</div>
 
-<h3>Basics</h3>
+<h3>Block Style</h3>
 <hr>
 <div class="row">
   <div class="col-xs-4 col-sm-3 col-lg-2">
@@ -18,7 +34,7 @@
       {{ui-button title='baz'}}
     {{/ui-buttons}}
   </div>
-  <div class="col-xs-4 col-sm-4 col-lg-5 monospace">
+  <div class="col-xs-4 col-sm-5 col-lg-5 monospace">
   <b>\{{#ui-buttons}}</b><br/>
     &nbsp;&nbsp;\{{ui-button title='foo'}}<br/>
     &nbsp;&nbsp;\{{ui-button title='bar'}}<br/>
@@ -32,20 +48,18 @@
 <hr>
 <div class="row">
   <div class="col-xs-4 col-sm-3 col-lg-2">
-    {{#ui-buttons howMany=howMany disabled=isDisabled as |group|}}
-      {{ui-button title='foo' group=group}}
-      {{ui-button title='bar' group=group}}
-      {{ui-button title='baz' group=group}}
-    {{/ui-buttons}}<br/>
-    # registered: {{howMany}}
+    {{#ui-buttons howMany=howMany disabled=isDisabled as |g1|}}
+      {{ui-button title='foo' group=g1}}
+      {{ui-button title='bar' group=g1}}
+      {{ui-button title='baz' group=g1}}
+    {{/ui-buttons}}
   </div>
-  <div class="col-xs-4 col-sm-4 col-lg-5 monospace">
-  <b>\{{#ui-buttons howMany=howMany as |group|}}</b><br/>
-    &nbsp;&nbsp;\{{ui-button title='foo' group=group}}<br/>
-    &nbsp;&nbsp;\{{ui-button title='bar' group=group}}<br/>
-    &nbsp;&nbsp;\{{ui-button title='baz' group=group}}<br/>
-  <b>\{{/ui-buttons}}</b><br/>
-  # registered: \{{howMany}}
+  <div class="col-xs-4 col-sm-5 col-lg-5 monospace">
+  <b>\{{#ui-buttons disabled=isDisabled as |g1|}}</b><br/>
+    &nbsp;&nbsp;\{{ui-button title='foo' group=g1}}<br/>
+    &nbsp;&nbsp;\{{ui-button title='bar' group=g1}}<br/>
+    &nbsp;&nbsp;\{{ui-button title='baz' group=g1}}<br/>
+  <b>\{{/ui-buttons}}</b>
   </div>
   <div class="col-xs-4 col-sm-4 col-lg-5">
     When a button detects its <code>group</code> property has been set then it uses this to register itself
@@ -56,22 +70,20 @@
     </p>
   </div>
 </div>
-
 <hr>
-
 <div class="row">
   <div class="col-xs-4 col-sm-3 col-lg-2">
-    {{#ui-buttons as |group2|}}
-      {{ui-radio-button title='foo' group=group2}}
-      {{ui-radio-button title='bar' group=group2}}
-      {{ui-radio-button title='baz' group=group2}}
+    {{#ui-buttons as |g2|}}
+      {{ui-radio-button title='foo' group=g2}}
+      {{ui-radio-button title='bar' group=g2}}
+      {{ui-radio-button title='baz' group=g2}}
     {{/ui-buttons}}
   </div>
-  <div class="col-xs-4 col-sm-4 col-lg-5 monospace">
-  <b>\{{#ui-buttons as |group2|}}</b><br/>
-    &nbsp;&nbsp;\{{ui-radio-button title='foo' group=group2}}<br/>
-    &nbsp;&nbsp;\{{ui-radio-button title='bar' group=group2}}<br/>
-    &nbsp;&nbsp;\{{ui-radio-button title='baz' group=group2}}<br/>
+  <div class="col-xs-4 col-sm-5 col-lg-5 monospace">
+  <b>\{{#ui-buttons as |g2|}}</b><br/>
+    &nbsp;&nbsp;\{{ui-radio-button title='foo' group=g2}}<br/>
+    &nbsp;&nbsp;\{{ui-radio-button title='bar' group=g2}}<br/>
+    &nbsp;&nbsp;\{{ui-radio-button title='baz' group=g2}}<br/>
   <b>\{{/ui-buttons}}</b><br/>
   </div>
   <div class="col-xs-4 col-sm-4 col-lg-5">
@@ -79,34 +91,34 @@
     radio button, you can see that only one button at a time can be picked.
   </div>
 </div>
-
 <hr>
 
+
+
+<br/>
+<h3>Inline Style</h3>
+<hr>
 <div class="row">
   <div class="col-xs-4 col-sm-3 col-lg-2">
     {{ui-buttons
-      type='radio'
       buttons='Foo,Bar,Baz'
     }}
   </div>
-  <div class="col-xs-4 col-sm-4 col-lg-5 monospace">
+  <div class="col-xs-4 col-sm-3 col-lg-5 monospace">
   <b>\{{ui-buttons </b><br/>
-  &nbsp;&nbsp;buttons='Foo,Bar,Baz' <br/>
-  &nbsp;&nbsp;type='radio'<br/>
+  &nbsp;&nbsp;buttons='Foo,Bar,Baz'<br/>
   }}
   </div>
-  <div class="col-xs-4 col-sm-4 col-lg-5">
-    This should produce similar results but uses the more compact "inline" form. The only thing to pay attention to right now is that
+  <div class="col-xs-4 col-sm-6 col-lg-5">
+    The basic inline syntax.<br/>
+
+    <note class="note"><b>Note</b>:   by default the values that each button take on
+      are dasherized version of the string and button type is <code>ui-button</code>.</note>
   </div>
 </div>
 <hr>
-
-<br/>
-
-<h3>Managing at Group Level</h3>
-<hr>
 <div class="row">
-  <div class="col-xs-5 col-sm-4 col-lg-3">
+  <div class="col-xs-5 col-sm-3 col-lg-3">
     {{ui-buttons
       type='radio'
       buttons='Foo,Bar,Baz'
@@ -124,20 +136,20 @@
   &nbsp;&nbsp;defaultValue='bar'<br/>
   }}
   </div>
-  <div class="col-xs-4 col-sm-4 col-lg-5">
-    Here we see the more compact yet highly capable inline form of the component. A things to take note of:
+  <div class="col-xs-4 col-sm-6 col-lg-5">
+    A few more things to take note of:
     <ul>
       <li>
-        <b>CSV Loading</b> - for many properties which can take on multiple values you can obviously bind to an array in the container but you may also use a CSV string in the template to load the values. Here you see that in <code>buttons</code> and <code>disabled</code>. Also note, in the case of <i>buttons</i> the CSV input sets the 'title' as the literal string passed in but the 'value' is a <i>dasherized</i> version of the string.
+        <b>type</b> - a 'radio' or 'checkbox' are the most handy types of buttons but you must specify which type you want as the default button will be used otherwise.
       </li>
-      <li><b>Global Properties</b> - properties like <code>moodActive</code> (as well as <code>size</code> and others)</li>
+      <li><b>disabled</b> - you can set the disabled property to either a boolean which has a global effect on all the buttons or to a specific value which disables only the button which has this value</li>
     </ul>
     More on these properties later ...
   </div>
 </div>
 <hr>
 <div class="row">
-  <div class="col-xs-5 col-sm-4 col-lg-3">
+  <div class="col-xs-5 col-sm-3 col-lg-3">
     {{ui-buttons
       type='radio'
       buttons=dynButtons
@@ -157,17 +169,24 @@
   &nbsp;&nbsp;canBeEmpty=true<br/>{{/if}}
   <b>}}</b>
   </div>
-  <div class="col-xs-4 col-sm-4 col-lg-5">
+  <div class="col-xs-4 col-sm-6 col-lg-5">
     Now play around with a few parameters:
     <div class="row">
-    <div class="col-xs-3">buttons</div>
+      <div class="col-xs-3">buttons</div>
       <div class="col-xs-9">
         {{text-input value=dynButtons }}
-      </div><br/>
+      </div>
+      <br/>
+      <div class="col-xs-3">Active Mood</div>
+      <div class="col-xs-9">
+         {{ui-buttons type='radio' value=activeButtonMood buttons='default,warning,danger'}}
+      </div>
+      <br/>
       <div class="col-xs-3 downer">size</div>
       <div class="col-xs-9 downer">
         {{ui-buttons buttons=sizes size='small' type='radio' value=size }}
-      </div><br/>
+      </div>
+      <br/>
       <div class="col-xs-3 downer">canBeEmpty</div>
       <div class="col-xs-9 downer">
         {{ui-buttons
@@ -177,8 +196,8 @@
           type='radio'
           defaultValue=true
           icon=icon
-          iconActive=iconActive
-          iconInactive=iconInactive
+          onIcon=iconActive
+          offIcon=iconInactive
           canBeEmpty=false
         }}
       </div><br/>
@@ -202,7 +221,7 @@
 <h3>Data Down, Actions Up</h3>
 <hr>
 <div class="row">
-  <div class="col-xs-5 col-sm-4 col-lg-3">
+  <div class="col-xs-5 col-sm-3 col-lg-3">
     {{ui-buttons
       type='radio'
       buttons='Foo,Bar,Baz'
@@ -220,7 +239,7 @@
   &nbsp;&nbsp;changed="changed"<br/>
   }}
   </div>
-  <div class="col-xs-4 col-sm-4 col-lg-5">
+  <div class="col-xs-4 col-sm-5 col-lg-5">
     We're trying to use the now accepted norm of "data down, actions up" to avoid side-effects and therefore when you use the <code>ui-buttons</code> components you can bind input values such as <i>size</i>,
   </div>
 </div>

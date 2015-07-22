@@ -7,7 +7,7 @@ export default Ember.Mixin.create({
     return new A([]);
   }),
   _registerItem: function(child) {
-    console.log('registering %o with %o', child, this.get('elementId'), this.get('_registeredItems.length'));
+    // console.log('registering %o with %o', child, this.get('elementId'), this.get('_registeredItems.length'));
     const _registeredItems = this.get('_registeredItems');
     _registeredItems.pushObject(child);
   },
@@ -44,11 +44,10 @@ export default Ember.Mixin.create({
   /** Send a specific command to ALL registered Items */
   _tellItems: function(cmd, ...args) {
     // console.log('telling all items: %s, %o', cmd, args);
-    const itemIds = new A(this.get('_registeredItems').map(item => {
-      return item.get('elementId');
-    }));
-    itemIds.forEach(id => {
-      this._tellItem(id, cmd, ...args);
+    const items = this.get('_registeredItems');
+    // console.log('telling all items: %o', items);
+    items.forEach(item => {
+      item._groupMessage(cmd, ...args);
     });
   },
 
