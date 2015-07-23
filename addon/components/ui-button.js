@@ -1,16 +1,42 @@
 import Ember from 'ember';
 const { computed, observer, $, A, run, on, typeOf, debug, keys, get, set, inject } = Ember;    // jshint ignore:line
 import layout from '../templates/components/ui-button';
-import Sharedmood from 'ui-button/mixins/shared-style';
+import SharedMood from 'ui-button/mixins/shared-style';
 import ItemMessaging from 'ui-button/mixins/item-messaging';
 
-export default Ember.Component.extend(Sharedmood,ItemMessaging,{
+export default Ember.Component.extend(SharedMood,ItemMessaging,{
   layout: layout,
 	tagName: 'button',
   group: null,
 	attributeBindings: ['disabled:disabled', 'type', '_mood:mood'],
 	classNameBindings: ['_mood','_prefixedSize','delayedHover:delayed-hover'],
 	classNames: ['btn','ui-button'],
+
+  selectedValues: computed('group.values',{
+    set: function(param,value) {
+      if(typeOf(value) === 'string') {
+        value = value.split(',');
+      }
+      return value;
+    },
+    get: function() {
+      const values = this.get('group.values');
+
+      return values ? values : ['getter'];
+    }
+  }),
+  disabledValues: ['monkey'],
+  selected: computed('selectedValues','value',{
+    set:function(param,value,oldValue) {
+      console.log('%s was set to value "%s"; old value was "%s"', param,value,oldValue);
+      return value;
+    },
+    get:function() {
+      const selectedValues = new A(this.get('selectedValues'));
+      const value = this.get('value');
+      return selectedValues.contains(value);
+    }
+  }),
 	disabled: false,
   enabled: true,
   _enabledObserver: observer('enabled', function() {

@@ -19,33 +19,40 @@ export default Ember.Component.extend(GroupMessaging,{
   tagName: 'div',
   classNames: ['ui-button', 'btn-group'],
   classNameBindings: ['disabled:disabled:enabled'],
-  selected: null, // TODO: make this into a proper one-way binding
-  selectedItem: computed('selected', function() {
-    const { selected, _registeredItems} = this.getProperties('selected', '_registeredItems');
-    return new A(_registeredItems).findBy('elementId', selected);
-  }),
-  selectedValue: computed('selected', function() {
-    const { selected, _registeredItems} = this.getProperties('selected', '_registeredItems');
-    const valueObject = new A(_registeredItems).findBy('elementId', selected);
-    return valueObject ? valueObject.get('value') : null;
-  }),
-  value: computed('selected', {
-    set: function(prop,value) {
-      const items = this.get('_registeredItems');
-      let newSelected = items.findBy('value', value);
 
-      if(typeOf(newSelected) === 'instance') {
-        console.log('setting value to: %s', newSelected.value);
-        this.set('selected', newSelected.get('elementId'));
-      } else {
-        console.log('could not find value [%s] in registered items', value);
+  values: computed({
+    set: function(prop,value) {
+      if(typeOf(value) === 'string') {
+        value = value.split(',');
       }
-      return this.get('selectedItem.value');
+      console.log('buttons values set: %o', value);
+
+      return new A(value);
     },
     get: function() {
-      return this.get('selectedItem.value');
+      return new A([]);
     }
   }),
+
+  value: computed('values','cardinality.max',{
+    set: function(param,value) {
+      console.log('buttons value set: %o', value);
+      return value;
+    },
+    get: function() {
+      const {values, cardinality} = this.getProperties('values','cardinality');
+      if(cardinality.max === 1) {
+        return values.length > 0 ? values[0] : null;
+      } else if (cardinality.max === 0) {
+        return null;
+      } else {
+        // Cardinality greater than 1
+        return values.join(',');
+      }
+    }
+  }),
+  cardinality: { min: 0, max: 0 },
+
   defaultValue: null,
   // set default after 'init' but before 'render'
   _setDefaultValue: on('didInsertElement', function() {

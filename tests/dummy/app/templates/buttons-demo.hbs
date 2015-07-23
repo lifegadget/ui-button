@@ -3,24 +3,8 @@
     <h3><code>ui-buttons</code></h3>
     <h3>Buttons Component</h3>
     <desc>
-      The primary "grouping" components, it groups buttons together by wrapping them in the <b>div</b> of class <em>btn-group</em>. This naming convention is consistent with Bootstrap and leverages the CSS that comes with CSS to make everything look right. In a broader fashion, this component is about bringing "together" button widgets (of various types) that contextually are related and allowing them to behave in a coordinated fashion as well as visually to present themselves as a group entity.
+      The buttons component is a <i>grouping</i> of buttons that can be used in a template as either <b>block</b> or <b>inline</b> component. The examples below illustrate both styles. For more information on this component see the sections on <a href="#state-mgmt">state management</a> and <a href="#messaging">messaging</a>.
     </desc>
-    <h4>Messaging API</h4>
-    <desc>
-      <p>
-        The buttons components is a wrapper around the various button types and therefore has a proscribed messaging API that is taken care of for you when using the inline style but is also managed for you if your button items pass the yielded block parameter into the button's
-        <code>group</code> property.
-        <br/>
-        <div class="row">
-          <img class="col-xs-12 col-sm-7" src="images/ui-buttons-to-buttons-messaging.png" alt="messaging API">
-          <span class="col-sm-5"></span>
-        </div>
-      </p>
-    </desc>
-    <desc>
-      <note>Note: this component is still a work in progress, feel free to contribute with a PR.</note>
-    </desc>
-
   </div>
 </div>
 
@@ -243,3 +227,20 @@
     We're trying to use the now accepted norm of "data down, actions up" to avoid side-effects and therefore when you use the <code>ui-buttons</code> components you can bind input values such as <i>size</i>,
   </div>
 </div>
+
+
+<h3 id='messaging'>Messaging API</h3>
+<desc>
+  <p>
+    The buttons components is a wrapper around the various button types and therefore has a proscribed messaging API that is taken care of for you when using the inline style but is also managed for you if your button items pass the yielded block parameter into the button's
+    <code>group</code> property.
+    <br/>
+    <div class="row">
+      <img class="col-xs-12 col-sm-7" src="images/ui-buttons-to-buttons-messaging.png" alt="messaging API">
+      <span class="col-sm-5"></span>
+    </div>
+  </p>
+</desc>
+<desc>
+  <note>Note: this component is still a work in progress, feel free to contribute with a PR.</note>
+</desc>
