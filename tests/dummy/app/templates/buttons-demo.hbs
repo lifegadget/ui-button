@@ -32,25 +32,28 @@
 <hr>
 <div class="row">
   <div class="col-xs-4 col-sm-3 col-lg-2">
-    {{#ui-buttons howMany=howMany disabled=isDisabled as |g1|}}
+    {{#ui-buttons howMany=howMany disabled=d size=s as |g1|}}
       {{ui-button title='foo' group=g1}}
       {{ui-button title='bar' group=g1}}
       {{ui-button title='baz' group=g1}}
     {{/ui-buttons}}
   </div>
   <div class="col-xs-4 col-sm-5 col-lg-5 monospace">
-  <b>\{{#ui-buttons disabled=isDisabled as |g1|}}</b><br/>
+  <b>\{{#ui-buttons disabled=d size=s as |g1|}}</b><br/>
     &nbsp;&nbsp;\{{ui-button title='foo' group=g1}}<br/>
     &nbsp;&nbsp;\{{ui-button title='bar' group=g1}}<br/>
     &nbsp;&nbsp;\{{ui-button title='baz' group=g1}}<br/>
   <b>\{{/ui-buttons}}</b>
   </div>
   <div class="col-xs-4 col-sm-4 col-lg-5">
-    When a button detects its <code>group</code> property has been set then it uses this to register itself
-    with the group. Registration allows the <code>ui-buttons</code> component to orchestrate certain things like
-    sizing, enablement/disablement, etc.<br/>
+    Associating the button with the <code>ui-buttons</code> component is achieved by setting the <code>group</code> property to the yielded value of buttons component. This automatically takes care of item registration and allows the container to orchestrate global properties like sizing, enablement/disablement, etc.<br/>
     <p class="downer">
-      {{ui-toggle-button on='enable the group' off='disable the group' value=isDisabled}}
+      {{ui-toggle-button on='enable the group' off='disable the group' value=d}}
+      <br/>
+      <p class="downer">
+        {{ui-buttons buttons='small,normal,large' value=s size='small' cardinality='1:1'}}
+      </p>
+
     </p>
   </div>
 </div>

@@ -13,6 +13,9 @@ const xtend = (core, options, override=false) => {
 
   return core;
 };
+const DEFAULT_CARDINALITY = { min: 0, max: 0 };
+const CARDINALITY_MIN = 'cardinality-min-threashold';
+const CARDINALITY_MAX = 'cardinality-max-threashold';
 
 export default Ember.Component.extend(GroupMessaging,{
   layout: layout,
@@ -20,7 +23,19 @@ export default Ember.Component.extend(GroupMessaging,{
   classNames: ['ui-button', 'btn-group'],
   classNameBindings: ['disabled:disabled:enabled'],
 
-  values: computed({
+  /**
+   * A set of buttons/items which are selected
+   */
+  selected: computed({
+    set: function(prop,value) {
+      return typeOf(value) === 'array' ? new Set(value) : new Set([value]);
+    },
+    get: function() {
+      return new Set();
+    }
+  }),
+
+  values: computed('selected',{
     set: function(prop,value) {
       if(typeOf(value) === 'string') {
         value = value.split(',');
@@ -30,13 +45,19 @@ export default Ember.Component.extend(GroupMessaging,{
       return new A(value);
     },
     get: function() {
-      return new A([]);
+      const {selected,_registeredItems} = this.getProperties('selected','_registeredItems');
+      return _registeredItems.filter(item => {
+        return selected.has(item.get('elementId'));
+      }).map(item => {
+        return item.get('value');
+      });
     }
   }),
 
-  value: computed('values','cardinality.max',{
+  value: computed('selected','cardinality.max',{
     set: function(param,value) {
       console.log('buttons value set: %o', value);
+      this.set('values', [value]);
       return value;
     },
     get: function() {
@@ -51,36 +72,59 @@ export default Ember.Component.extend(GroupMessaging,{
       }
     }
   }),
-  cardinality: { min: 0, max: 0 },
+  cardinality: computed({
+    set: function(prop,value) {
+      if(typeOf(value) === 'string') {
+        const [min,max] = value.split(':');
+        return {min: min, max: max};
+      }
 
-  defaultValue: null,
-  // set default after 'init' but before 'render'
-  _setDefaultValue: on('didInsertElement', function() {
-    const defaultValue = this.get('defaultValue');
-    const defaultButton = this.get('_registeredItems').findBy('value', defaultValue);
-
-    this.set('selected', defaultButton ? defaultButton.get('elementId') : null);
-  }),
-  emptyNestObserver: on('init',observer('selected','canBeEmpty', function() {
-    const { selected, canBeEmpty, _registeredItems } = this.getProperties('selected', 'value', 'canBeEmpty', '_registeredItems' );
-    if (!canBeEmpty && !selected && _registeredItems.length > 0) {
-      this._tellItem(_registeredItems[0].get('elementId'), 'activate');
+      return value;
+    },
+    get: function() {
+      return DEFAULT_CARDINALITY;
     }
-  })),
-  canBeEmpty: true,
+  }),
+  disabled: computed({
+     set: function(param,value) {
+       if(typeOf(value) === 'string') {
+         value = value.split(',');
+       }
+       console.log('buttons disabled set: %o', value);
+       return value;
+     },
+     get: function() {
+       return false;
+     }
+   }),
+
+  // defaultValue: null,
+  // // set default after 'init' but before 'render'
+  // _setDefaultValue: on('didInsertElement', function() {
+  //   const defaultValue = this.get('defaultValue');
+  //   const defaultButton = this.get('_registeredItems').findBy('value', defaultValue);
+
+  //   this.set('selected', defaultButton ? defaultButton.get('elementId') : null);
+  // }),
+  // emptyNestObserver: on('init',observer('selected','canBeEmpty', function() {
+  //   const { selected, canBeEmpty, _registeredItems } = this.getProperties('selected', 'value', 'canBeEmpty', '_registeredItems' );
+  //   if (!canBeEmpty && !selected && _registeredItems.length > 0) {
+  //     this._tellItem(_registeredItems[0].get('elementId'), 'activate');
+  //   }
+  // })),
   icon: null,
   iconActive: null,
   iconInactive: null,
-  disabled: null,
+
   // Disable (false), Enable(true), by value (array/string), or ignore (null) Item's disablement state
-  disabledObserver: on('didInsertElement',observer('disabled', function() {
-    const disabled = this.get('disabled');
-    const disabledItems = typeOf(disabled) === 'boolean' ? null : new A(typeOf(disabled) === 'array' ? disabled : String(disabled).split(','));
-    if(disabled !== null) {
-      console.log('disabling: %o, %o, %o', disabled, disabledItems, this.get('_registeredItems'));
-      this._tellItems('disable', disabled ? true : false, disabledItems);
-    }
-  })),
+  // disabledObserver: on('didInsertElement',observer('disabled', function() {
+  //   const disabled = this.get('disabled');
+  //   const disabledItems = typeOf(disabled) === 'boolean' ? null : new A(typeOf(disabled) === 'array' ? disabled : String(disabled).split(','));
+  //   if(disabled !== null) {
+  //     console.log('disabling: %o, %o, %o', disabled, disabledItems, this.get('_registeredItems'));
+  //     this._tellItems('disable', disabled ? true : false, disabledItems);
+  //   }
+  // })),
   type: null,
   _type: computed('type', function() {
     const type = this.get('type');
@@ -108,32 +152,66 @@ export default Ember.Component.extend(GroupMessaging,{
     items = typeOf(items) === 'string' ? items.split(',') : new A(items);
 
     return new A(items.map( item => {
-        const baseline = typeOf(item) === 'object' ? item : { value: dasherize(item), title: item };
+        const baseline = typeOf(item) === 'object' ? item : { value: dasherize(item), title: item, mood: 'default' };
         return xtend(baseline,getPropertyValues(globalItemProps));
     }));
   }),
 
   buttonActions: {
-    activate: function(self, item){
-      self.sendAction('changed', item ? item.value : null, self.get('selectedValue'), item); // new value, old value, object
-      self.set('selected', item.get('elementId'));
-      self.sendAction('activated', item); // specific action
-      return true;
-    },
-    deactivate: function(self, item) {
-      // reject single-item states which can not be empty
-      if(!self.get('canBeEmpty') && typeOf(self.selected) !== 'array') {
-        return false;
+    /**
+     * When a button is clicked, it requests through this message to be toggled between active/inactive state (aka, button's "selected" prop).
+     * @param  {object}   self reference to ui-buttons instance
+     * @param  {object}   item reference to the requesting instance
+     * @return {boolean}  passes back a boolean response to the requestor to indicate whether or not the request has been granted
+     */
+    btnPressed: function(self, item){
+      const id = item.get('elementId');
+      const {cardinality,selected} = self.getProperties('cardinality','selected');
+      if(selected.has(id)) {
+        // asking for deactivation
+        if(selected.size <= cardinality.min) {
+          self.sendAction('onError', CARDINALITY_MIN, `there must be at least ${cardinality.min} buttons`);
+          return false;
+        }
+        selected.delete(id);
+        self.sendAction('onChanged', 'unselected', item);
+    } else {
+        // asking for activation
+        if(Number.isInteger(cardinality.max) && selected.size >= cardinality.max) {
+          self.sendAction('onError', CARDINALITY_MAX, 'there must be no more than ${cardinality.max} buttons');
+          return false;
+        }
+        selected.add(id);
+        self.sendAction('onChanged', 'selected', item);
       }
-      self.sendAction('changed', null, self.get('selectedValue'), item); // general action gets the value
-      self.set('selected', null);
-      self.sendAction('deactivated', item); // specific action gets the "deactivated item"
       return true;
     },
+    // deactivate: function(self, item) {
+    //   // reject single-item states which can not be empty
+    //   if(!self.get('canBeEmpty') && typeOf(self.selected) !== 'array') {
+    //     return false;
+    //   }
+    //   self.sendAction('onChanged', null, self.get('selectedValue'), item); // general action gets the value
+    //   self.set('selected', null);
+    //   self.sendAction('deactivated', item); // specific action gets the "deactivated item"
+    //   return true;
+    // },
     registration: function(self,item) {
       const _registeredItems = self.get('_registeredItems');
+      const selectedValues = computed.alias('group.selected');
+      const disabled = computed.alias('group.disabled');
+      const size = computed.alias('group.size');
       _registeredItems.pushObject(item);
-      self.set('howMany', _registeredItems.length);
+      // link globally managed properties back to item ("data down")
+      Ember.defineProperty(item,'selectedValues',selectedValues);
+      Ember.defineProperty(item,'disabledValues',disabled);
+      Ember.defineProperty(item,'size',size);
+      // there WAS a problem where 'elementId' wasn't available at init but it should be now
+      // so set the 'value' of the item to the elementId if it is still null
+      if(item.get('value') === null) {
+        item.set('value', item.get('elementId'));
+      }
+
       self.sendAction('registered', item); // specific action only
     },
     btnEvent: function(self, evt, ...args) {

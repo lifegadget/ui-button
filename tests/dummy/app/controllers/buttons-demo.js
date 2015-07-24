@@ -3,7 +3,8 @@ const { computed, observer, $, A, run, on, typeOf, debug, keys, get, set, inject
 
 export default Ember.Controller.extend({
 
-  isDisabled: false,
+  d: false,
+  s: 'normal',
   howMany: null,
   canBeEmptyValues: [
     { title: 'Yes', value: true },

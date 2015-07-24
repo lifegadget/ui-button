@@ -64,6 +64,6 @@ export default UiButton.extend({
     if(icon) {
       this.set('icon',icon);
     }
-    this.set('mood',mood);
+    // this.set('mood',mood);
   }
 });

@@ -16,52 +16,48 @@ export default UiButton.extend({
     return this.get('selected') === this.get('elementId');
   }),
   // TITLE
-  title: null,
-  active: null, // will override title if set (while in active state)
-  inactive: null, // will overrride title if set (while in inactive state)
-  _title: computed('title', 'active', 'inactive', 'toggleState', function() {
-    const { title, active, inactive, toggleState } = this.getProperties('title', 'active', 'inactive', 'toggleState');
-    if (toggleState) {
-      return active ? active : title;
-    } else {
-      return inactive ? inactive : title;
-    }
-  }),
-  // mood
-  mood: 'default',
-  moodActive: null,
-  moodInactive: null,
-  _mood: computed('mood', 'moodActive', 'moodInactive', 'toggleState', function() {
-    const { mood, moodActive, moodInactive , toggleState } = this.getProperties('mood', 'moodActive', 'moodInactive', 'toggleState');
-    let moodFamily;
-    if (toggleState) {
-      moodFamily = moodActive ? moodActive : mood;
-    } else {
-      moodFamily = moodInactive ? moodInactive : mood;
-    }
-    moodFamily = moodFamily ? moodFamily : 'default';
+  // title: null,
+  // active: null, // will override title if set (while in active state)
+  // inactive: null, // will overrride title if set (while in inactive state)
+  // _title: computed('title', 'active', 'inactive', 'toggleState', function() {
+  //   const { title, active, inactive, toggleState } = this.getProperties('title', 'active', 'inactive', 'toggleState');
+  //   if (toggleState) {
+  //     return active ? active : title;
+  //   } else {
+  //     return inactive ? inactive : title;
+  //   }
+  // }),
+  // _mood: computed('mood', 'moodActive', 'moodInactive', 'toggleState', function() {
+  //   const { mood, moodActive, moodInactive , toggleState } = this.getProperties('mood', 'moodActive', 'moodInactive', 'toggleState');
+  //   let moodFamily;
+  //   if (toggleState) {
+  //     moodFamily = moodActive ? moodActive : mood;
+  //   } else {
+  //     moodFamily = moodInactive ? moodInactive : mood;
+  //   }
+  //   moodFamily = moodFamily ? moodFamily : 'default';
 
-    return `btn-${moodFamily}`;
-  }),
+  //   return `btn-${moodFamily}`;
+  // }),
 
   // ICON
-  icon: null,
-  iconActive: null,
-  iconInactive: null,
-  _icon: computed('iconActive', 'iconInactive', 'icon', 'toggleState', function() {
-    const { icon, iconActive, iconInactive, toggleState } = this.getProperties('icon', 'iconActive', 'iconInactive', 'toggleState');
-    if (toggleState) {
-      return iconActive ? iconActive : icon;
-    } else {
-      return iconInactive ? iconInactive : icon;
-    }
-  }),
+  // icon: null,
+  // iconActive: null,
+  // iconInactive: null,
+  // _icon: computed('iconActive', 'iconInactive', 'icon', 'toggleState', function() {
+  //   const { icon, iconActive, iconInactive, toggleState } = this.getProperties('icon', 'iconActive', 'iconInactive', 'toggleState');
+  //   if (toggleState) {
+  //     return iconActive ? iconActive : icon;
+  //   } else {
+  //     return iconInactive ? iconInactive : icon;
+  //   }
+  // }),
 
-  canBeEmpty: computed.alias('group.canBeEmpty'),
+  // canBeEmpty: computed.alias('group.canBeEmpty'),
   // clickEffect: 'pulse',
 
-  toggleState: false,
-  value: true, // this can be set to any value and represents the "state" when this radio choice is selected
+  // toggleState: false,
+  // value: true, // this can be set to any value and represents the "state" when this radio choice is selected
   click: function() {
     const {elementId, selected, canBeEmpty} = this.getProperties('elementId', 'selected', 'canBeEmpty');
     if(elementId === selected && canBeEmpty ) {

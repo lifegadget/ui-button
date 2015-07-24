@@ -6,8 +6,9 @@ const _styleProperties = ['maxWidth', 'width', 'minWidth','height'];
 
 var SharedStyle = Ember.Mixin.create({
   attributeBindings: ['_style:style'],
+  concatenatedProperties: ['classNames', 'classNameBindings', 'attributeBindings','_propertyUnset'],
 
-  _propertyUnset: [], // properties to UNSET on a component so component can manage them instead of base class
+  _propertyUnset: _styleProperties, // properties to UNSET on a component so component can manage them instead of base class
 
   _style: computed(..._styleProperties, function() {
     const styles = this.getProperties(..._styleProperties);
