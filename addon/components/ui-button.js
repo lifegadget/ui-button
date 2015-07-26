@@ -38,15 +38,6 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
 	classNameBindings: ['mood','_prefixedSize','delayedHover:delayed-hover'],
 	classNames: ['btn','ui-button'],
 
-  isSelectable: false, // allows for control to move into the selected state, by default buttons are just pressed not selected
-  selectedValues: computed('group.selected', {
-    set: function(param,value) {
-
-    },
-    get: function() {
-      return new Set();
-    }
-  }),
   disabledValues: computed('group.disabled',{
     set: function(param,value) {
       if(typeOf(value) === 'string') {
@@ -58,26 +49,20 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
       return new A([]);
     }
   }),
-  selected: computed('selectedValues.size','value',{
-    set:function(param,value) {
-      return value;
-    },
-    get:function() {
-      const {selectedValues,elementId} = this.getProperties('selectedValues', 'elementId');
-      console.log('selected GET for %s: ', elementId, selectedValues);
-      return selectedValues.has(elementId);
-    }
-  }),
-  disabled: computed('disabledValues','value', {
-    set: function(prop, setterValue) {
+  disabled: computed('disabledValues','disabledValues.size','value', {
+    set: function(prop, setterValue, previousValue) {
       let {value,disabledValues} = this.getProperties('onValue','disabledValues');
       if(setterValue) {
-        // this.applyEffect(this.get('disableEffect'));
+        if(typeOf(previousValue) !== 'undefined') {
+          this.applyEffect(this.get('disableEffect'));
+        }
         disabledValues = disabledValues.filter( item => {
           return item === value; // remove from list
         });
       } else {
-        // this.applyEffect(this.enabled);
+        if(typeOf(previousValue) !== 'undefined') {
+          this.applyEffect(this.enabled);
+        }
         disabledValues.pushObject(value);
       }
 
@@ -142,10 +127,11 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
       const valueStates = new Set([onValue,offValue]);
       if(onValue !== offValue && isSelectable && valueStates.has(value)) {
         console.log('switching state [%s]', this.get('elementId'));
-        this.set('selected', value === onValue ? true : false);
         console.log('selected set to %s; which has a value of %s', this.get('selected'), this.get('selected') ? onValue : offValue);
       } else if (isSelectable) {
         // it's selectable so only set the current state's value
+        this.set(selected ? 'onValue' : 'offValue', value);
+      } else if (isSelectable) {
         this.set(selected ? 'onValue' : 'offValue', value);
       } else {
         // if setter value doesn't meet above criteria then set both on and off states to this new value
@@ -231,21 +217,48 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
   clickEffect: null,
   enabledEffect: null,
   disabledEffect: null,
+  // SELECTION
+  // allows for control to move into the selected state, by default buttons are just pressed not selected
+  isSelectable: false,
+  // Contains a list of elementIds which are selected (if not grouped then the only ID would be itself)
+  selectedValues: on('init',computed('group.selected', {
+    set: function(param,value) {
+      return typeOf(value) === 'array' ? new Set(value) : new Set([value]);
+    },
+    get: function() {
+      return new Set();
+    }
+  })),
+  selected: computed('selectedValues.size','selectedValues',{
+    set:function(param,setterValue) {
+      // you shouldn't directly SET this property so the setterValue is ignored
+      // and this action is just seen as an explicit 're-get' of the property
+      debug(`selected was called as a setter[${fromSetter}], the state of this property should instead be influenced by setting the value property`);
+      return this.isSelected();
+    },
+    get:function() {
+      return this.isSelected();
+    }
+  }),
+  isSelected() {
+    const {selectedValues,elementId} = this.getProperties('selectedValues', 'elementId');
+    console.log('isSelected queried for %s: %o', elementId, selectedValues);
+    return selectedValues.has(elementId);
+  },
+  toggleSelection() {
+    const {selectedValues,elementId,isSelectable} = this.getProperties('selectedValues','elementId','isSelectable');
+    if(isSelectable) {
+      selectedValues.has(elementId) ? selectedValues.delete(elementId) : selectedValues.add(elementId); // jshint ignore:line
+      this.notifyPropertyChange('selected');
+    }
+  },
+  // CLICK
 	click() {
 		this.sendAction('action', this); // send generic action event (for non-grouped buttons)
     if(this.group) {
-      this._tellGroup('pressed', this);
-    } else if(this.get('isSelectable')) {
-      const {selectedValues,elementId} = this.getProperties('selectedValues','elementId');
-      // this.toggleProperty('selected');
-      if(selectedValues.has(elementId)) {
-        console.log('had %s already so deleting', elementId);
-        selectedValues.delete(elementId);
-      } else {
-        console.log('didn\'t have %s already so adding to %o', elementId,selectedValues);
-        selectedValues.add(elementId);
-      }
-      this.notifyPropertyChange('selectedValues');
+      this._tellGroup('pressed', this); // group will toggle selection if it deems fit
+    } else {
+      this.toggleSelection(); // if not in group then must take own responsibility for toggling
     }
 
     if(!this.get('keepFocus')) {
