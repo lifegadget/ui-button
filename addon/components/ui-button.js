@@ -16,6 +16,9 @@ const objectifyJson = content => {
 
   return content;
 };
+const nullOrUndefined = thingy => {
+  return typeOf(thingy) === 'null' || typeOf(thingy) === 'undefined' ? true : false;
+};
 import layout from '../templates/components/ui-button';
 import SharedMood from 'ui-button/mixins/shared-style';
 import ItemMessaging from 'ui-button/mixins/item-messaging';
@@ -29,14 +32,21 @@ const MOOD_DEFAULT = 'btn-default';
 
 export default Ember.Component.extend(SharedMood,ItemMessaging,{
   layout: layout,
-  type: 'button',
 	tagName: 'button',
   group: null,
 	attributeBindings: ['disabled:disabled', 'type'],
 	classNameBindings: ['mood','_prefixedSize','delayedHover:delayed-hover'],
 	classNames: ['btn','ui-button'],
 
-  selectedValues: [], // note: this is converted to point group after registration
+  isSelectable: false, // allows for control to move into the selected state, by default buttons are just pressed not selected
+  selectedValues: computed('group.selected', {
+    set: function(param,value) {
+
+    },
+    get: function() {
+      return new Set();
+    }
+  }),
   disabledValues: computed('group.disabled',{
     set: function(param,value) {
       if(typeOf(value) === 'string') {
@@ -48,15 +58,14 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
       return new A([]);
     }
   }),
-  selected: computed('selectedValues',{
-    set:function(param,value,oldValue) {
-      console.log('%s was set to value "%s"; old value was "%s"', param,value,oldValue);
+  selected: computed('selectedValues.size','value',{
+    set:function(param,value) {
       return value;
     },
     get:function() {
-      const selectedValues = new A(this.get('selectedValues'));
-      const value = this.get('onValue');
-      return contains(selectedValues,value);
+      const {selectedValues,elementId} = this.getProperties('selectedValues', 'elementId');
+      console.log('selected GET for %s: ', elementId, selectedValues);
+      return selectedValues.has(elementId);
     }
   }),
   disabled: computed('disabledValues','value', {
@@ -101,6 +110,8 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
   offTitle: null,
   activeTitle: computed.alias('onTitle'),
   inactiveTitle: computed.alias('offTitle'),
+  on: computed.alias('onTitle'),
+  off: computed.alias('offTitle'),
   title: computed('onTitle','offTitle','selected',{
     set: function(param,value) {
       this.set('onTitle', value);
@@ -122,17 +133,35 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
   inactiveValue: computed.alias('offValue'),
   value: computed('onValue','offValue','selected','offTitle','onTitle',{
     set:function(prop,value) {
+      const {onValue,offValue,selected,isSelectable} = this.getProperties('onValue', 'offValue', 'selected','isSelectable');
+      if(typeOf(value) === 'undefined' || typeOf(value) === 'null') {
+        return selected ? onValue : offValue;
+      }
       value = objectifyJson(value); // if its a JSON string convert to object
-      this.set('onValue', value);
-      this.set('offValue', value);
-      return value;
+      // If the button has two value states and setter value is one of them then just switch to the right state
+      const valueStates = new Set([onValue,offValue]);
+      if(onValue !== offValue && isSelectable && valueStates.has(value)) {
+        console.log('switching state [%s]', this.get('elementId'));
+        this.set('selected', value === onValue ? true : false);
+        console.log('selected set to %s; which has a value of %s', this.get('selected'), this.get('selected') ? onValue : offValue);
+      } else if (isSelectable) {
+        // it's selectable so only set the current state's value
+        this.set(selected ? 'onValue' : 'offValue', value);
+      } else {
+        // if setter value doesn't meet above criteria then set both on and off states to this new value
+        this.set('onValue', value);
+        this.set('offValue', value);
+      }
+
+     return value;
     },
     get:function() {
       const {onValue,offValue,selected,onTitle,offTitle} = this.getProperties('onValue', 'offValue', 'selected', 'onTitle', 'offTitle');
+      console.log('getting value [%s]: %s, %s', selected, onValue, offValue);
       if(selected) {
-        return onValue ? onValue : camelize(onTitle);
+        return nullOrUndefined(onValue) ? camelize(onTitle) : onValue;
       } else {
-        return offValue ? offValue : camelize(offTitle);
+        return nullOrUndefined(offValue) ? camelize(offTitle) : offValue;
       }
     }
   }),
@@ -204,7 +233,21 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
   disabledEffect: null,
 	click() {
 		this.sendAction('action', this); // send generic action event (for non-grouped buttons)
-    this._tellGroup('pressed', this);
+    if(this.group) {
+      this._tellGroup('pressed', this);
+    } else if(this.get('isSelectable')) {
+      const {selectedValues,elementId} = this.getProperties('selectedValues','elementId');
+      // this.toggleProperty('selected');
+      if(selectedValues.has(elementId)) {
+        console.log('had %s already so deleting', elementId);
+        selectedValues.delete(elementId);
+      } else {
+        console.log('didn\'t have %s already so adding to %o', elementId,selectedValues);
+        selectedValues.add(elementId);
+      }
+      this.notifyPropertyChange('selectedValues');
+    }
+
     if(!this.get('keepFocus')) {
       this.$().blur();
     }
@@ -252,9 +295,5 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
     if(this.get('tooltip')){
       this.$().tooltip('destroy');
     }
-  }),
-
-  buttonActions: {
-
-  }
+  })
 });

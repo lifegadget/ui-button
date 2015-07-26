@@ -116,15 +116,6 @@ export default Ember.Component.extend(GroupMessaging,{
   iconActive: null,
   iconInactive: null,
 
-  // Disable (false), Enable(true), by value (array/string), or ignore (null) Item's disablement state
-  // disabledObserver: on('didInsertElement',observer('disabled', function() {
-  //   const disabled = this.get('disabled');
-  //   const disabledItems = typeOf(disabled) === 'boolean' ? null : new A(typeOf(disabled) === 'array' ? disabled : String(disabled).split(','));
-  //   if(disabled !== null) {
-  //     console.log('disabling: %o, %o, %o', disabled, disabledItems, this.get('_registeredItems'));
-  //     this._tellItems('disable', disabled ? true : false, disabledItems);
-  //   }
-  // })),
   type: null,
   _type: computed('type', function() {
     const type = this.get('type');
@@ -186,26 +177,18 @@ export default Ember.Component.extend(GroupMessaging,{
       }
       return true;
     },
-    // deactivate: function(self, item) {
-    //   // reject single-item states which can not be empty
-    //   if(!self.get('canBeEmpty') && typeOf(self.selected) !== 'array') {
-    //     return false;
-    //   }
-    //   self.sendAction('onChanged', null, self.get('selectedValue'), item); // general action gets the value
-    //   self.set('selected', null);
-    //   self.sendAction('deactivated', item); // specific action gets the "deactivated item"
-    //   return true;
-    // },
     registration: function(self,item) {
       const _registeredItems = self.get('_registeredItems');
       const selectedValues = computed.alias('group.selected');
       const disabled = computed.alias('group.disabled');
       const size = computed.alias('group.size');
+      const cardinality = computed.alias('group.cardinality');
       _registeredItems.pushObject(item);
       // link globally managed properties back to item ("data down")
       Ember.defineProperty(item,'selectedValues',selectedValues);
       Ember.defineProperty(item,'disabledValues',disabled);
       Ember.defineProperty(item,'size',size);
+      Ember.defineProperty(item,'cardinality',cardinality);
       // there WAS a problem where 'elementId' wasn't available at init but it should be now
       // so set the 'value' of the item to the elementId if it is still null
       if(item.get('value') === null) {
