@@ -70,7 +70,7 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
 
       return setterValue;
     },
-    get: function(param, previousValue) {
+    get: function() {
       const {value,disabledValues} = this.getProperties('value','disabledValues');
       return typeOf(disabledValues) === 'boolean' ? disabledValues : contains(disabledValues,value);
     }
@@ -95,7 +95,7 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
   inactiveTitle: computed.alias('offTitle'),
   on: computed.alias('onTitle'),
   off: computed.alias('offTitle'),
-  title: computed('onTitle','offTitle','selected',{
+  title: computed('title','selected',{
     set: function(param,value) {
       this.set('onTitle', value);
       this.set('offTitle', value);
@@ -114,33 +114,54 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
   offValue: null,
   activeValue: computed.alias('onValue'),
   inactiveValue: computed.alias('offValue'),
-  value: computed('onValue','offValue','selected','offTitle','onTitle','disabled',{
-    set:function(prop,value) {
+  value: computed('selected',{
+    set:function(prop,setter) {
       const {onValue,offValue,selected,isSelectable,selectedValues} = this.getProperties('onValue', 'offValue', 'selected', 'isSelectable', 'selectedValues');
       const onOffValues = new Set([onValue,offValue]);
-      value = objectifyJson(value); // if its a JSON string convert to object
+      setter = objectifyJson(setter); // if its a JSON string convert to object
 
-      if (onOffValues.has(value) && isSelectable) {
-        const currentValue = selected ? onValue : offValue;
-        if(true) {
-          console.log('toggling value [%s] because within onoff values: %s, %s. Selected values: %o', this.get('elementId'), onValue, offValue, selectedValues);
-          this.setSelection(value === onValue);
+      // Toggle to the new value property if it exists as a possible value state, otherwise set value property
+      if (isSelectable) {
+        if (!onOffValues.has(setter)) {
+          // Selectable button but value being set to is NOT a current state
+          if(selected) {
+            console.log('setting two-state button to new value for SELECTED: %s', setter);
+            this.set('onValue', setter);
+          } else {
+            console.log('setting two-state button to new value for UNSELECTED: %s', setter);
+            this.set('offValue', setter);
+          }
+        } else {
+          if(setter === offValue) {
+            console.log('setter was offValue: %s', setter);
+            this.set('selected',false);
+          } else {
+            console.log('setter was onValue: %s', setter);
+            this.set('selected',true);
+          }
         }
       } else {
-        this.set('onValue', value);
-        this.set('offValue', value);
+        // Non-selectable buttons should just have both on and off states set to the setter value
+        this.set('onValue', setter);
+        this.set('offValue', setter);
       }
-
-     return value;
+      console.log('%s elements value is being SET to %s', this.get('elementId'), setter);
+     return setter;
     },
     get:function() {
       const {onValue,offValue,selected,onTitle,offTitle} = this.getProperties('onValue', 'offValue', 'selected', 'onTitle', 'offTitle');
-      console.log('getting value [%s]: %s, %s', selected, onValue, offValue);
+      console.log('GET value from %s [%s]: %s, %s', this.get('elementId'), selected, onValue, offValue);
       if(selected) {
         return nullOrUndefined(onValue) ? camelize(onTitle) : onValue;
       } else {
         return nullOrUndefined(offValue) ? camelize(offTitle) : offValue;
       }
+    }
+  }),
+  _valueInit: on('willRender', function() {
+    const {value,onValue,offValue,selected,elementId} = this.getProperties('value','onValue','offValue','selected','elementId');
+    if(onValue === value) {
+      this.set('selected',true);
     }
   }),
   param: computed.alias('value'),
@@ -209,22 +230,31 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
   // allows for control to move into the selected state, by default buttons are just pressed not selected
   isSelectable: false,
   // Contains a list of elementIds which are selected (if not grouped then the only ID would be itself)
-  selectedValues: on('init',computed('group.selected', {
+  selectedValues: computed('group.selected', {
     set: function(param,value) {
       return typeOf(value) === 'array' ? new Set(value) : new Set([value]);
     },
     get: function() {
       return new Set();
     }
-  })),
-  selected: computed('selectedValues.size','selectedValues','value',{
-    set:function(param,setterValue) {
-      // you shouldn't directly SET this property so the setterValue is ignored
-      // and this action is just seen as an explicit 're-get' of the property
-      debug(`selected was called as a setter[${setterValue}], the state of this property should instead be influenced by setting the value property`);
-      return this.isSelected();
+  }),
+  selected: computed('value',{
+    set:function(param,setter) {
+      if(typeOf(setter) === 'boolean') {
+        this.setSelection(setter);
+        return setter;
+      } else {
+        // setting to a string value
+        const selectedValues = this.get('selectedValues');
+        if(selectedValues.has(setter)) {
+          selectedValues.delete(setter);
+        } else {
+          selectedValues.add(setter);
+        }
+      }
     },
     get:function() {
+      console.log('GET selected for %s: %o', this.get('elementId'), this.get('selectedValues'));
       return this.isSelected();
     }
   }),
@@ -249,11 +279,9 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
       run.next( () => {
         const registeredElementId = this.get('elementId');
         this._setSelection(flag, selectedValues, registeredElementId);
-        this.notifyPropertyChange('selected');
       });
     } else {
       this._setSelection(flag, selectedValues, elementId);
-      this.notifyPropertyChange('selected');
     }
   },
   _setSelection(flag,selectedValues,elementId) {
@@ -263,6 +291,7 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
     } else {
       selectedValues.delete(elementId);
     }
+    // this.notifyPropertyChange('selected');
   },
   // CLICK
 	click() {
@@ -299,7 +328,6 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
       return false;
     }
     try {
-      console.log('applying %s effect = %s [%s,%s,%o]', effectType, effect, initialized, this.get('elementId'), this.$());
       run.next(() => {
         this.$().addClass('animated ' + effect);
         this.$().one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', () => {
