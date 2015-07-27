@@ -11,6 +11,6 @@ export default UiButton.extend({
   offValue: false,
   isSelectable: true,
   clickEffect: 'pulse',
-  toggleEffect: Ember.computed.alias('clickEffect')
+  toggleEffect: computed.alias('clickEffect')
 
 });

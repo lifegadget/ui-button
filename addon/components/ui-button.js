@@ -34,6 +34,10 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
   layout: layout,
 	tagName: 'button',
   group: null,
+  initialized: false,
+  _initialized: on('didInsertElement', function() {
+    this.set('initialized', true);
+  }),
 	attributeBindings: ['disabled:disabled', 'type'],
 	classNameBindings: ['mood','_prefixedSize','delayedHover:delayed-hover'],
 	classNames: ['btn','ui-button'],
@@ -43,39 +47,33 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
       if(typeOf(value) === 'string') {
         value = value.split(',');
       }
-      return new A(value);
+      return new Set(value);
     },
     get: function() {
-      return new A([]);
+      return new Set([]);
     }
   }),
   disabled: computed('disabledValues','disabledValues.size','value', {
     set: function(prop, setterValue, previousValue) {
       let {value,disabledValues} = this.getProperties('onValue','disabledValues');
       if(setterValue) {
-        if(typeOf(previousValue) !== 'undefined') {
-          this.applyEffect(this.get('disableEffect'));
+        if(previousValue === false) {
+          this.applyEffect('disabledEffect');
         }
-        disabledValues = disabledValues.filter( item => {
-          return item === value; // remove from list
-        });
+        disabledValues.delete(setterValue);
       } else {
-        if(typeOf(previousValue) !== 'undefined') {
-          this.applyEffect(this.enabled);
+        if(previousValue === true) {
+          this.applyEffect('enabledEffect');
         }
-        disabledValues.pushObject(value);
+        disabledValues.add(value);
       }
 
       return setterValue;
     },
-    get: function() {
+    get: function(param, previousValue) {
       const {value,disabledValues} = this.getProperties('value','disabledValues');
       return typeOf(disabledValues) === 'boolean' ? disabledValues : contains(disabledValues,value);
     }
-  }),
-  disabledObserver: observer('disabled', function() {
-    const {disabled,disabledEffect,enabledEffect} = this.getProperties('disabled', 'disabledEffect', 'enabledEffect');
-    this.applyEffect(disabled ? disabledEffect : enabledEffect);
   }),
   enabled: computed('disabled', {
     set: function(param,value) {
@@ -116,25 +114,19 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
   offValue: null,
   activeValue: computed.alias('onValue'),
   inactiveValue: computed.alias('offValue'),
-  value: computed('onValue','offValue','selected','offTitle','onTitle',{
+  value: computed('onValue','offValue','selected','offTitle','onTitle','disabled',{
     set:function(prop,value) {
-      const {onValue,offValue,selected,isSelectable} = this.getProperties('onValue', 'offValue', 'selected','isSelectable');
-      if(typeOf(value) === 'undefined' || typeOf(value) === 'null') {
-        return selected ? onValue : offValue;
-      }
+      const {onValue,offValue,selected,isSelectable,selectedValues} = this.getProperties('onValue', 'offValue', 'selected', 'isSelectable', 'selectedValues');
+      const onOffValues = new Set([onValue,offValue]);
       value = objectifyJson(value); // if its a JSON string convert to object
-      // If the button has two value states and setter value is one of them then just switch to the right state
-      const valueStates = new Set([onValue,offValue]);
-      if(onValue !== offValue && isSelectable && valueStates.has(value)) {
-        console.log('switching state [%s]', this.get('elementId'));
-        console.log('selected set to %s; which has a value of %s', this.get('selected'), this.get('selected') ? onValue : offValue);
-      } else if (isSelectable) {
-        // it's selectable so only set the current state's value
-        this.set(selected ? 'onValue' : 'offValue', value);
-      } else if (isSelectable) {
-        this.set(selected ? 'onValue' : 'offValue', value);
+
+      if (onOffValues.has(value) && isSelectable) {
+        const currentValue = selected ? onValue : offValue;
+        if(true) {
+          console.log('toggling value [%s] because within onoff values: %s, %s. Selected values: %o', this.get('elementId'), onValue, offValue, selectedValues);
+          this.setSelection(value === onValue);
+        }
       } else {
-        // if setter value doesn't meet above criteria then set both on and off states to this new value
         this.set('onValue', value);
         this.set('offValue', value);
       }
@@ -213,10 +205,6 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
   tooltipHtml: true,
   tooltipTrigger: 'hover',
   tooltipTemplate: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
-  // effects
-  clickEffect: null,
-  enabledEffect: null,
-  disabledEffect: null,
   // SELECTION
   // allows for control to move into the selected state, by default buttons are just pressed not selected
   isSelectable: false,
@@ -229,11 +217,11 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
       return new Set();
     }
   })),
-  selected: computed('selectedValues.size','selectedValues',{
+  selected: computed('selectedValues.size','selectedValues','value',{
     set:function(param,setterValue) {
       // you shouldn't directly SET this property so the setterValue is ignored
       // and this action is just seen as an explicit 're-get' of the property
-      debug(`selected was called as a setter[${fromSetter}], the state of this property should instead be influenced by setting the value property`);
+      debug(`selected was called as a setter[${setterValue}], the state of this property should instead be influenced by setting the value property`);
       return this.isSelected();
     },
     get:function() {
@@ -242,7 +230,6 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
   }),
   isSelected() {
     const {selectedValues,elementId} = this.getProperties('selectedValues', 'elementId');
-    console.log('isSelected queried for %s: %o', elementId, selectedValues);
     return selectedValues.has(elementId);
   },
   toggleSelection() {
@@ -252,9 +239,34 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
       this.notifyPropertyChange('selected');
     }
   },
+  setSelection(flag) {
+    const {selectedValues, elementId} = this.getProperties('selectedValues', 'elementId');
+    if(typeOf(flag) !== 'boolean') {
+      debug('setSelection called with non-boolean value, this is not expected behaviour');
+    }
+    console.log('setting %s selectedValues to %o', elementId, flag);
+    if(elementId === null) {
+      run.next( () => {
+        const registeredElementId = this.get('elementId');
+        this._setSelection(flag, selectedValues, registeredElementId);
+        this.notifyPropertyChange('selected');
+      });
+    } else {
+      this._setSelection(flag, selectedValues, elementId);
+      this.notifyPropertyChange('selected');
+    }
+  },
+  _setSelection(flag,selectedValues,elementId) {
+    console.log('Setting %s to %s', elementId,flag);
+    if(flag) {
+      selectedValues.add(elementId);
+    } else {
+      selectedValues.delete(elementId);
+    }
+  },
   // CLICK
 	click() {
-		this.sendAction('action', this); // send generic action event (for non-grouped buttons)
+    this.sendAction('action', this); // send generic action event (for non-grouped buttons)
     if(this.group) {
       this._tellGroup('pressed', this); // group will toggle selection if it deems fit
     } else {
@@ -264,18 +276,39 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
     if(!this.get('keepFocus')) {
       this.$().blur();
     }
-    if(this.clickEffect) {
-      this.applyEffect(this.clickEffect);
+    const {isSelectable,selected} = this.getProperties('isSelectable', 'selected');
+    this.applyEffect('clickEffect');
+    if(isSelectable) {
+      if(selected) {
+        this.applyEffect('onEffect')
+      } else {
+        this.applyEffect('offEffect');
+      }
     }
-	},
-  applyEffect(effect) {
-    if(!effect) {
+  },
+  // EFFECTS
+  clickEffect: null,
+  enabledEffect: null,
+  disabledEffect: null,
+  onEffect: null,
+  offEffect: null,
+  applyEffect(effectType) {
+    const effect = this.get(effectType);
+    const initialized = this.get('initialized');
+    if(!effect || !initialized) {
       return false;
     }
-    this.$().addClass('animated ' + effect);
-    this.$().one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', () => {
-      this.$().removeClass('animated ' + effect);
-    });
+    try {
+      console.log('applying %s effect = %s [%s,%s,%o]', effectType, effect, initialized, this.get('elementId'), this.$());
+      run.next(() => {
+        this.$().addClass('animated ' + effect);
+        this.$().one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', () => {
+          this.$().removeClass('animated ' + effect);
+        });
+      })
+    } catch (e) {
+      // debug(`could not effect ${effect} animation: ${e}`);
+    }
   },
 
   _init: on('init', function() {

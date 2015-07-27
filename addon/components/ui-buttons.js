@@ -4,7 +4,7 @@ import layout from '../templates/components/ui-buttons';
 import GroupMessaging from 'ui-button/mixins/group-messaging';
 const dasherize = Ember.String.dasherize;
 const globalItemProps = ['mood','moodActive','moodInactive','size','icon','iconActive','iconInactive'];
-const xtend = (core, options, override=false) => {
+const xtend = function (core, options, override=false){
   for (var index in options) {
     if(override || !core[index]) {
       core[index] = options[index];
