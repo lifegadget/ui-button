@@ -254,6 +254,7 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
   }),
   isSelected() {
     const {selectedValues,elementId} = this.getProperties('selectedValues', 'elementId');
+    console.log('checking for selection: %o, %o', elementId, selectedValues);
     return selectedValues.has(elementId);
   },
   toggleSelection() {

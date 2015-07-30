@@ -31,7 +31,7 @@ export default Ember.Component.extend(GroupMessaging,{
   classNames: ['ui-button', 'btn-group'],
   classNameBindings: ['disabled:disabled:enabled'],
 
-
+  // SELECTED VALUES
   selectedValues: computed('selected', {
     set: function(prop,value) {
       debug('"selectedValues" should not be SET, set/bind to "select" property instead!');
@@ -39,9 +39,20 @@ export default Ember.Component.extend(GroupMessaging,{
       return value;
     },
     get: function() {
-      return this.selected;
+      this._selectedValues();
     }
   }),
+  _selectedValues() {
+    const selected = this.get('selected');
+    if(typeOf(selected) === 'object' && selected.size) {
+      return selected;
+    }
+    if(typeOf(selected) === 'string') {
+      return new Set(selected);
+    }
+
+    return new Set();
+  },
 
   values: computed('selectedValues',{
     set: function(prop,value) {
@@ -93,44 +104,46 @@ export default Ember.Component.extend(GroupMessaging,{
       return DEFAULT_CARDINALITY;
     }
   }),
-   /**
-    * The API exposes the 'disabled' property, when it changes disabledButtons responds to that
-    * depending on the type of input received:
-    *
-    *    - If a BOOLEAN all of the registered controls are added/removed from the set.
-    *    - If a STRING it will check first to see if the string starts with "ember..."
-    *      if so then it will assume this is a direct reference to the elementId,
-    *      otherwise it will assume its a value and any items which match this value will
-    *      have their elementId looked up.
-    *    - If an ARRAY it will just convert to a Set
-    *    - If a SET is passed in then it will just proxy it across
-    *
-    * Regardless of disabled type, disabledButtons will be an ES6 Set which indicates
-    * which elementId's should be disabled.
-    */
-    disabledButtons: computed('disabled', {
-      set(_,value) {
-        debug('disabledButtons should not be SET, set disabled property instead!');
-        this.set('disabled', value);
-        return value;
-      },
-      get(_,previousValue) {
-        return this._disabledButtons();
-      }
-    }),
-    _disabledButtons() {
-      let disabled = this.get('disabled');
-      if (disabled.size) {
-        return disabled;
-      }
-      if(typeof(disabled) === 'string') {
-        if(disabled.substr(0,5) === 'ember') {
-          const id = this.get('_registeredItems').filterBy('elementId', disabled);
-          return new Set().add(id);
-        } else {
+ /**
+  * The API exposes the 'disabled' property, when it changes disabledButtons responds to that
+  * depending on the type of input received:
+  *
+  *    - If a BOOLEAN all of the registered controls are added/removed from the set.
+  *    - If a STRING it will check first to see if the string starts with "ember..."
+  *      if so then it will assume this is a direct reference to the elementId,
+  *      otherwise it will assume its a value and any items which match this value will
+  *      have their elementId looked up.
+  *    - If an ARRAY it will just convert to a Set
+  *    - If a SET is passed in then it will just proxy it across
+  *
+  * Regardless of disabled type, disabledButtons will be an ES6 Set which indicates
+  * which elementId's should be disabled.
+  */
+  disabled: new Set(),
+  disabledButtons: computed('disabled', {
+    set(_,value) {
+      debug('disabledButtons should not be SET, set disabled property instead!');
+      this.set('disabled', value);
+      return value;
+    },
+    get(_,previousValue) {
+      return this._disabledButtons();
+    }
+  }),
+  _disabledButtons() {
+    let disabled = this.get('disabled');
+    if (disabled.size) {
+      return disabled;
+    }
+    if(typeof(disabled) === 'string') {
+      if(disabled.substr(0,5) === 'ember') {
+        const id = this.get('_registeredItems').filterBy('elementId', disabled);
+        return new Set().add(id);
+      } else {
         const ids = this.get('_registeredItems').map(item => {
           return item.get('elementId');
         });
+        console.log('disabled with a string: %s, %o');
         return ids ? new Set(disabled) : new Set();
       }
     }
