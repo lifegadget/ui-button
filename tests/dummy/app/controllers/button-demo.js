@@ -15,7 +15,7 @@ export default Ember.Controller.extend({
       console.log('toggling');
       this.toggleProperty('toggledEnablement');
     },
-    buttonAction: function(btn) {
+    buttonAction: function(action,btn) {
       let {elementId,value} = Ember.getProperties(btn, 'elementId','value');
       let type = Ember.typeOf(value);
       if(type === 'object') {

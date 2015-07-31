@@ -16,21 +16,13 @@ const objectifyJson = content => {
 
   return content;
 };
-const nullOrUndefined = thingy => {
-  return typeOf(thingy) === 'null' || typeOf(thingy) === 'undefined' ? true : false;
-};
 import layout from '../templates/components/ui-button';
-import SharedMood from 'ui-button/mixins/shared-style';
+import SharedStyle from 'ui-button/mixins/shared-style';
 import ItemMessaging from 'ui-button/mixins/item-messaging';
 
-const contains = function(source, lookFor) {
-  return typeOf(source) === 'array' ? source.filter( item => {
-    return item === lookFor;
-  }).length > 0 : false;
-};
-const MOOD_DEFAULT = 'btn-default';
+const MOOD_DEFAULT = 'default';
 
-export default Ember.Component.extend(SharedMood,ItemMessaging,{
+const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   layout: layout,
 	tagName: 'button',
   group: null,
@@ -39,7 +31,7 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
     this.set('initialized', true);
   }),
 	attributeBindings: ['disabled:disabled', 'type'],
-	classNameBindings: ['mood','_prefixedSize','delayedHover:delayed-hover'],
+	classNameBindings: ['_mood','_prefixedSize','delayedHover:delayed-hover'],
 	classNames: ['btn','ui-button'],
 
   disabledButtons: computed({
@@ -54,27 +46,39 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
     }
   }),
   disabled: computed('disabledButtons', {
-    set: function(prop, setterValue, previousValue) {
-      let {value,disabledButtons} = this.getProperties('onValue','disabledButtons');
-      if(setterValue) {
-        if(previousValue === false) {
-          this.applyEffect('disabledEffect');
-        }
-        disabledButtons.delete(setterValue);
-      } else {
-        if(previousValue === true) {
-          this.applyEffect('enabledEffect');
-        }
-        disabledButtons.add(value);
-      }
-
-      return setterValue;
+    set: function(_, value) {
+      this.setDisabled(value);
+      return value;
     },
     get: function() {
-      const {elementId,disabledButtons} = this.getProperties('elementId','disabledButtons');
-      return disabledButtons && disabledButtons.has(elementId) ? true : false;
+      return this.getDisabled();
     }
   }),
+  setDisabled(value) {
+    const {elementId, disabledButtons} = this.getProperties('elementId','disabledButtons');
+    const doItNow = value => {
+      if(value && !disabledButtons.has(elementId)) {
+        disabledButtons.add(elementId);
+      } else if(!value && disabledButtons.has(elementId)) {
+        disabledButtons.delete(elementId);
+      }
+      this.notifyPropertyChange('disabledButtons');
+    }; // end doItNow
+
+    // defer setting if elementId isn't ready
+    if(elementId) {
+      doItNow(value);
+    } else {
+      run.next(() => {
+        doItNow(value);
+      });
+    }
+  },
+  getDisabled() {
+    let {disabledButtons,elementId} = this.getProperties('disabledButtons','elementId');
+    return disabledButtons ? disabledButtons.has(elementId) : false;
+  },
+
   enabled: computed('disabled', {
     set: function(param,value) {
       this.set('disabled', !value);
@@ -91,110 +95,87 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
 	name: 'Submit',
   onTitle: null,
   offTitle: null,
-  activeTitle: computed.alias('onTitle'),
-  inactiveTitle: computed.alias('offTitle'),
   on: computed.alias('onTitle'),
   off: computed.alias('offTitle'),
-  title: computed('title','selected',{
+  title: computed('title','toggled',{
     set: function(param,value) {
       this.set('onTitle', value);
       this.set('offTitle', value);
       return value;
     },
     get: function() {
-      const {onTitle,offTitle,selected} = this.getProperties('onTitle', 'offTitle', 'selected');
-      if(selected) {
+      const {onTitle,offTitle,toggled} = this.getProperties('onTitle', 'offTitle', 'toggled');
+      if(toggled) {
         return onTitle ? onTitle : '';
       } else {
         return offTitle ? offTitle : '';
       }
     }
   }),
-  onValue: null,
-  offValue: null,
-  activeValue: computed.alias('onValue'),
-  inactiveValue: computed.alias('offValue'),
-  value: computed('selected',{
-    set(prop,setter) {
-      // const {onValue,offValue,selected,isToggleable} = this.getProperties('onValue', 'offValue', 'selected', 'isToggleable');
-      // const onOffValues = new Set([onValue,offValue]);
-      setter = objectifyJson(setter); // if its a JSON string convert to object
 
-      // // Toggle to the new value property if it exists as a possible value state, otherwise set value property
-      // if (isToggleable) {
-      //   if (!onOffValues.has(setter)) {
-      //     // Selectable button but value being set to is NOT a current state
-      //     if(selected) {
-      //       this.set('onValue', setter);
-      //     } else {
-      //       this.set('offValue', setter);
-      //     }
-      //   } else {
-      //     if(setter === offValue) {
-      //       this.set('selected',false);
-      //     } else {
-      //       this.set('selected',true);
-      //     }
-      //   }
-      // } else {
-      //   // Non-selectable buttons should just have both on and off states set to the setter value
-      //   // this.set('onValue', setter);
-      //   // this.set('offValue', setter);
-      // }
-      console.log('%s value SETTER is: %o', this.get('elementId'), setter);
-     return setter;
+  // VALUE
+  value: computed('toggled',{
+    set(_,value) {
+      this.setValue(value);
+      return value;
     },
     get() {
-      console.log('%s button value got', this.get('elementId'));
-      const {onValue,offValue,selected,onTitle,offTitle} = this.getProperties('onValue', 'offValue', 'selected', 'onTitle', 'offTitle');
-      if(selected) {
-        return nullOrUndefined(onValue) ? camelize(onTitle) : onValue;
+      return this.getValue();
+    }
+  }),
+  setValue(value) {
+    if(this.isToggleable) {
+      const toggled = this.get('toggled');
+      const property = toggled ? 'onValue' : 'offValue';
+      const otherProperty = toggled ? 'offValue' : 'onValue';
+      if(value === this.get(otherProperty)) {
+        console.log('toggling button based on value set');
+        this.toggleProperty('toggled');
       } else {
-        return nullOrUndefined(offValue) ? camelize(offTitle) : offValue;
+        this.set(property, value);
       }
+    } else {
+      this.set('onValue', value); // TODO: remove this and check everything works
+      this.set('offValue', value);
     }
-  }),
-  _valueInit: on('willRender', function() {
-    const {value,onValue} = this.getProperties('value','onValue');
-    if(onValue === value) {
-      this.set('selected',true);
-    }
-  }),
-  param: computed.alias('value'),
+  },
+  getValue() {
+    const {onValue,offValue,toggled} = this.getProperties('onValue', 'offValue', 'toggled');
+    return toggled ? onValue : offValue;
+  },
 
-  onIcon: null,
-  offIcon: null,
-  activeIcon: computed.alias('onIcon'),
-  inactiveIcon: computed.alias('offIcon'),
   icon: null,
-  _icon: computed('icon','onIcon','offIcon','selected',function() {
-      const {icon,onIcon,offIcon,selected} = this.getProperties('icon','onIcon','offIcon', 'selected');
+  _icon: computed('icon','onIcon','offIcon','toggled',function() {
+      const {icon,onIcon,offIcon,toggled} = this.getProperties('icon','onIcon','offIcon', 'toggled');
       if (icon) {
         return icon;
       } else {
-        return selected ? onIcon : offIcon;
+        return toggled ? onIcon : offIcon;
       }
     }
   ),
-  onMood: null,
-  offMood: null,
-  activeMood: computed.alias('onMood'),
-  inactiveMood: computed.alias('offMood'),
-  mood: computed('onMood','offMood','selected', {
-    set: function(param,value) {
-      this.set('onMood', value);
-      this.set('offMood', value);
+
+  mood: null,
+  _mood: computed('mood','onMood','offMood','toggled', {
+    set: function(_,value) {
       return value;
     },
     get: function() {
-      const {onMood,offMood,selected} = this.getProperties('onMood','offMood', 'selected');
-      if(selected) {
-        return onMood ? `btn-${onMood}` : MOOD_DEFAULT;
-      } else {
-        return offMood ? `btn-${offMood}` : MOOD_DEFAULT;
-      }
+      return this.getMood();
     }
   }),
+  getMood() {
+    const {mood,toggled} = this.getProperties('mood', 'toggled');
+    const property = toggled ? 'onMood' : 'offMood';
+    let officialMood;
+    if(mood) {
+      officialMood = mood;
+    } else {
+      officialMood = this.get(property) ? this.get(property) : MOOD_DEFAULT;
+    }
+
+    return `btn-${officialMood}`;
+  },
   delayedHover: true,
   size: 'normal',
   width: null,
@@ -233,20 +214,12 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
       return new Set();
     }
   }),
-  selected: computed('value',{
-    set:function(param,setter) {
-      if(typeOf(setter) === 'boolean') {
-        this.setSelection(setter);
-        return setter;
-      } else {
-        // setting to a string value
-        const selectedValues = this.get('selectedValues');
-        if(selectedValues.has(setter)) {
-          selectedValues.delete(setter);
-        } else {
-          selectedValues.add(setter);
-        }
-      }
+  // SELECTED
+  selected: computed('elementId','selectedValues',{
+    set:function(_,value) {
+      debug('calling the setter of selected is considered bad practice');
+      this._tellGroup('select', this, value);
+      return value;
     },
     get:function() {
       return this.isSelected();
@@ -254,9 +227,12 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
   }),
   isSelected() {
     const {selectedValues,elementId} = this.getProperties('selectedValues', 'elementId');
-    console.log('checking for selection: %o, %o', elementId, selectedValues);
-    return selectedValues.has(elementId);
+
+    return selectedValues ? selectedValues.has(elementId) : false;
   },
+  toggled: false,
+
+
   toggleSelection() {
     const {selectedValues,elementId,isToggleable} = this.getProperties('selectedValues','elementId','isToggleable');
     if(isToggleable) {
@@ -287,7 +263,11 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
   },
   // CLICK
 	click() {
-    this.sendAction('action', this); // send generic action event (for non-grouped buttons)
+    this.sendAction('action', 'pressed', this); // send generic action event (for non-grouped buttons)
+    if(this.isToggleable) {
+      this.toggleProperty('toggled');
+      this.sendAction('action', 'toggled', this);
+    }
     if(this.group) {
       this._tellGroup('pressed', this); // group will toggle selection if it deems fit
     } else {
@@ -331,7 +311,13 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
     }
   },
 
-  _init: on('init', function() {
+  // EVENTS
+  // -------------------------
+  _i: on('init', function() { return this._init(); }),
+  _r: on('willRender', function() { return this.willRender(); }),
+  _d: on('willDestroyElement', function() { return this.willDestroyElement(); }),
+
+  _init() {
     this._tellGroup('registration', this);
     const tooltip = this.get('tooltip');
     if(tooltip) {
@@ -356,10 +342,17 @@ export default Ember.Component.extend(SharedMood,ItemMessaging,{
         }
       });
     }
-  }),
-  _willRemoveElement: on('willDestroyElement', function() {
+  },
+  willRender() {
+    // do something
+  },
+  willDestroyElement() {
     if(this.get('tooltip')){
       this.$().tooltip('destroy');
     }
-  })
+  }
 });
+
+export default uiButton;
+uiButton[Ember.NAME_KEY] = 'UI Button';
+

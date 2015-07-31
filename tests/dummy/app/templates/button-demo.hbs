@@ -256,60 +256,51 @@
 
 <div class="row">
     <div class="col-xs-2">
-        {{ui-button title='just do it' action='buttonAction' param='just do it'}}
+        {{ui-button title='just do it' action='buttonAction' value='just do it'}}
     </div>
     <div class="snippet col-xs-10">
-        \{{ui-button action='buttonAction' param='just do it'}}
-    </div>
-</div>
-<div class="row">
-    <div class="col-xs-2">
-        {{ui-button title='what\'s in a name?' action='buttonAction' value='just do it'}}
-    </div>
-    <div class="snippet col-xs-10">
-        <span class="descriptive">'value' and 'param' are the same thing (aka, param is an alias for value)</span><br/>
         \{{ui-button action='buttonAction' value='just do it'}}
     </div>
 </div>
 <div class="row">
     <div class="col-xs-2">
-        {{ui-button title='objectify me' action='buttonAction' param='{"id":"object", "value":"foobar"}' }}
+        {{ui-button title='objectify me' action='buttonAction' value='{"id":"object", "value":"foobar"}' }}
     </div>
     <div class="snippet col-xs-10">
         <span class="descriptive">JSON strings are converted to objects</span><br/>
-        \{{ui-button title='objectify me' action='buttonAction' param='{"id":"object", "value":"foobar"}'}}
+        \{{ui-button title='objectify me' action='buttonAction' value='{"id":"object", "value":"foobar"}'}}
     </div>
 </div>
 <div class="row">
     <div class="col-xs-2">
-        {{ui-button title='bad juju' action='buttonAction' param='{id:"object", value:"foobar"}' }}
+        {{ui-button title='bad juju' action='buttonAction' value='{id:"object", value:"foobar"}' }}
     </div>
     <div class="snippet col-xs-10">
         <span class="descriptive">Passing in a string representation of a JS object but not a JSON representation doesn't work</span><br/>
         <span class="snippet">
-            \{{ui-button title='bad juju' action='buttonAction' param='{id:"object", value:"foobar"}'}}
+            \{{ui-button title='bad juju' action='buttonAction' value='{id:"object", value:"foobar"}'}}
         </span>
     </div>
 </div>
 <div class="row">
     <div class="col-xs-2">
-        {{ui-button title='I am not a number' action='buttonAction' param='5' }}
+        {{ui-button title='I am not a number' action='buttonAction' value='5' }}
     </div>
     <div class="snippet col-xs-10">
         <span class="descriptive">Passing in a numeric string will be recognized as a string</span><br/>
         <span class="snippet">
-            \{{ui-button title='I am not a number' action='buttonAction' param='5'}}
+            \{{ui-button title='I am not a number' action='buttonAction' value='5'}}
         </span>
     </div>
 </div>
 <div class="row">
     <div class="col-xs-2">
-        {{ui-button title='I AM a number' action='buttonAction' param=5 }}
+        {{ui-button title='I AM a number' action='buttonAction' value=5 }}
     </div>
     <div class="snippet col-xs-10">
         <span class="descriptive">Passing in a numeric value will be recognized as a number</span><br/>
         <span class="snippet">
-            \{{ui-button title='I AM a number' action='buttonAction' param=5}}
+            \{{ui-button title='I AM a number' action='buttonAction' value=5}}
         </span>
     </div>
 </div>

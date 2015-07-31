@@ -39,11 +39,12 @@ export default Ember.Component.extend(GroupMessaging,{
       return value;
     },
     get: function() {
-      this._selectedValues();
+      return this.getSelectedValues();
     }
   }),
-  _selectedValues() {
+  getSelectedValues() {
     const selected = this.get('selected');
+    console.log('selectedValues for %s: %o', this.get('elementId'), selected);
     if(typeOf(selected) === 'object' && selected.size) {
       return selected;
     }
@@ -54,6 +55,7 @@ export default Ember.Component.extend(GroupMessaging,{
     return new Set();
   },
 
+  // VALUES
   values: computed('selectedValues',{
     set: function(prop,value) {
       if(typeOf(value) === 'string') {
@@ -91,19 +93,40 @@ export default Ember.Component.extend(GroupMessaging,{
       }
     }
   }),
-   cardinality: computed({
-    set: function(prop,value) {
-      if(typeOf(value) === 'string') {
-        const [min,max] = value.split(':');
-        return {min: min, max: max};
-      }
-
+  // CARDINALITY
+  defaultCardinality: {min: 0, max: 0},
+  cardinality: computed('_cardinality', {
+    set: function(_,value) {
+      this.setCardinality(value);
       return value;
     },
     get: function() {
-      return DEFAULT_CARDINALITY;
+      return this.getCardinality();
     }
   }),
+  setCardinality(value) {
+    if(typeOf(value) === 'string') {
+      let [min,max] = value.split(':');
+      if (!max) {
+        max = min;
+      }
+      value = {min: Number(min), max: Number(max)};
+    } else if(typeOf(value) !== 'object' || !value.min || !value.max) {
+      debug('Trying to set cardinality with improper structure so using default cardinality instead. Attempted: %o', value);
+      value = this.get('defaultCardinality');
+    }
+
+    this.set('_cardinality', value);
+  },
+  getCardinality() {
+    const {_cardinality, defaultCardinality} = this.getProperties('_cardinality', 'defaultCardinality');
+    if(typeOf(_cardinality) === 'undefined') {
+      this.set('_cardinality', defaultCardinality);
+      return defaultCardinality;
+    } else {
+      return _cardinality;
+    }
+  },
  /**
   * The API exposes the 'disabled' property, when it changes disabledButtons responds to that
   * depending on the type of input received:
@@ -126,7 +149,7 @@ export default Ember.Component.extend(GroupMessaging,{
       this.set('disabled', value);
       return value;
     },
-    get(_,previousValue) {
+    get() {
       return this._disabledButtons();
     }
   }),
@@ -135,17 +158,21 @@ export default Ember.Component.extend(GroupMessaging,{
     if (disabled.size) {
       return disabled;
     }
-    if(typeof(disabled) === 'string') {
+    // get elementIds from registered buttons
+    const ids = this.get('_registeredItems').map(item => {
+      return item.get('elementId');
+    });
+    if(typeOf(disabled) === 'string') {
       if(disabled.substr(0,5) === 'ember') {
         const id = this.get('_registeredItems').filterBy('elementId', disabled);
         return new Set().add(id);
       } else {
-        const ids = this.get('_registeredItems').map(item => {
-          return item.get('elementId');
-        });
-        console.log('disabled with a string: %s, %o');
-        return ids ? new Set(disabled) : new Set();
+        const idsWithValue = ids.filterBy('value',disabled);
+        return idsWithValue ? new Set(idsWithValue) : new Set();
       }
+    }
+    if(typeOf(disabled) === 'boolean' ) {
+      return disabled ? new Set(ids) : new Set();
     }
     return typeOf(disabled) === 'array' ? new Set(disabled) : new Set();
   },
@@ -207,16 +234,17 @@ _type: computed('type', function() {
      * @param  {object}   item reference to the requesting instance
      * @return {boolean}  passes back a boolean response to the requestor to indicate whether or not the request has been granted
      */
-     btnPressed: function(self, item){
+     pressed(self, item){
+      console.log('buttons pressed: %o', item);
       const id = item.get('elementId');
-      const {cardinality,selected} = self.getProperties('cardinality','selected');
-      if(selected.has(id)) {
+      const {cardinality,selectedValues} = self.getProperties('cardinality','selectedValues');
+      if(selectedValues.has(id)) {
         // asking for deactivation
-        if(selected.size <= cardinality.min) {
+        if(selectedValues.size <= cardinality.min) {
           self.sendAction('onError', CARDINALITY_MIN, `there must be at least ${cardinality.min} buttons`);
           return false;
         }
-        selected.delete(id);
+        selectedValues.delete(id);
         self.sendAction('onChanged', 'unselected', item);
       } else {
         // asking for activation
@@ -224,10 +252,21 @@ _type: computed('type', function() {
           self.sendAction('onError', CARDINALITY_MAX, 'there must be no more than ${cardinality.max} buttons');
           return false;
         }
-        selected.add(id);
+        selectedValues.add(id);
         self.sendAction('onChanged', 'selected', item);
+        item.notifyPropertyChange('selectedValues');
       }
       return true;
+    },
+    /**
+     * A request to select or deselect a button item
+     * @param  {object}   self
+     * @param  {object}   item
+     * @param  {boolean}  state   whether to enable(true) or disable(false)
+     * @return {null}
+     */
+    select(self, item, state) {
+
     },
     registration: function(self,item) {
       const _registeredItems = self.get('_registeredItems');

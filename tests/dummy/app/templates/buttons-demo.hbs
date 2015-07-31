@@ -32,7 +32,7 @@
 <hr>
 <div class="row">
   <div class="col-xs-4 col-sm-3 col-lg-2">
-    {{#ui-buttons howMany=howMany disabled=d size=s as |g1|}}
+    {{#ui-buttons howMany=howMany disabled=d size=s cardinality='1:1' as |g1|}}
       {{ui-button title='foo' group=g1}}
       {{ui-button title='bar' group=g1}}
       {{ui-button title='baz' group=g1}}
