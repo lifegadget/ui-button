@@ -1,1 +1,0 @@
-export { default } from 'ui-button/components/test-cp';

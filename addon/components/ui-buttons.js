@@ -13,7 +13,6 @@ const xtend = function (core, options, override=false){
 
   return core;
 };
-const DEFAULT_CARDINALITY = { min: 0, max: 0 };
 const CARDINALITY_MIN = 'cardinality-min-threashold';
 const CARDINALITY_MAX = 'cardinality-max-threashold';
 
@@ -248,7 +247,7 @@ _type: computed('type', function() {
         self.sendAction('onChanged', 'unselected', item);
       } else {
         // asking for activation
-        if(Number.isInteger(cardinality.max) && selected.size >= cardinality.max) {
+        if(Number.isInteger(cardinality.max) && selectedValues.size >= cardinality.max) {
           self.sendAction('onError', CARDINALITY_MAX, 'there must be no more than ${cardinality.max} buttons');
           return false;
         }
@@ -265,8 +264,8 @@ _type: computed('type', function() {
      * @param  {boolean}  state   whether to enable(true) or disable(false)
      * @return {null}
      */
-    select(self, item, state) {
-
+    select(self, item, state) { //jshint ignore:line
+      // TODO: implement
     },
     registration: function(self,item) {
       const _registeredItems = self.get('_registeredItems');

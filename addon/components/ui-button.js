@@ -1,48 +1,30 @@
 import Ember from 'ember';
 const { computed, observer, $, A, run, on, typeOf, debug, get, set, inject } = Ember;    // jshint ignore:line
-const camelize = thingy => {
-  return thingy ? Ember.String.camelize(thingy) : thingy;
-};
-const objectifyJson = content => {
-  if (typeOf(content) === 'string' && content.slice(0,1) === '{' && content.slice(-1) === '}') {
-    let object = {};
-    try {
-     object = JSON.parse(content);
-     return object;
-    } catch (e) {
-      // invalid JSON
-    }
-  }
-
-  return content;
-};
 import layout from '../templates/components/ui-button';
 import SharedStyle from 'ui-button/mixins/shared-style';
 import ItemMessaging from 'ui-button/mixins/item-messaging';
-
 const MOOD_DEFAULT = 'default';
+const isSetter = value => {
+  const truthy = typeOf(value) !== 'null' && typeOf(value) !== 'undefined';
+  console.log('is "%s" setter? %s', value, truthy);
+  return truthy;
+};
 
 const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   layout: layout,
 	tagName: 'button',
   group: null,
-  initialized: false,
-  _initialized: on('willRender', function() {
-    this.set('initialized', true);
-  }),
+
 	attributeBindings: ['disabled:disabled', 'type'],
-	classNameBindings: ['_mood','_prefixedSize','delayedHover:delayed-hover'],
+	classNameBindings: ['selected:active','_mood','_size','delayedHover:delayed-hover'],
 	classNames: ['btn','ui-button'],
 
   disabledButtons: computed({
-    set: function(param,value) {
-      if(typeOf(value) === 'string') {
-        value = value.split(',');
-      }
-      return new Set(value);
+    set: function(_,value) {
+      return value;
     },
     get: function() {
-      return new Set([]);
+      return new Set();
     }
   }),
   disabled: computed('disabledButtons', {
@@ -55,16 +37,20 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
     }
   }),
   setDisabled(value) {
+    console.log('setting disabled: %o', value);
     const {elementId, disabledButtons} = this.getProperties('elementId','disabledButtons');
     const doItNow = value => {
-      if(value && !disabledButtons.has(elementId)) {
-        disabledButtons.add(elementId);
-      } else if(!value && disabledButtons.has(elementId)) {
-        disabledButtons.delete(elementId);
+      const id = this.get('elementId');
+      if(value) {
+        disabledButtons.add(id);
+        this.set('disabledButtons', disabledButtons);
+        this.applyEffect('disabledEffect');
+      } else {
+        disabledButtons.delete(id);
+        this.set('disabledButtons', disabledButtons);
+        this.applyEffect('enabledEffect');
       }
-      this.notifyPropertyChange('disabledButtons');
     }; // end doItNow
-
     // defer setting if elementId isn't ready
     if(elementId) {
       doItNow(value);
@@ -98,21 +84,26 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   on: computed.alias('onTitle'),
   off: computed.alias('offTitle'),
   title: computed('title','toggled',{
-    set: function(param,value) {
-      this.set('onTitle', value);
-      this.set('offTitle', value);
+    set: function(_,value) {
+      this.setTitle(value);
       return value;
     },
     get: function() {
-      const {onTitle,offTitle,toggled} = this.getProperties('onTitle', 'offTitle', 'toggled');
-      if(toggled) {
-        return onTitle ? onTitle : '';
-      } else {
-        return offTitle ? offTitle : '';
-      }
+      return this.getTitle();
     }
   }),
-
+  setTitle(value) {
+    this.set('onTitle', value);
+    this.set('offTitle', value);
+  },
+  getTitle() {
+    const {onTitle,offTitle,toggled} = this.getProperties('onTitle', 'offTitle', 'toggled');
+    if(toggled) {
+      return onTitle ? onTitle : '';
+    } else {
+      return offTitle ? offTitle : '';
+    }
+  },
   // VALUE
   value: computed('toggled',{
     set(_,value) {
@@ -124,24 +115,18 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
     }
   }),
   setValue(value) {
-    if(this.isToggleable) {
-      const toggled = this.get('toggled');
-      const property = toggled ? 'onValue' : 'offValue';
-      const otherProperty = toggled ? 'offValue' : 'onValue';
-      if(value === this.get(otherProperty)) {
-        console.log('toggling button based on value set');
-        this.toggleProperty('toggled');
-      } else {
-        this.set(property, value);
-      }
-    } else {
-      this.set('onValue', value); // TODO: remove this and check everything works
-      this.set('offValue', value);
+    const {toggled, isToggleable} = this.getProperties('toggled','isToggleable');
+    const toggleValue = this.get(toggled ? 'onValue' : 'offValue');
+    const otherToggleValue = this.get(toggled ? 'offValue' : 'onValue');
+    if(isToggleable && value === otherToggleValue && otherToggleValue !== toggleValue) {
+      this.toggle();
     }
   },
   getValue() {
     const {onValue,offValue,toggled} = this.getProperties('onValue', 'offValue', 'toggled');
-    return toggled ? onValue : offValue;
+    console.log('value getter called');
+
+    return toggled ? onValue : offValue; // NOTE: if not toggleable; toggled prop will always be false
   },
 
   icon: null,
@@ -180,7 +165,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   size: 'normal',
   width: null,
   keepFocus: false, // keep focus on button after clicking?
-	_prefixedSize: Ember.computed('mood','size', function() {
+	_size: Ember.computed('mood','size', function() {
     let size = this.get('size');
     if(!size) {
       size = 'normal';
@@ -265,27 +250,23 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
 	click() {
     this.sendAction('action', 'pressed', this); // send generic action event (for non-grouped buttons)
     if(this.isToggleable) {
-      this.toggleProperty('toggled');
+      this.toggle();
       this.sendAction('action', 'toggled', this);
     }
     if(this.group) {
       this._tellGroup('pressed', this); // group will toggle selection if it deems fit
-    } else {
-      this.toggleSelection(); // if not in group then must take own responsibility for toggling
     }
 
     if(!this.get('keepFocus')) {
       this.$().blur();
     }
-    const {isToggleable,selected, onValue,offValue} = this.getProperties('isToggleable', 'selected','onValue', 'offValue');
     this.applyEffect('clickEffect');
-    if(isToggleable) {
-      if(selected) {
-        this.applyEffect('onEffect');
-      } else {
-        this.applyEffect('offEffect');
-      }
-    }
+  },
+  toggle() {
+    const toggleValue = this.get('toggled');
+    const effect = toggleValue ? 'onEffect' : 'offEffect';
+    this.set('toggled', !toggleValue);
+    this.applyEffect(effect);
   },
   // EFFECTS
   clickEffect: null,
@@ -294,6 +275,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   onEffect: null,
   offEffect: null,
   applyEffect(effectType) {
+    console.log('applying effect: %o => %o', effectType, this.get(effectType));
     const effect = this.get(effectType);
     const initialized = this.get('initialized');
     if(!effect || !initialized) {
@@ -311,14 +293,10 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
     }
   },
 
-  // EVENTS
-  // -------------------------
-  _i: on('init', function() { return this._init(); }),
-  _r: on('willRender', function() { return this.willRender(); }),
-  _d: on('willDestroyElement', function() { return this.willDestroyElement(); }),
-
-  _init() {
-    this._tellGroup('registration', this);
+  setDefaultValues() {
+    const properties = ['value','']
+  },
+  setupTooltip() {
     const tooltip = this.get('tooltip');
     if(tooltip) {
       let {
@@ -343,8 +321,24 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
       });
     }
   },
+
+  // EVENTS
+  // -------------------------
+  _i: on('init', function() { return this._init(); }),
+  _ia: on('didInitAttrs', function() { return this.didInitAttrs(); }),
+  _r: on('willRender', function() { return this.willRender(); }),
+  _d: on('willDestroyElement', function() { return this.willDestroyElement(); }),
+
+  _init() {
+    this._tellGroup('registration', this);
+    this.setupTooltip();
+  },
   willRender() {
-    // do something
+    // nothing yet
+  },
+  didInitAttrs() {
+    this.set('initialized', true);
+    this.setDefaultValues();
   },
   willDestroyElement() {
     if(this.get('tooltip')){
