@@ -74,7 +74,10 @@ export default Ember.Component.extend(GroupMessaging,{
     }
   }),
 
-  value: computed('selected','cardinality.max',{
+  /**
+   * Returns a scalar value which represents the first element in the values array; null if empty values
+   */
+  value: computed('selectedValues',{
     set: function(param,value) {
       console.log('buttons value set: %o', value);
       this.set('values', [value]);

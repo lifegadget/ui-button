@@ -1,14 +1,10 @@
 import Ember from 'ember';
 const { computed, observer, $, A, run, on, typeOf, debug, get, set, inject } = Ember;    // jshint ignore:line
+const capitalize = Ember.String.capitalize;
 import layout from '../templates/components/ui-button';
 import SharedStyle from 'ui-button/mixins/shared-style';
 import ItemMessaging from 'ui-button/mixins/item-messaging';
 const MOOD_DEFAULT = 'default';
-const isSetter = value => {
-  const truthy = typeOf(value) !== 'null' && typeOf(value) !== 'undefined';
-  console.log('is "%s" setter? %s', value, truthy);
-  return truthy;
-};
 
 const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   layout: layout,
@@ -37,7 +33,6 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
     }
   }),
   setDisabled(value) {
-    console.log('setting disabled: %o', value);
     const {elementId, disabledButtons} = this.getProperties('elementId','disabledButtons');
     const doItNow = value => {
       const id = this.get('elementId');
@@ -124,11 +119,9 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   },
   getValue() {
     const {onValue,offValue,toggled} = this.getProperties('onValue', 'offValue', 'toggled');
-    console.log('value getter called');
-
     return toggled ? onValue : offValue; // NOTE: if not toggleable; toggled prop will always be false
   },
-
+  // ICON
   icon: null,
   _icon: computed('icon','onIcon','offIcon','toggled',function() {
       const {icon,onIcon,offIcon,toggled} = this.getProperties('icon','onIcon','offIcon', 'toggled');
@@ -139,7 +132,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
       }
     }
   ),
-
+  // MOOD
   mood: null,
   _mood: computed('mood','onMood','offMood','toggled', {
     set: function(_,value) {
@@ -191,61 +184,45 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   // allows for control to move into the selected state, by default buttons are just pressed not selected
   isToggleable: false,
   // Contains a list of elementIds which are selected (if not grouped then the only ID would be itself)
-  selectedValues: computed('group.selected', {
+  selectedButtons: computed('group.selected', {
     set: function(param,value) {
-      return typeOf(value) === 'array' ? new Set(value) : new Set([value]);
+      return value;
     },
     get: function() {
       return new Set();
     }
   }),
   // SELECTED
-  selected: computed('elementId','selectedValues',{
+  isSelectable: false,
+  selected: computed('selectedButtons','isSelectable',{
     set:function(_,value) {
-      debug('calling the setter of selected is considered bad practice');
-      this._tellGroup('select', this, value);
+      this.setSelected(value);
       return value;
     },
     get:function() {
-      return this.isSelected();
+      return this.getSelected();
     }
   }),
-  isSelected() {
-    const {selectedValues,elementId} = this.getProperties('selectedValues', 'elementId');
+  setSelected(value) {
+    const {selectedButtons,elementId} = this.getProperties('selectedButtons','elementId');
+    debug('calling the setter of selected is considered bad practice, try to use "selectedButtons" instead');
+    if(value) {
+      selectedButtons.add(elementId);
+    } else {
+      selectedButtons.delete(elementId);
+    }
+    this.set('selectedButtons', selectedButtons);
+  },
+  getSelected() {
+    const {isSelectable, selectedButtons, elementId} = this.getProperties('isSelectable', 'selectedButtons', 'elementId');
+    if(!isSelectable) {
+      return false;
+    }
 
-    return selectedValues ? selectedValues.has(elementId) : false;
+    return selectedButtons ? selectedButtons.has(elementId) : false;
   },
   toggled: false,
 
-
-  toggleSelection() {
-    const {selectedValues,elementId,isToggleable} = this.getProperties('selectedValues','elementId','isToggleable');
-    if(isToggleable) {
-      selectedValues.has(elementId) ? selectedValues.delete(elementId) : selectedValues.add(elementId); // jshint ignore:line
-      this.notifyPropertyChange('selected');
-    }
-  },
-  setSelection(flag) {
-    const {selectedValues, elementId} = this.getProperties('selectedValues', 'elementId');
-    if(typeOf(flag) !== 'boolean') {
-      debug('setSelection called with non-boolean value, this is not expected behaviour');
-    }
-    if(elementId === null) {
-      run.next( () => {
-        const registeredElementId = this.get('elementId');
-        this._setSelection(flag, selectedValues, registeredElementId);
-      });
-    } else {
-      this._setSelection(flag, selectedValues, elementId);
-    }
-  },
-  _setSelection(flag,selectedValues,elementId) {
-    if(flag) {
-      selectedValues.add(elementId);
-    } else {
-      selectedValues.delete(elementId);
-    }
-  },
   // CLICK
 	click() {
     this.sendAction('action', 'pressed', this); // send generic action event (for non-grouped buttons)
@@ -275,7 +252,6 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   onEffect: null,
   offEffect: null,
   applyEffect(effectType) {
-    console.log('applying effect: %o => %o', effectType, this.get(effectType));
     const effect = this.get(effectType);
     const initialized = this.get('initialized');
     if(!effect || !initialized) {
@@ -286,15 +262,22 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
         this.$().addClass('animated ' + effect);
         this.$().one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', () => {
           this.$().removeClass('animated ' + effect);
+          this.sendAction('action', 'effectEnded', 'effectType');
         });
       });
     } catch (e) {
       // debug(`could not effect ${effect} animation: ${e}`);
     }
   },
-
   setDefaultValues() {
-    const properties = ['value','']
+    const properties = ['value'];
+    for(let property of properties) {
+      const defaultProp = 'default' + capitalize(property);
+      const defaultValue = this.get(defaultProp);
+      if(typeOf(defaultValue) !== 'undefined' && typeOf(this.get(property)) === 'undefined' ) {
+        this.set(property, defaultValue);
+      }
+    }
   },
   setupTooltip() {
     const tooltip = this.get('tooltip');

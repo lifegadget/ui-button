@@ -120,7 +120,7 @@ test('value set at instantiation; effects toggle', function(assert) {
   assert.equal(component.get('toggled'), true, 'toggled should habe been switched to true as well');
 });
 
-test('selected flag impacted by selectedValues', function(assert) {
+test('selected flag impacted by selectedButtons', function(assert) {
   assert.expect(2);
   let component = this.subject({
     isSelectable: true
@@ -128,9 +128,23 @@ test('selected flag impacted by selectedValues', function(assert) {
   this.render();
   Ember.run.next(() => {
     const id = component.get('elementId');
-    assert.equal(component.get('selected'), false, '"selected" should be false when nothing is in selectedValues');
-    component.set('selectedValues', new Set().add(id));
+    assert.equal(component.get('selected'), false, '"selected" should be false when nothing is in selectedButtons');
+    component.set('selectedButtons', new Set().add(id));
     assert.equal(component.get('selected'), true, '"selected" should have switched to true');
+  });
+});
+
+test('selected flag ignores selectedButtons if isSelectable = false', function(assert) {
+  assert.expect(2);
+  let component = this.subject({
+    isSelectable: false
+  });
+  this.render();
+  Ember.run.next(() => {
+    const id = component.get('elementId');
+    assert.equal(component.get('selected'), false, '"selected" should be false when nothing is in selectedButtons');
+    component.set('selectedButtons', new Set().add(id));
+    assert.equal(component.get('selected'), false, '"selected" should have maintained a false status');
   });
 });
 
@@ -140,7 +154,6 @@ test('disabled flag impacted by changes to disabledButtons', function(assert) {
   this.render();
   Ember.run.next(() => {
     const id = component.get('elementId');
-    const dv = component.get('disabledButtons');
     assert.equal(component.get('disabled'), false, '"disabled" should be false when nothing is in disabledButtons');
     component.set('disabledButtons', new Set().add(id));
     assert.equal(component.get('disabled'), true, '"disabled" should switch to true when new Set replacement provided');
@@ -159,5 +172,17 @@ test('setting disabled sets disabledButtons', function(assert) {
   assert.equal(component.get('disabledButtons.size'), 1, 'there should be one element in disabledButtons after setting button to disabled');
   component.set('disabled', false);
   assert.equal(component.get('disabledButtons.size'), 0, 'should be back to zero elements after setting disabled to false');
+});
+
+test('setting selected directly impacts selectedButtons (although not suggested use-case)', function(assert) {
+  assert.expect(3);
+  let component = this.subject({
+    isSelectable: true
+  });
+  assert.equal(component.get('selectedButtons').size, 0, 'there should be zero selectedButtons to start');
+  component.set('selected', true);
+  assert.equal(component.get('selectedButtons.size'), 1, 'there should be one element in selectedButtons after setting "selected" to true');
+  component.set('selected', false);
+  assert.equal(component.get('selectedButtons.size'), 0, 'should be back to zero elements after setting selected to false');
 });
 
