@@ -304,7 +304,13 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
       });
     }
   },
-
+  // MESSAGING
+  buttonActions: {
+    notify(self, property) {
+      console.log('notifying');
+      self.notifyPropertyChange(property);
+    }
+  },
   // EVENTS
   // -------------------------
   _i: on('init', function() { return this._init(); }),

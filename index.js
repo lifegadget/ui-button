@@ -17,6 +17,8 @@ module.exports = {
     app.import('bower_components/animate.css/source/attention_seekers/swing.css');
     app.import('bower_components/animate.css/source/attention_seekers/tada.css');
     app.import('bower_components/animate.css/source/attention_seekers/wobble.css');
+    // We need the babel polyfil for now ...
+    app.import('bower_components/babel-polyfill/browser-polyfill.js', { prepend: true });
 	}
 
 };

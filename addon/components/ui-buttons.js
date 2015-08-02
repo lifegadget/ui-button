@@ -16,7 +16,7 @@ const xtend = function (core, options, override=false){
 const CARDINALITY_MIN = 'cardinality-min-threashold';
 const CARDINALITY_MAX = 'cardinality-max-threashold';
 
-export default Ember.Component.extend(GroupMessaging,{
+const uiButtons = Ember.Component.extend(GroupMessaging,{
   init() {
     this._super();
     this.disabled = new Set();
@@ -30,32 +30,19 @@ export default Ember.Component.extend(GroupMessaging,{
   classNames: ['ui-button', 'btn-group'],
   classNameBindings: ['disabled:disabled:enabled'],
 
-  // SELECTED VALUES
-  selectedValues: computed('selected', {
-    set: function(prop,value) {
-      debug('"selectedValues" should not be SET, set/bind to "select" property instead!');
-      this.set('selected', value);
+  // SELECTED BUTTONS
+  // Contains a list of elementIds which are selected
+  selectedButtons: computed({
+    set: function(param,value) {
+      debug('selectedButtons should never be set!');
       return value;
     },
     get: function() {
-      return this.getSelectedValues();
+      return new Set();
     }
   }),
-  getSelectedValues() {
-    const selected = this.get('selected');
-    console.log('selectedValues for %s: %o', this.get('elementId'), selected);
-    if(typeOf(selected) === 'object' && selected.size) {
-      return selected;
-    }
-    if(typeOf(selected) === 'string') {
-      return new Set(selected);
-    }
-
-    return new Set();
-  },
-
   // VALUES
-  values: computed('selectedValues',{
+  values: computed('selectedButtons',{
     set: function(prop,value) {
       if(typeOf(value) === 'string') {
         value = value.split(',');
@@ -65,9 +52,9 @@ export default Ember.Component.extend(GroupMessaging,{
       return new A(value);
     },
     get: function() {
-      const {selectedValues,_registeredItems} = this.getProperties('selectedValues','_registeredItems');
+      const {selectedButtons,_registeredItems} = this.getProperties('selectedButtons','_registeredItems');
       return _registeredItems.filter(item => {
-        return selectedValues.has(item.get('elementId'));
+        return selectedButtons.has(item.get('elementId'));
       }).map(item => {
         return item.get('value');
       });
@@ -75,26 +62,39 @@ export default Ember.Component.extend(GroupMessaging,{
   }),
 
   /**
-   * Returns a scalar value which represents the first element in the values array; null if empty values
+   * VALUE
+   * Returns a scalar value which represents the first element in the
+   * values array; null if empty values
    */
-  value: computed('selectedValues',{
-    set: function(param,value) {
-      console.log('buttons value set: %o', value);
-      this.set('values', [value]);
+  value: computed('selectedButtons',{
+    set: function(_,value) {
+      this.setValue(value);
       return value;
     },
     get: function() {
-      const {values, cardinality} = this.getProperties('values','cardinality');
-      if(cardinality.max === 1) {
-        return values.length > 0 ? values[0] : null;
-      } else if (cardinality.max === 0) {
-        return null;
-      } else {
-        // Cardinality greater than 1
-        return values.join(',');
-      }
+      return this.getValue();
     }
   }),
+  getValue() {
+    const {selectedButtons, cardinality} = this.getProperties('selectedButtons','cardinality');
+    if(cardinality.max === 1) {
+      return selectedButtons.size > 0 ? selectedButtons[0].value : null;
+    } else if (cardinality.max === 0) {
+      return null;
+    } else {
+      return Array.from(selectedButtons).map(item => {
+        return item.get('value');
+      }).join(',');
+    }
+  },
+  setValue(value) {
+    if(value) {
+      console.log('buttons value set: %o', value);
+      // this.get('selectedButtons').add(value);
+      // this._tellItems('notify', 'selectedButtons');
+      // this.notifyPropertyChange('selectedButtons');
+    }
+  },
   // CARDINALITY
   defaultCardinality: {min: 0, max: 0},
   cardinality: computed('_cardinality', {
@@ -107,14 +107,18 @@ export default Ember.Component.extend(GroupMessaging,{
     }
   }),
   setCardinality(value) {
+    if(!value) {
+      value = this.get('defaultCardinality') ? this.get('defaultCardinality') : {min:0,max:0};
+    }
     if(typeOf(value) === 'string') {
       let [min,max] = value.split(':');
       if (!max) {
         max = min;
       }
       value = {min: Number(min), max: Number(max)};
-    } else if(typeOf(value) !== 'object' || !value.min || !value.max) {
-      debug('Trying to set cardinality with improper structure so using default cardinality instead. Attempted: %o', value);
+    } else if(typeOf(value) === 'object' && value.min && value.max) {
+      // nothing to do
+    } else {
       value = this.get('defaultCardinality');
     }
 
@@ -129,6 +133,7 @@ export default Ember.Component.extend(GroupMessaging,{
       return _cardinality;
     }
   },
+  makeSelectable: computed.gt('_cardinality.max',0),
  /**
   * The API exposes the 'disabled' property, when it changes disabledButtons responds to that
   * depending on the type of input received:
@@ -144,39 +149,68 @@ export default Ember.Component.extend(GroupMessaging,{
   * Regardless of disabled type, disabledButtons will be an ES6 Set which indicates
   * which elementId's should be disabled.
   */
-  disabled: new Set(),
-  disabledButtons: computed('disabled', {
+  disabled: false,
+  disabledButtons: computed('disabled',{
     set(_,value) {
-      debug('disabledButtons should not be SET, set disabled property instead!');
-      this.set('disabled', value);
+      this.set('_disabledButtons', value);
       return value;
     },
     get() {
-      return this._disabledButtons();
+      return this.getDisabledButtons();
     }
   }),
-  _disabledButtons() {
-    let disabled = this.get('disabled');
-    if (disabled.size) {
+  getDisabledButtons() {
+    const disabled = this.get('disabled');
+    const disabledButtons = this.get('_disabledButtons') || new Set();
+    const _registeredItems = this.get('_registeredItems');
+    if (typeOf(disabled) === 'object' && disabled.size) {
       return disabled;
     }
+    disabledButtons.clear();
     // get elementIds from registered buttons
-    const ids = this.get('_registeredItems').map(item => {
+    const ids = new Set(_registeredItems.map(item => {
       return item.get('elementId');
-    });
-    if(typeOf(disabled) === 'string') {
-      if(disabled.substr(0,5) === 'ember') {
-        const id = this.get('_registeredItems').filterBy('elementId', disabled);
-        return new Set().add(id);
-      } else {
-        const idsWithValue = ids.filterBy('value',disabled);
-        return idsWithValue ? new Set(idsWithValue) : new Set();
+    }));
+    const processArray = (disabledArray) => {
+      for (let disabledItem of disabledArray) {
+        console.log('processing %s', disabledItem);
+        if(disabledItem.substr(0,5) === 'ember') {
+          if(ids.has(disabledItem)) {
+            disabledButtons.delete(disabledItem);
+          } else {
+            disabledButtons.add(disabledItem);
+          }
+        } else {
+          const idsWithValue = _registeredItems.filterBy('value',disabledItem).map(item => {
+            return item.get('elementId');
+          });
+          for(let i of idsWithValue) {
+              disabledButtons.add(i);
+          }
+        }
       }
+    };
+    if(typeOf(disabled) === 'string') {
+      const disabledArray = disabled.split(',');
+      processArray(disabledArray);
+    }
+    if(typeOf(disabled) === 'array') {
+      processArray(disabled);
     }
     if(typeOf(disabled) === 'boolean' ) {
-      return disabled ? new Set(ids) : new Set();
+      if(disabled) {
+        console.log('disabling all');
+        for(let i of ids) {
+          disabledButtons.add(i);
+        }
+      } else {
+        console.log('enabling all');
+        disabledButtons.clear();
+      }
     }
-    return typeOf(disabled) === 'array' ? new Set(disabled) : new Set();
+    console.log('returning: %o', disabledButtons);
+
+    return disabledButtons;
   },
   defaultValues: null, // a representative set of values to look for in registered items
   _setDefaultValues: on('willRender', function() {
@@ -239,25 +273,36 @@ _type: computed('type', function() {
      pressed(self, item){
       console.log('buttons pressed: %o', item);
       const id = item.get('elementId');
-      const {cardinality,selectedValues} = self.getProperties('cardinality','selectedValues');
-      if(selectedValues.has(id)) {
+      const {_cardinality,selectedButtons} = self.getProperties('_cardinality','selectedButtons');
+      if(selectedButtons.has(id)) {
         // asking for deactivation
-        if(selectedValues.size <= cardinality.min) {
-          self.sendAction('onError', CARDINALITY_MIN, `there must be at least ${cardinality.min} buttons`);
+        console.log('%s asking for deactivation', id);
+        if(selectedButtons.size <= _cardinality.min) {
+          self.sendAction('onError', CARDINALITY_MIN, `there must be at least ${_cardinality.min} buttons`);
+          console.log('rejected', id);
           return false;
         }
-        selectedValues.delete(id);
-        self.sendAction('onChanged', 'unselected', item);
+        selectedButtons.delete(id);
+        self.sendAction('action', 'unselected', item);
       } else {
         // asking for activation
-        if(Number.isInteger(cardinality.max) && selectedValues.size >= cardinality.max) {
-          self.sendAction('onError', CARDINALITY_MAX, 'there must be no more than ${cardinality.max} buttons');
+        console.log('%s asking for activation', id);
+        // if cardinality is 'x:1' then requests for activation will be granted even if 1 item is
+        // selected; in this scenario the correct behavior is to toggle the value
+        if(_cardinality.max === 1 && selectedButtons.size === 1) {
+          selectedButtons.clear();
+          selectedButtons.add(id);
+        } else if(Number.isInteger(_cardinality.max) && selectedButtons.size >= _cardinality.max) {
+          self.sendAction('error', CARDINALITY_MAX, 'there must be no more than ${_cardinality.max} buttons');
           return false;
+        } else {
+          selectedButtons.add(id);
         }
-        selectedValues.add(id);
-        self.sendAction('onChanged', 'selected', item);
-        item.notifyPropertyChange('selectedValues');
+        self.sendAction('action', 'selected', item);
       }
+      console.log('selectedButtons is now: %o', selectedButtons);
+      self._tellItems('notify', 'selectedButtons');
+      // self.notifyPropertyChange('selectedButtons');
       return true;
     },
     /**
@@ -272,14 +317,16 @@ _type: computed('type', function() {
     },
     registration: function(self,item) {
       const _registeredItems = self.get('_registeredItems');
-      const selectedValues = computed.alias('group.selectedValues');
+      const selectedButtons = computed.alias('group.selectedButtons');
       const disabledButtons = computed.alias('group.disabledButtons');
+      const makeSelectable = computed.alias('group.makeSelectable');
       const size = computed.alias('group.size');
       // const cardinality = computed.alias('group.cardinality');
       _registeredItems.pushObject(item);
       // link globally managed properties back to item ("data down")
-      Ember.defineProperty(item,'selectedValues',selectedValues);
+      Ember.defineProperty(item,'selectedButtons',selectedButtons);
       Ember.defineProperty(item,'disabledButtons',disabledButtons);
+      Ember.defineProperty(item,'isSelectable',makeSelectable);
       Ember.defineProperty(item,'size',size);
       // Ember.defineProperty(item,'cardinality',cardinality);
       // there WAS a problem where 'elementId' wasn't available at init but it should be now
@@ -297,5 +344,8 @@ _type: computed('type', function() {
       this.preRender();
     })
   },
-
 });
+
+export default uiButtons;
+uiButtons[Ember.NAME_KEY] = 'UI Buttons';
+

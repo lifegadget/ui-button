@@ -10,7 +10,8 @@
     "ember-qunit-notifications": "0.0.7",
     "animate.css": "~3.2.6",
     "bootstrap": "~3.3.4",
-    "fontawesome": "~4.3.0"
+    "fontawesome": "~4.3.0",
+    "babel-polyfill": "~0.0.1"
   },
   "devDependencies": {
     "loader.js": "ember-cli/loader.js#3.2.0",
