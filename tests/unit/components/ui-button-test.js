@@ -237,3 +237,25 @@ test('setting selected on non-selectable button is ignored', function(assert) {
   assert.equal(component.get('selectedButtons.size'), 0, 'even after setting select to true, selectedButtons should remain uneffected');
 });
 
+test('setting value to selectedButtons property selects it', function(assert) {
+  assert.expect(3);
+  let component = this.subject({
+    isSelectable: true,
+    value: 'bar',
+    selectedButtons: new Set().add('foo')
+  });
+  assert.equal(component.get('selected'), false, 'button is NOT selected to start');
+  component.set('value', 'foo');
+  assert.equal(component.get('selectedButtons').has(component.get('value')), true, 'it is confirmed that value is within selectedButtons');
+  assert.equal(component.get('selected'), true, 'after setting value, button should now be selected');
+});
+
+test('value set at initialisation part of selectedButtons property selects it', function(assert) {
+  assert.expect(1);
+  let component = this.subject({
+    isSelectable: true,
+    value: 'foo',
+    selectedButtons: new Set().add('foo')
+  });
+  assert.equal(component.get('selected'), true);
+});

@@ -324,6 +324,10 @@ heading {
     margin-bottom: 15px;
 }
 
+h4 {
+  margin-top: 0px;
+}
+
 .components code {
     padding: 6px !important;
 }
