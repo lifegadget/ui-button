@@ -83,30 +83,71 @@ test('value toggled between on,off states', function(assert) {
   });
 });
 
-test('value set back and forth with setter and toggling', function(assert) {
-  assert.expect(10);
+test('value defaults to camelized title if not set', function(assert) {
+  assert.expect(1);
+  let component = this.subject({
+    title: 'Foo-Bar'
+  });
+  this.render();
+  assert.equal(component.get('value'), 'fooBar', 'value is set to fooBar');
+});
+
+test('value defaults to elementId if not set (and no title set)', function(assert) {
+  assert.expect(1);
+  let component = this.subject();
+  this.render();
+  assert.equal(component.get('value'), component.get('elementId'), 'value is set to elementId: ' + component.get('elementId'));
+});
+
+
+test('value set back and forth with setter and toggling (toggleable button)', function(assert) {
+  assert.expect(8);
   let component = this.subject();
   component.set('isToggleable', true);
   component.set('offValue', false);
   component.set('onValue', true);
-  component.set('value', 'foo');
-  assert.equal(component.get('toggled'), false, 'toggled starts out in false state');
   this.render();
-  assert.equal(component.get('value'), 'foo', 'value is what was set explicitly not the offValue');
+  assert.equal(component.get('value'),false, 'value starts in the offValue state of false');
   Ember.run.next(()=> {
-    component.set('value', 'bar');
-    assert.equal(component.get('value'), 'bar', 'value has moved to new value on second set');
-    assert.equal(component.get('toggled'), false, 'toggled property remains false');
+    component.set('value', 'bar'); // sets the offValue
+    assert.equal(component.get('offValue'), 'bar', 'setting the value to "bar" sets the offValue to "bar"');
+    assert.equal(component.get('toggled'), false, 'toggled property remains set to false');
     component.toggle();
     assert.equal(component.get('toggled'), true, 'toggled property has changed to true');
     assert.equal(component.get('onValue'), true, 'the onValue has remained set at true');
-    assert.equal(component.get('value'), true, 'the value is now reporting it\'s onValue');
-    component.set('value', false);
-    assert.equal(component.get('value'), false, 'the value is set back to false');
-    assert.equal(component.get('offValue'), false, 'the offValue remains set to false');
-    assert.equal(component.get('toggled'), false, 'toggled should have changed to false when value was set to false');
+    assert.equal(component.get('value'), component.get('onValue'), 'the value is now reporting the "onValue"');
+    component.set('value', 'bar');
+    assert.equal(component.get('toggled'), false, 'setting value to the offValue should have resulted in toggled returning to a false state');
+    assert.equal(component.get('value'), component.get('offValue'), 'the value is back to reporting the "offValue"');
   });
 });
+
+test('value toggling ignored on non-toggleable button', function(assert) {
+  assert.expect(3);
+  let component = this.subject();
+  component.set('isToggleable', false);
+  component.set('offValue', false);
+  component.set('onValue', true);
+  this.render();
+  assert.equal(
+    component.get('value'),
+    component.get('offValue'),
+    'value starts in the offValue state of false'
+  );
+  Ember.run.next(()=> {
+    component.set('value', component.get('onValue'));
+    assert.equal(
+      component.get('toggled'),
+      false,
+      'setting value to the onValue did NOT create a toggled state'
+    );
+    assert.equal(
+      component.get('offValue'),
+      component.get('offValue'),
+      'setting the value did change the "offValue" to true');
+  });
+});
+
 
 test('value set at instantiation; effects toggle', function(assert) {
   assert.expect(2);

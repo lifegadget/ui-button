@@ -1,6 +1,12 @@
 import Ember from 'ember';
 const { computed, observer, $, A, run, on, typeOf, debug, get, set, inject } = Ember;    // jshint ignore:line
 const capitalize = Ember.String.capitalize;
+const camelize = thingy => {
+  return thingy ? Ember.String.camelize(thingy) : thingy;
+};
+const isInitialized = value => {
+  return typeOf(value) !== 'null' && typeOf(value) !== 'undefined';
+};
 import layout from '../templates/components/ui-button';
 import SharedStyle from 'ui-button/mixins/shared-style';
 import ItemMessaging from 'ui-button/mixins/item-messaging';
@@ -111,14 +117,27 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   }),
   setValue(value) {
     const {toggled, isToggleable} = this.getProperties('toggled','isToggleable');
-    const toggleValue = this.get(toggled ? 'onValue' : 'offValue');
+    const toggleProp = toggled ? 'onValue' : 'offValue';
+    const toggleValue = this.get(toggleProp);
     const otherToggleValue = this.get(toggled ? 'offValue' : 'onValue');
     if(isToggleable && value === otherToggleValue && otherToggleValue !== toggleValue) {
       this.toggle();
+    } else {
+      if(isToggleable) {
+        this.set(toggleProp, value);
+      } else {
+        this.set('_value', value);
+      }
     }
   },
   getValue() {
-    const {onValue,offValue,toggled} = this.getProperties('onValue', 'offValue', 'toggled');
+    const {_value,onValue,offValue,toggled, title} = this.getProperties('_value', 'onValue', 'offValue', 'toggled', 'title');
+    if(_value) {
+      return _value;
+    }
+    if(!isInitialized(onValue) && !isInitialized(offValue)) {
+      return title ? camelize(title) : this.get('elementId');
+    }
     return toggled ? onValue : offValue; // NOTE: if not toggleable; toggled prop will always be false
   },
   // ICON

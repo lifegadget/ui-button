@@ -17,14 +17,6 @@ const CARDINALITY_MIN = 'cardinality-min-threashold';
 const CARDINALITY_MAX = 'cardinality-max-threashold';
 
 const uiButtons = Ember.Component.extend(GroupMessaging,{
-  init() {
-    this._super();
-    this.disabled = new Set();
-    this.selected = new Set();
-  },
-  preRender() {
-
-  },
   layout: layout,
   tagName: 'div',
   classNames: ['ui-button', 'btn-group'],
@@ -76,10 +68,10 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
     }
   }),
   getValue() {
-    const {selectedButtons, cardinality} = this.getProperties('selectedButtons','cardinality');
-    if(cardinality.max === 1) {
-      return selectedButtons.size > 0 ? selectedButtons[0].value : null;
-    } else if (cardinality.max === 0) {
+    const {selectedButtons, _cardinality} = this.getProperties('selectedButtons','_cardinality');
+    if(_cardinality.max === 1) {
+      return selectedButtons.size > 0 ? this._getItem(Array.from(selectedButtons)[0]).get('value') : null;
+    } else if (_cardinality.max === 0) {
       return null;
     } else {
       return Array.from(selectedButtons).map(item => {
@@ -89,49 +81,43 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   },
   setValue(value) {
     if(value) {
-      console.log('buttons value set: %o', value);
-      // this.get('selectedButtons').add(value);
-      // this._tellItems('notify', 'selectedButtons');
-      // this.notifyPropertyChange('selectedButtons');
+      const {selectedButtons,_registeredItems} = this.getProperties('selectedButtons','_registeredItems');
+
+      if(value.substr(0,5) === 'ember') {
+        this.activate(value);
+      } else {
+        console.log('value[%s] was not a elementId; registered items: %o', value, _registeredItems.length);
+      }
     }
   },
   // CARDINALITY
   defaultCardinality: {min: 0, max: 0},
-  cardinality: computed('_cardinality', {
+  cardinality: null,
+  _cardinality: computed('cardinality', {
     set: function(_,value) {
-      this.setCardinality(value);
       return value;
     },
     get: function() {
-      return this.getCardinality();
+      return this._getCardinality();
     }
   }),
-  setCardinality(value) {
-    if(!value) {
-      value = this.get('defaultCardinality') ? this.get('defaultCardinality') : {min:0,max:0};
-    }
-    if(typeOf(value) === 'string') {
-      let [min,max] = value.split(':');
+
+  _getCardinality() {
+    const {cardinality, defaultCardinality} = this.getProperties('cardinality', 'defaultCardinality');
+    let value;
+    if(typeOf(cardinality) === 'string') {
+      let [min,max] = cardinality.split(':');
       if (!max) {
         max = min;
       }
       value = {min: Number(min), max: Number(max)};
     } else if(typeOf(value) === 'object' && value.min && value.max) {
-      // nothing to do
+      value = cardinality;
     } else {
-      value = this.get('defaultCardinality');
+      value = defaultCardinality;
     }
 
-    this.set('_cardinality', value);
-  },
-  getCardinality() {
-    const {_cardinality, defaultCardinality} = this.getProperties('_cardinality', 'defaultCardinality');
-    if(typeOf(_cardinality) === 'undefined') {
-      this.set('_cardinality', defaultCardinality);
-      return defaultCardinality;
-    } else {
-      return _cardinality;
-    }
+    return value;
   },
   makeSelectable: computed.gt('_cardinality.max',0),
  /**
@@ -262,6 +248,46 @@ _type: computed('type', function() {
       return xtend(baseline,getPropertyValues(globalItemProps));
     }));
   }),
+  _activateButton(id) {
+    const {_cardinality,selectedButtons} = this.getProperties('_cardinality','selectedButtons');
+
+    if(_cardinality.max === 1 && selectedButtons.size === 1) {
+      selectedButtons.clear();
+      selectedButtons.add(id);
+    } else if(Number.isInteger(_cardinality.max) && selectedButtons.size >= _cardinality.max) {
+      this.sendAction('error', CARDINALITY_MAX, 'there must be no more than ${_cardinality.max} buttons');
+      return false;
+    } else {
+      selectedButtons.add(id);
+    }
+    this.sendAction('action', 'selected', this._getItem(id));
+    this._tellItems('notify', 'selectedButtons');
+    this.notifyPropertyChange('value');
+  },
+  _deactivateButton(id) {
+    const {_cardinality,selectedButtons} = this.getProperties('_cardinality','selectedButtons');
+    console.log('%s asking for deactivation', id);
+    if(selectedButtons.size <= _cardinality.min) {
+      this.sendAction('onError', CARDINALITY_MIN, `there must be at least ${_cardinality.min} buttons`);
+      return false;
+    }
+    selectedButtons.delete(id);
+    this.sendAction('action', 'unselected', this._getItem(id));
+    this._tellItems('notify', 'selectedButtons');
+    this.notifyPropertyChange('value');
+  },
+  // if cardinality.min is non-zero ensure button is selected
+  selectButtonIfNotSelected() {
+    run.next(()=>{
+      const {_cardinality,selectedButtons, _registeredItems} = this.getProperties('_cardinality', 'selectedButtons', '_registeredItems');
+      console.log('btn select: %o, %o, %o', _cardinality.min, selectedButtons.size, _registeredItems.length);
+      if(_cardinality.min === 1 && selectedButtons.size === 0) {
+        selectedButtons.add(this.get('_registeredItems.0.elementId'));
+        this._tellItems('notify', 'selectedButtons');
+      }
+    });
+  },
+
 
   buttonActions: {
     /**
@@ -272,39 +298,18 @@ _type: computed('type', function() {
      */
      pressed(self, item){
       console.log('buttons pressed: %o', item);
+      const selectedButtons = self.get('selectedButtons');
       const id = item.get('elementId');
-      const {_cardinality,selectedButtons} = self.getProperties('_cardinality','selectedButtons');
       if(selectedButtons.has(id)) {
         // asking for deactivation
-        console.log('%s asking for deactivation', id);
-        if(selectedButtons.size <= _cardinality.min) {
-          self.sendAction('onError', CARDINALITY_MIN, `there must be at least ${_cardinality.min} buttons`);
-          console.log('rejected', id);
-          return false;
-        }
-        selectedButtons.delete(id);
-        self.sendAction('action', 'unselected', item);
+        self._deactivateButton(id);
       } else {
         // asking for activation
-        console.log('%s asking for activation', id);
-        // if cardinality is 'x:1' then requests for activation will be granted even if 1 item is
-        // selected; in this scenario the correct behavior is to toggle the value
-        if(_cardinality.max === 1 && selectedButtons.size === 1) {
-          selectedButtons.clear();
-          selectedButtons.add(id);
-        } else if(Number.isInteger(_cardinality.max) && selectedButtons.size >= _cardinality.max) {
-          self.sendAction('error', CARDINALITY_MAX, 'there must be no more than ${_cardinality.max} buttons');
-          return false;
-        } else {
-          selectedButtons.add(id);
-        }
-        self.sendAction('action', 'selected', item);
+        self._activateButton(id);
       }
-      console.log('selectedButtons is now: %o', selectedButtons);
-      self._tellItems('notify', 'selectedButtons');
-      // self.notifyPropertyChange('selectedButtons');
       return true;
     },
+
     /**
      * A request to select or deselect a button item
      * @param  {object}   self
@@ -328,22 +333,43 @@ _type: computed('type', function() {
       Ember.defineProperty(item,'disabledButtons',disabledButtons);
       Ember.defineProperty(item,'isSelectable',makeSelectable);
       Ember.defineProperty(item,'size',size);
-      // Ember.defineProperty(item,'cardinality',cardinality);
       // there WAS a problem where 'elementId' wasn't available at init but it should be now
       // so set the 'value' of the item to the elementId if it is still null
-      if(item.get('value') === null) {
-        item.set('value', item.get('elementId'));
-      }
 
+
+      run.debounce(self, self.registrationComplete, 1);
       self.sendAction('registered', item); // specific action only
     },
     btnEvent: function(self, evt, ...args) {
       console.log('button event: %s: %o', evt,args);
     },
-    _willRender: on('willRender', function() {
-      this.preRender();
-    })
   },
+
+  // EVENTS
+  // -------------------------
+  _i: on('init', function() { return this._init(); }),
+  _ia: on('didInitAttrs', function() { return this.didInitAttrs(); }),
+  _r: on('willRender', function() { return this.willRender(); }),
+  _d: on('willDestroyElement', function() { return this.willDestroyElement(); }),
+
+  _init() {
+    // nothing yet
+  },
+  willRender() {
+
+  },
+  registrationComplete() {
+    this.set('_registrationComplete', true);
+    this.selectButtonIfNotSelected();
+    console.log('registration complete: %s', this.get('_registeredItems.length'));
+  },
+  didInitAttrs() {
+
+  },
+  willDestroyElement() {
+    // nothing yet
+  }
+
 });
 
 export default uiButtons;
