@@ -70,7 +70,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   getValue() {
     const {selectedButtons, _cardinality} = this.getProperties('selectedButtons','_cardinality');
     if(_cardinality.max === 1) {
-      return selectedButtons.size > 0 ? this._getItem(Array.from(selectedButtons)[0]).get('value') : null;
+      return selectedButtons.size > 0 ? Array.from(selectedButtons)[0] : null;
     } else if (_cardinality.max === 0) {
       return null;
     } else {
@@ -248,31 +248,31 @@ _type: computed('type', function() {
       return xtend(baseline,getPropertyValues(globalItemProps));
     }));
   }),
-  _activateButton(id) {
+  _activateButton(value) {
     const {_cardinality,selectedButtons} = this.getProperties('_cardinality','selectedButtons');
 
     if(_cardinality.max === 1 && selectedButtons.size === 1) {
       selectedButtons.clear();
-      selectedButtons.add(id);
+      selectedButtons.add(value);
     } else if(Number.isInteger(_cardinality.max) && selectedButtons.size >= _cardinality.max) {
       this.sendAction('error', CARDINALITY_MAX, 'there must be no more than ${_cardinality.max} buttons');
       return false;
     } else {
-      selectedButtons.add(id);
+      selectedButtons.add(value);
     }
-    this.sendAction('action', 'selected', this._getItem(id));
+    this.sendAction('action', 'selected', value);
     this._tellItems('notify', 'selectedButtons');
     this.notifyPropertyChange('value');
   },
-  _deactivateButton(id) {
+  _deactivateButton(value) {
     const {_cardinality,selectedButtons} = this.getProperties('_cardinality','selectedButtons');
-    console.log('%s asking for deactivation', id);
+    console.log('%s asking for deactivation', value);
     if(selectedButtons.size <= _cardinality.min) {
       this.sendAction('onError', CARDINALITY_MIN, `there must be at least ${_cardinality.min} buttons`);
       return false;
     }
-    selectedButtons.delete(id);
-    this.sendAction('action', 'unselected', this._getItem(id));
+    selectedButtons.delete(value);
+    this.sendAction('action', 'unselected', value);
     this._tellItems('notify', 'selectedButtons');
     this.notifyPropertyChange('value');
   },
@@ -282,7 +282,7 @@ _type: computed('type', function() {
       const {_cardinality,selectedButtons, _registeredItems} = this.getProperties('_cardinality', 'selectedButtons', '_registeredItems');
       console.log('btn select: %o, %o, %o', _cardinality.min, selectedButtons.size, _registeredItems.length);
       if(_cardinality.min === 1 && selectedButtons.size === 0) {
-        selectedButtons.add(this.get('_registeredItems.0.elementId'));
+        selectedButtons.add(this.get('_registeredItems.0.value'));
         this._tellItems('notify', 'selectedButtons');
       }
     });
@@ -299,13 +299,13 @@ _type: computed('type', function() {
      pressed(self, item){
       console.log('buttons pressed: %o', item);
       const selectedButtons = self.get('selectedButtons');
-      const id = item.get('elementId');
-      if(selectedButtons.has(id)) {
+      const value = item.get('value');
+      if(selectedButtons.has(value)) {
         // asking for deactivation
-        self._deactivateButton(id);
+        self._deactivateButton(value);
       } else {
         // asking for activation
-        self._activateButton(id);
+        self._activateButton(value);
       }
       return true;
     },
@@ -320,7 +320,7 @@ _type: computed('type', function() {
     select(self, item, state) { //jshint ignore:line
       // TODO: implement
     },
-    registration: function(self,item) {
+    registration(self,item) {
       const _registeredItems = self.get('_registeredItems');
       const selectedButtons = computed.alias('group.selectedButtons');
       const disabledButtons = computed.alias('group.disabledButtons');
@@ -333,14 +333,17 @@ _type: computed('type', function() {
       Ember.defineProperty(item,'disabledButtons',disabledButtons);
       Ember.defineProperty(item,'isSelectable',makeSelectable);
       Ember.defineProperty(item,'size',size);
-      // there WAS a problem where 'elementId' wasn't available at init but it should be now
-      // so set the 'value' of the item to the elementId if it is still null
-
+      // if groups value is already set, check against item's value
+      const groupValue = self.get('value');
+      const itemValue = item.get('value');
+      if(groupValue && groupValue === itemValue) {
+        self._activateButton(groupValue);
+      }
 
       run.debounce(self, self.registrationComplete, 1);
       self.sendAction('registered', item); // specific action only
     },
-    btnEvent: function(self, evt, ...args) {
+    btnEvent(self, evt, ...args) {
       console.log('button event: %s: %o', evt,args);
     },
   },

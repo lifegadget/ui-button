@@ -86,10 +86,10 @@ test('value toggled between on,off states', function(assert) {
 test('value defaults to camelized title if not set', function(assert) {
   assert.expect(1);
   let component = this.subject({
-    title: 'Foo-Bar'
+    title: 'Foo Bar'
   });
   this.render();
-  assert.equal(component.get('value'), 'fooBar', 'value is set to fooBar');
+  assert.equal(component.get('value'), 'foo-bar', 'value is set to foo-bar');
 });
 
 test('value defaults to elementId if not set (and no title set)', function(assert) {
@@ -225,5 +225,15 @@ test('setting selected directly impacts selectedButtons (although not suggested 
   assert.equal(component.get('selectedButtons.size'), 1, 'there should be one element in selectedButtons after setting "selected" to true');
   component.set('selected', false);
   assert.equal(component.get('selectedButtons.size'), 0, 'should be back to zero elements after setting selected to false');
+});
+
+test('setting selected on non-selectable button is ignored', function(assert) {
+  assert.expect(2);
+  let component = this.subject({
+    isSelectable: false
+  });
+  assert.equal(component.get('selectedButtons').size, 0, 'there should be zero selectedButtons to start');
+  component.set('selected', true);
+  assert.equal(component.get('selectedButtons.size'), 0, 'even after setting select to true, selectedButtons should remain uneffected');
 });
 

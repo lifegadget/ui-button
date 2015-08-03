@@ -1,9 +1,10 @@
 import Ember from 'ember';
 const { computed, observer, $, A, run, on, typeOf, debug, get, set, inject } = Ember;    // jshint ignore:line
 const capitalize = Ember.String.capitalize;
-const camelize = thingy => {
-  return thingy ? Ember.String.camelize(thingy) : thingy;
+const dasherize = thingy => {
+  return thingy ? Ember.String.dasherize(thingy) : thingy;
 };
+
 const isInitialized = value => {
   return typeOf(value) !== 'null' && typeOf(value) !== 'undefined';
 };
@@ -136,7 +137,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
       return _value;
     }
     if(!isInitialized(onValue) && !isInitialized(offValue)) {
-      return title ? camelize(title) : this.get('elementId');
+      return title ? dasherize(title) : this.get('elementId');
     }
     return toggled ? onValue : offValue; // NOTE: if not toggleable; toggled prop will always be false
   },
@@ -177,7 +178,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   size: 'normal',
   width: null,
   keepFocus: false, // keep focus on button after clicking?
-	_size: Ember.computed('mood','size', function() {
+	_size: Ember.computed('size', function() {
     let size = this.get('size');
     if(!size) {
       size = 'normal';
@@ -222,23 +223,23 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
       return this.getSelected();
     }
   }),
-  setSelected(value) {
-    const {selectedButtons,elementId} = this.getProperties('selectedButtons','elementId');
+  setSelected(selected) {
+    const {selectedButtons,value, isSelectable} = this.getProperties('selectedButtons','value','isSelectable');
     debug('calling the setter of selected is considered bad practice, try to use "selectedButtons" instead');
-    if(value) {
-      selectedButtons.add(elementId);
+    if(selected && isSelectable) {
+      selectedButtons.add(value);
     } else {
-      selectedButtons.delete(elementId);
+      selectedButtons.delete(value);
     }
     this.set('selectedButtons', selectedButtons);
   },
   getSelected() {
-    const {isSelectable, selectedButtons, elementId} = this.getProperties('isSelectable', 'selectedButtons', 'elementId');
+    const {isSelectable, selectedButtons, value} = this.getProperties('isSelectable', 'selectedButtons', 'value');
     if(!isSelectable) {
       return false;
     }
 
-    return selectedButtons ? selectedButtons.has(elementId) : false;
+    return selectedButtons ? selectedButtons.has(value) : false;
   },
   toggled: false,
 
@@ -285,7 +286,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
         });
       });
     } catch (e) {
-      // debug(`could not effect ${effect} animation: ${e}`);
+      // do nothing
     }
   },
   setDefaultValues() {
