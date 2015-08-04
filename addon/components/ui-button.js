@@ -154,7 +154,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   ),
   // MOOD
   mood: null,
-  _mood: computed('mood','onMood','offMood','toggled', {
+  _mood: computed('mood','onMood','offMood','toggled','selected','activeMood','inactiveMood', {
     set: function(_,value) {
       return value;
     },
@@ -163,13 +163,18 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
     }
   }),
   getMood() {
-    const {mood,toggled} = this.getProperties('mood', 'toggled');
-    const property = toggled ? 'onMood' : 'offMood';
+    const {mood,toggled,isToggleable,selected} = this.getProperties('mood', 'toggled','isToggleable', 'selected');
+    const toggleProperty = toggled ? 'onMood' : 'offMood';
+    const selectProperty = selected ? 'activeMood' : 'inactiveMood';
     let officialMood;
     if(mood) {
       officialMood = mood;
     } else {
-      officialMood = this.get(property) ? this.get(property) : MOOD_DEFAULT;
+      if(selected || !isToggleable) {
+        officialMood = this.get(selectProperty) ? this.get(selectProperty) : MOOD_DEFAULT;
+      } else {
+        officialMood = this.get(toggleProperty) ? this.get(toggleProperty) : MOOD_DEFAULT;
+      }
     }
 
     return `btn-${officialMood}`;

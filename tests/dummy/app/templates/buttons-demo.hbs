@@ -163,7 +163,8 @@
     {{ui-buttons
       buttons=dynButtons
       size=size
-      moodActive='warning'
+      activeMood=activeButtonMood
+      inactiveMood=inactiveButtonMood
       defaultValue='baz'
       cardinality=cardinality
     }}
@@ -171,7 +172,7 @@
   <div class="col-xs-3 col-sm-3 col-lg-4 monospace">
   <b>\{{ui-buttons </b><br/>
   &nbsp;&nbsp;buttons='{{dynButtons}}' <br/>
-  &nbsp;&nbsp;moodActive='success'<br/>
+  &nbsp;&nbsp;activeMood='{{activeButtonMood}}'<br/>
   &nbsp;&nbsp;defaultValue='bar'<br/>{{#if size}}
   &nbsp;&nbsp;size='{{size}}'<br/>{{/if}}{{#if cardinality}}
   &nbsp;&nbsp;cardinality='{{cardinality}}'<br/>{{/if}}
@@ -185,9 +186,14 @@
         {{text-input value=dynButtons }}
       </div>
       <br/>
-      <div class="col-xs-3">Active Mood</div>
-      <div class="col-xs-9">
-         {{ui-buttons cardinality='0:1' value=activeButtonMood buttons='default,warning,danger'}}
+      <div class="col-xs-3 downer">Active Mood</div>
+      <div class="col-xs-9 downer">
+         {{ui-buttons cardinality='0:1' size='small' value=activeButtonMood buttons='default,success,primary,warning,danger'}}
+      </div>
+      <br/>
+      <div class="col-xs-3 downer">Inactive</div>
+      <div class="col-xs-9 downer">
+         {{ui-buttons cardinality='0:1' size='small' value=inactiveButtonMood buttons='default,success,primary,warning,danger'}}
       </div>
       <br/>
       <div class="col-xs-3 downer">size</div>
