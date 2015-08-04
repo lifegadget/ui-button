@@ -10,7 +10,7 @@ const propertyIsSet = thingy => {
 const isUndefined = thingy => {
   return Ember.typeOf(thingy) === 'undefined';
 };
-const globalItemProps = ['mood','moodActive','moodInactive','size','icon','iconActive','iconInactive'];
+const globalItemProps = ['mood','activeMood','inactiveMood','size','icon','iconActive','iconInactive'];
 const xtend = function (core, options, override=false){
   for (var index in options) {
     if(override || !core[index]) {
@@ -34,8 +34,8 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   // Contains a list of elementIds which are selected
   selectedMutex: true,
   selectedButtons: computed({
-    set: function(param,value) {
-      debug('selectedButtons should never be set!');
+    set: function(_,value) {
+      this.notifyPropertyChange('selectedMutex');
       return value;
     },
     get: function() {
@@ -44,33 +44,41 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   }),
   // VALUES
   values: computed('selectedMutex',{
-    set: function(_,values) {
-      this.setValues(values);
-      return values;
+    set: function(_,values,oldValue) {
+      this.setValues(values,oldValue);
+      return values ? values : []; // This may be a bad idea but idea is to force to array at all times
     },
     get: function() {
       return this.getValues();
     }
   }),
-  setValues(values) {
-    const {selectedButtons,_cardinality} = this.getProperties('selectedButtons', '_cardinality');
+  setValues(values,oldValue) {
+    let {selectedButtons,_cardinality} = this.getProperties('selectedButtons', '_cardinality');
     if(typeOf(values) === 'string') {
       values = values.split(',');
     }
     values = values ? values : [];
-    if(_cardinality.min > 0 && (_cardinality.max === 'M' || _cardinality.max >= values.length) ) {
+    console.log('values is now: %o. Cardinality: %s:%s', values, _cardinality.min, _cardinality.max);
+    if(_cardinality.max === 'M' || _cardinality.max >= values.length ) {
       selectedButtons.clear();
-      selectedButtons.add(...values);
-      console.log('setting values: %o, %o', selectedButtons, this.get('selectedButtons'));
-      // this.notifyPropertyChange('selectedButtons');
-      // this._tellItems('notify', 'selectedButtons');
+      for(var i of values) {
+        this._activateButton(i);
+      }
+      console.log('selectedButtons added (value setter): %o', selectedButtons);
     } else {
-      this.sendAction('error', VALUES_CARDINALITY_ERROR, `Couldn't set the "values" property because it did not meet the cardinality constraints [${_cardinality}]`);
+      console.log('selectedButtons ERROR (value setter): %o, %o', values, selectedButtons);
+      this.sendAction('error', VALUES_CARDINALITY_ERROR, `Couldn't set the "values" property because it did not meet the cardinality constraints [${_cardinality.min}:${_cardinality.max}]`);
+      run.next(()=>{
+        for(var i of oldValue) {
+          this._activateButton(i);
+        }
+      });
     }
   },
   getValues() {
     const selectedButtons = this.get('selectedButtons');
-    console.log('getting values: %o', selectedButtons);
+    console.log('GET values: %o', Array.from(selectedButtons));
+
     return Array.from(selectedButtons);
   },
 
@@ -96,22 +104,24 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
     } else if (_cardinality.max === 0) {
       return null;
     } else {
-      return Array.from(selectedButtons).join(',');
+      const csvValue = Array.from(selectedButtons).join(',');
+      console.log('GET value: %o', csvValue);
+      return csvValue ? csvValue : null;
     }
   },
   setValue(value) {
-    if(value) {
       const {selectedButtons, _cardinality} = this.getProperties('selectedButtons','_cardinality');
-      if(_cardinality.max === 'M' || _cardinality.max > 0) {
+      if(_cardinality.max !== 0) {
         console.log('setting value to: %o', value);
-        selectedButtons.clear(); // setting value always results in singular item in
-        selectedButtons.add(value);
-        // this.notifyPropertyChange('selectedButtons');
-        this._tellItems('notify', 'selectedButtons');
+        if(value) {
+          this._activateButton(value, true);
+        } else {
+          selectedButtons.clear();
+          this.notifyPropertyChange('selectedMutex');
+        }
       } else {
-        console.log('setting value but did not meet criteria: %o, %o', value, _cardinality);
+        console.log('Trying to set value[%o] with a cardinality of 0', value);
       }
-    }
   },
   // CARDINALITY
   defaultCardinality: {min: 0, max: 0},
@@ -124,7 +134,6 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       return this._getCardinality();
     }
   }),
-
   _getCardinality() {
     const {cardinality, defaultCardinality} = this.getProperties('cardinality', 'defaultCardinality');
     let value;
@@ -141,6 +150,22 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       value = cardinality;
     } else {
       value = defaultCardinality;
+    }
+    // reduce set buttons to no more than max
+    if(value.max !== 'M') {
+      const selectedButtons = this.get('selectedButtons');
+      const differential = Number(selectedButtons.size - value.max);
+      if(differential > 0) {
+        const removal = Array.from(selectedButtons).slice(differential * -1);
+        for(var item of removal) {
+          console.log('deactivating: %s', item);
+          selectedButtons.delete(item);
+        }
+        console.log('after deactivation: %o, %o', selectedButtons, this.get('selectedButtons'));
+        run.next(()=>{
+          this.notifyPropertyChange('selectedMutex');
+        });
+      }
     }
 
     return value;
@@ -254,7 +279,6 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       });
       return obj;
     };
-
     items = items ? items : [];
     items = typeOf(items) === 'string' ? items.split(',') : new A(items);
 
@@ -263,9 +287,11 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       return xtend(baseline,getPropertyValues(globalItemProps));
     }));
   }),
-  _activateButton(value) {
+  _activateButton(value, forcedClear=false) {
     const {_cardinality,selectedButtons} = this.getProperties('_cardinality','selectedButtons');
-
+    if(forcedClear) {
+      selectedButtons.clear();
+    }
     if(_cardinality.max === 1 && selectedButtons.size === 1) {
       selectedButtons.clear();
       selectedButtons.add(value);
@@ -276,11 +302,8 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       selectedButtons.add(value);
     }
     this.sendAction('action', 'selected', value);
-    // this.notifyPropertyChange('selectedButtons');
-    // this.notifyPropertyChange('values');
-    // this.notifyPropertyChange('value');
     this.notifyPropertyChange('selectedMutex');
-    this._tellItems('notify', 'selectedButtons');
+    return true;
   },
   _deactivateButton(value) {
     const {_cardinality,selectedButtons} = this.getProperties('_cardinality','selectedButtons');
@@ -291,18 +314,15 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
     }
     selectedButtons.delete(value);
     this.sendAction('action', 'unselected', value);
-    // this.notifyPropertyChange('values');
-    // this.notifyPropertyChange('value');
     this.notifyPropertyChange('selectedMutex');
-    this._tellItems('notify', 'selectedButtons');
+    return true;
   },
   // if cardinality.min is non-zero ensure button is selected
   selectButtonIfNotSelected() {
     run.next(()=>{
       const {_cardinality,selectedButtons} = this.getProperties('_cardinality', 'selectedButtons');
       if(_cardinality.min === 1 && selectedButtons.size === 0) {
-        selectedButtons.add(this.get('_registeredItems.0.value'));
-        this._tellItems('notify', 'selectedButtons');
+        this._activateButton(this.get('_registeredItems.0.value'));
       }
     });
   },
@@ -339,17 +359,6 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       }
       return true;
     },
-
-    /**
-     * A request to select or deselect a button item
-     * @param  {object}   self
-     * @param  {object}   item
-     * @param  {boolean}  state   whether to enable(true) or disable(false)
-     * @return {null}
-     */
-    select(self, item, state) { //jshint ignore:line
-      // TODO: implement
-    },
     registration(self,item) {
       const _registeredItems = self.get('_registeredItems');
       const selectedButtons = computed.alias('group.selectedButtons');
@@ -368,6 +377,13 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       if(groupValue && groupValue === itemValue) {
         console.log('activating: %o, %o', groupValue, self.get('_cardinality'));
         self._activateButton(groupValue);
+        run.next(()=> {
+          /**
+           * there seems to be a small break in Ember where setting a property
+           * before it is fully initialized doesn't propagate observer events
+           */
+          self.notifyPropertyChange('selectedMutex');
+        });
       }
 
       run.debounce(self, self.registrationComplete, 1);
@@ -389,7 +405,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
     // nothing yet
   },
   willRender() {
-
+    // nothing yet
   },
   registrationComplete() {
     this.set('_registrationComplete', true);

@@ -214,7 +214,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   }),
   // SELECTED
   isSelectable: false,
-  selected: computed('selectedButtons','isSelectable','value',{
+  selected: computed('selectedButtons','isSelectable','group.selectedMutex','value',{
     set:function(_,value) {
       this.setSelected(value);
       return value;
