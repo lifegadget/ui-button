@@ -173,9 +173,13 @@
   <b>\{{ui-buttons </b><br/>
   &nbsp;&nbsp;buttons='{{dynButtons}}' <br/>
   &nbsp;&nbsp;activeMood='{{activeButtonMood}}'<br/>
+  &nbsp;&nbsp;inactiveMood='{{inactiveButtonMood}}'<br/>
   &nbsp;&nbsp;defaultValue='bar'<br/>{{#if size}}
   &nbsp;&nbsp;size='{{size}}'<br/>{{/if}}{{#if cardinality}}
-  &nbsp;&nbsp;cardinality='{{cardinality}}'<br/>{{/if}}
+  &nbsp;&nbsp;cardinality='{{cardinality}}'<br/>{{/if}}{{#if activeIcon}}
+  &nbsp;&nbsp;activeIcon='{{activeIcon}}'<br/>{{/if}}{{#if inactiveIcon}}
+  &nbsp;&nbsp;activeIcon='{{inactiveIcon}}'<br/>{{/if}}{{#if icon}}
+  &nbsp;&nbsp;activeIcon='{{icon}}'<br/>{{/if}}
   <b>}}</b>
   </div>
   <div class="col-xs-4 col-sm-6 col-lg-5">
@@ -250,6 +254,43 @@
   </div>
   <div class="col-xs-4 col-sm-5 col-lg-5">
     We're trying to use the now accepted norm of "data down, actions up" to avoid side-effects and therefore when you use the <code>ui-buttons</code> components you can bind input values such as <i>size</i>,
+  </div>
+</div>
+
+<h3>Shortcut Components</h3>
+<hr>
+<div class="row">
+  <div class="col-xs-5 col-sm-3 col-lg-3">
+    {{radio-buttons
+      buttons='Foo,Bar,Baz'
+      value=radioValue
+    }}<br/>
+    <p class="downer">value: {{radioValue}}</p>  </div>
+  <div class="col-xs-3 col-sm-3 col-lg-4 monospace">
+  <b>\{{radio-buttons </b><br/>
+  &nbsp;&nbsp;buttons='Foo,Bar,Baz' <br/>
+  }}
+  </div>
+  <div class="col-xs-4 col-sm-5 col-lg-5">
+    <h4>Radio Buttons</h4>
+    A simple shortcut/config for ui-buttons ... this simply sets the default cardinality to a default of '1:1'
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-5 col-sm-3 col-lg-3">
+    {{checkbox-buttons
+      buttons='Foo,Bar,Baz'
+      values=checkValue
+    }}<br/>
+    <p class="downer">values: {{checkValue}}</p>  </div>
+  <div class="col-xs-3 col-sm-3 col-lg-4 monospace">
+  <b>\{{checkbox-buttons </b><br/>
+  &nbsp;&nbsp;buttons='Foo,Bar,Baz' <br/>
+  }}
+  </div>
+  <div class="col-xs-4 col-sm-5 col-lg-5">
+    <h4>Checkbox Buttons</h4>
+    Another simple shortcut/config ... this  sets the default cardinality to '0:M'
   </div>
 </div>
 
