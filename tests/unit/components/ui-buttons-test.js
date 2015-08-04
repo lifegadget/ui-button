@@ -86,30 +86,28 @@ test('Setting values', function(assert) {
     assert.equal(fooButton.get('selected'), true, 'the button "foo" should be selected');
     let barButton = component.get('_registeredItems').filterBy('value','bar')[0];
     assert.equal(barButton.get('selected'), true, 'the button "bar" should be selected');
-    assert.equal(component.get('values.length'), 0, 'no items should be in values after setting to null');
 
     // Set to null
     component.set('values', null);
-      selectedButtons = component.get('selectedButtons');
-      assert.equal(selectedButtons.size, 0, 'no items should be in selectedButtons: ' + JSON.stringify(selectedButtons));
-    Ember.run.next(()=>{
-      assert.equal(selectedButtons.has('foo'), false, `selectedButtons should not contain foo (${JSON.stringify(selectedButtons)})`);
-      assert.equal(selectedButtons.has('bar'), false, 'selectedButtons should not contain bar');
-      // check underlying buttons
-      fooButton = component.get('_registeredItems').filterBy('value','foo')[0];
-      assert.equal(fooButton.get('selected'), false, 'the button "foo" should NOT be selected');
-      barButton = component.get('_registeredItems').filterBy('value','bar')[0];
-      assert.equal(barButton.get('selected'), false, 'the button "bar" should NOT be selected');
+    selectedButtons = component.get('selectedButtons');
+    assert.equal(component.get('values.length'), 0, 'no items should be in values after setting to null');
+    assert.equal(selectedButtons.size, 0, 'no items should be in selectedButtons: ' + JSON.stringify(selectedButtons));
+    assert.equal(selectedButtons.has('foo'), false, `selectedButtons should not contain foo (${JSON.stringify(selectedButtons)})`);
+    assert.equal(selectedButtons.has('bar'), false, 'selectedButtons should not contain bar');
+    // check underlying buttons
+    fooButton = component.get('_registeredItems').filterBy('value','foo')[0];
+    assert.equal(fooButton.get('selected'), false, 'the button "foo" should NOT be selected');
+    barButton = component.get('_registeredItems').filterBy('value','bar')[0];
+    assert.equal(barButton.get('selected'), false, 'the button "bar" should NOT be selected');
 
-      // Set to []
-      component.set('values', []);
-      assert.equal(component.get('values.length'), 0, 'no items should be in values after setting to null');
-      selectedButtons = component.get('selectedButtons');
-      assert.equal(selectedButtons.size, 0, 'no items should be in selectedButtons');
-      // check underlying buttons
-      fooButton = component.get('_registeredItems').filterBy('value','foo')[0];
-      assert.equal(fooButton.get('selected'), false, 'the button "foo" should be selected');
-    });
+    // Set to []
+    component.set('values', []);
+    assert.equal(component.get('values.length'), 0, 'no items should be in values after setting to []');
+    selectedButtons = component.get('selectedButtons');
+    assert.equal(selectedButtons.size, 0, 'no items should be in selectedButtons');
+    // check underlying buttons
+    fooButton = component.get('_registeredItems').filterBy('value','foo')[0];
+    assert.equal(fooButton.get('selected'), false, 'the button "foo" should be selected');
   });
 });
 

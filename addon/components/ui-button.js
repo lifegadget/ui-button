@@ -30,7 +30,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
       return new Set();
     }
   }),
-  disabled: computed('group.disabledMutex', {
+  disabled: computed('group.disabledMutex','disabledMutex', {
     set: function(_, value) {
       this.setDisabled(value);
       return value;

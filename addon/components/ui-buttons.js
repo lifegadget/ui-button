@@ -66,6 +66,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
         this._activateButton(i);
       }
       console.log('selectedButtons added (value setter): %o', selectedButtons);
+      this.notifyPropertyChange('selectedMutex');
     } else {
       console.log('selectedButtons ERROR (value setter): %o, %o', values, selectedButtons);
       this.sendAction('error', VALUES_CARDINALITY_ERROR, `Couldn't set the "values" property because it did not meet the cardinality constraints [${_cardinality.min}:${_cardinality.max}]`);

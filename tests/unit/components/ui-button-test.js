@@ -197,8 +197,10 @@ test('disabled flag impacted by changes to disabledButtons', function(assert) {
     const id = component.get('elementId');
     assert.equal(component.get('disabled'), false, '"disabled" should be false when nothing is in disabledButtons');
     component.set('disabledButtons', new Set().add(id));
+    component.notifyPropertyChange('disabledMutex');
     assert.equal(component.get('disabled'), true, '"disabled" should switch to true when new Set replacement provided');
     component.set('disabledButtons', new Set());
+    component.notifyPropertyChange('disabledMutex');
     assert.equal(component.get('disabled'), false, '"disabled" should switch to false when new empty Set replacement provided');
     component.set('disabledButtons', new Set().add(id+'zzz'));
     assert.equal(component.get('disabled'), false, '"disabled" should remain false when new Set added but which only has other elementIds');
