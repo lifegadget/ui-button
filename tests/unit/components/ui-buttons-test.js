@@ -35,17 +35,25 @@ test('Registration of inline buttons', function(assert) {
   assert.equal(titles.has('Foo'),true,'the title of one of the items should be "Foo"');
 });
 
-test('Inline buttons with initial value set', function(assert) {
+test('Inline buttons: setting value', function(assert) {
   let component = this.subject({
-    buttons: 'Foo,Bar,Baz',
-    value: 'foo'
+    cardinality: '1:M',
+    buttons: 'Foo,Bar,Baz'
   });
   this.render();
-  const foo = component.get('_registeredItems').filter(item => {
-    return item.get('value') === 'foo';
-  })[0];
-  const fooId = foo.get('elementId');
+  Ember.run.next(()=> {
+    const selectedButtons = component.get('selectedButtons');
+    assert.equal(selectedButtons.size, 0, 'initially no buttons selected');
+    component.set('value', 'foo');
+    assert.equal(component.get('value'), 'foo', 'after setting foo, it should be accessible with get');
+    assert.equal(selectedButtons.size, 1, 'one item should be selected');
+    assert.equal(selectedButtons.has('foo'), true, 'selectedButtons has "foo"');
+    component.set('value', 'bar');
+    assert.equal(component.get('value'), 'bar', 'after setting bar, it should be accessible with get');
+    assert.equal(selectedButtons.size, 1, 'still only one item should exist in selectedButtons');
+    assert.equal(selectedButtons.has('bar'), true, 'selectedButtons should have "bar" ... in fact was "' + Array.from(selectedButtons)[0] + '"');
+    const barButton = component.get('_registeredItems').filterBy('value','bar')[0];
+    assert.equal(barButton.get('selected'), true, 'the button "bar" should be selected');
 
-  assert.equal(String(fooId).substr(0,5),'ember',`registered item with value foo has an elementId [${fooId}]`);
-  assert.equal(component.get('selectedItems').has(fooId),true,'the elementId of foo should be in valueItems');
+  });
 });

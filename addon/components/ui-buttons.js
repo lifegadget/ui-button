@@ -22,6 +22,7 @@ const xtend = function (core, options, override=false){
 };
 const CARDINALITY_MIN = 'cardinality-min-threashold';
 const CARDINALITY_MAX = 'cardinality-max-threashold';
+const VALUES_CARDINALITY_ERROR = 'values-cardinality-error';
 
 const uiButtons = Ember.Component.extend(GroupMessaging,{
   layout: layout,
@@ -31,6 +32,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
 
   // SELECTED BUTTONS
   // Contains a list of elementIds which are selected
+  selectedMutex: true,
   selectedButtons: computed({
     set: function(param,value) {
       debug('selectedButtons should never be set!');
@@ -41,31 +43,43 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
     }
   }),
   // VALUES
-  values: computed('selectedButtons',{
-    set: function(prop,value) {
-      if(typeOf(value) === 'string') {
-        value = value.split(',');
-      }
-      console.log('buttons values set: %o', value);
-
-      return new A(value);
+  values: computed('selectedMutex',{
+    set: function(_,values) {
+      this.setValues(values);
+      return values;
     },
     get: function() {
-      const {selectedButtons,_registeredItems} = this.getProperties('selectedButtons','_registeredItems');
-      return _registeredItems.filter(item => {
-        return selectedButtons.has(item.get('elementId'));
-      }).map(item => {
-        return item.get('value');
-      });
+      return this.getValues();
     }
   }),
+  setValues(values) {
+    const {selectedButtons,_cardinality} = this.getProperties('selectedButtons', '_cardinality');
+    if(typeOf(values) === 'string') {
+      values = values.split(',');
+    }
+    values = values ? values : [];
+    if(_cardinality.min > 0 && (_cardinality.max === 'M' || _cardinality.max >= values.length) ) {
+      selectedButtons.clear();
+      selectedButtons.add(...values);
+      console.log('setting values: %o, %o', selectedButtons, this.get('selectedButtons'));
+      // this.notifyPropertyChange('selectedButtons');
+      // this._tellItems('notify', 'selectedButtons');
+    } else {
+      this.sendAction('error', VALUES_CARDINALITY_ERROR, `Couldn't set the "values" property because it did not meet the cardinality constraints [${_cardinality}]`);
+    }
+  },
+  getValues() {
+    const selectedButtons = this.get('selectedButtons');
+    console.log('getting values: %o', selectedButtons);
+    return Array.from(selectedButtons);
+  },
 
   /**
    * VALUE
    * Returns a scalar value which represents the first element in the
    * values array; null if empty values
    */
-  value: computed('selectedButtons',{
+  value: computed('selectedMutex',{
     set: function(_,value) {
       this.setValue(value);
       return value;
@@ -76,22 +90,26 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   }),
   getValue() {
     const {selectedButtons, _cardinality} = this.getProperties('selectedButtons','_cardinality');
+    console.log('getting value [%s]: %o. (%o)', this.get('elementId'), Array.from(selectedButtons), _cardinality);
     if(_cardinality.max === 1) {
       return selectedButtons.size > 0 ? Array.from(selectedButtons)[0] : null;
     } else if (_cardinality.max === 0) {
       return null;
     } else {
-      return Array.from(selectedButtons).map(item => {
-        return item.get('value');
-      }).join(',');
+      return Array.from(selectedButtons).join(',');
     }
   },
   setValue(value) {
     if(value) {
       const {selectedButtons, _cardinality} = this.getProperties('selectedButtons','_cardinality');
       if(_cardinality.max === 'M' || _cardinality.max > 0) {
+        console.log('setting value to: %o', value);
         selectedButtons.clear(); // setting value always results in singular item in
         selectedButtons.add(value);
+        // this.notifyPropertyChange('selectedButtons');
+        this._tellItems('notify', 'selectedButtons');
+      } else {
+        console.log('setting value but did not meet criteria: %o, %o', value, _cardinality);
       }
     }
   },
@@ -258,8 +276,11 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       selectedButtons.add(value);
     }
     this.sendAction('action', 'selected', value);
+    // this.notifyPropertyChange('selectedButtons');
+    // this.notifyPropertyChange('values');
+    // this.notifyPropertyChange('value');
+    this.notifyPropertyChange('selectedMutex');
     this._tellItems('notify', 'selectedButtons');
-    this.notifyPropertyChange('value');
   },
   _deactivateButton(value) {
     const {_cardinality,selectedButtons} = this.getProperties('_cardinality','selectedButtons');
@@ -270,8 +291,10 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
     }
     selectedButtons.delete(value);
     this.sendAction('action', 'unselected', value);
+    // this.notifyPropertyChange('values');
+    // this.notifyPropertyChange('value');
+    this.notifyPropertyChange('selectedMutex');
     this._tellItems('notify', 'selectedButtons');
-    this.notifyPropertyChange('value');
   },
   // if cardinality.min is non-zero ensure button is selected
   selectButtonIfNotSelected() {
@@ -290,7 +313,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       const propValue = this.get(prop);
       const defaultValue = this.get('default' + capitalize(prop));
       if(propertyIsSet(defaultValue) && isUndefined(propValue)) {
-        console.log('defaultValue for group prop [%s] is: %s', prop,defaultValue);
+        console.log('defaultValue for group prop [%s] is: %s', this.get('elementId'),defaultValue);
         this.set(prop, defaultValue);
       }
     }
@@ -333,7 +356,6 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       const disabledButtons = computed.alias('group.disabledButtons');
       const makeSelectable = computed.alias('group.makeSelectable');
       const size = computed.alias('group.size');
-      // const cardinality = computed.alias('group.cardinality');
       _registeredItems.pushObject(item);
       // link globally managed properties back to item ("data down")
       Ember.defineProperty(item,'selectedButtons',selectedButtons);
@@ -344,6 +366,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       const groupValue = self.get('value');
       const itemValue = item.get('value');
       if(groupValue && groupValue === itemValue) {
+        console.log('activating: %o, %o', groupValue, self.get('_cardinality'));
         self._activateButton(groupValue);
       }
 

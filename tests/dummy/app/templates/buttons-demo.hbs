@@ -33,7 +33,7 @@
 <hr>
 <div class="row">
   <div class="col-xs-4 col-sm-3 col-lg-2">
-    {{#ui-buttons howMany=howMany disabled=d size=s cardinality='0:1' as |g1|}}
+    {{#ui-buttons howMany=howMany disabled=d size=s value=v1 as |g1|}}
       {{ui-button title='foo' group=g1}}
       {{ui-button title='bar' group=g1}}
       {{ui-button title='baz' group=g1}}
@@ -44,6 +44,7 @@
       <br/>
       <i>&nbsp;&nbsp; and s = {{s}}</i>
     </p>
+
 
   </div>
   <div class="col-xs-4 col-sm-5 col-lg-5 monospace">
@@ -69,7 +70,7 @@
 <hr>
 <div class="row">
   <div class="col-xs-4 col-sm-3 col-lg-2">
-    {{#ui-buttons cardinality=c as |g2|}}
+    {{#ui-buttons cardinality=c values=vs2 value=v2 as |g2|}}
       {{ui-button title='foo' group=g2}}
       {{ui-button title='bar' group=g2}}
       {{ui-button title='baz' group=g2}}
@@ -77,6 +78,12 @@
     <br/>
     <p class='downer'>
       <i>&nbsp;&nbsp; where c = {{c}}</i>
+    </p>
+    <hr>
+    <p class='downer'>
+      VALUES are <i>&nbsp;&nbsp; {{vs2}}</i>
+      <br/>
+      VALUE is <i>&nbsp;&nbsp; {{v2}}</i>
     </p>
   </div>
   <div class="col-xs-4 col-sm-5 col-lg-5 monospace">

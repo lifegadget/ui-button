@@ -204,7 +204,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   // allows for control to move into the selected state, by default buttons are just pressed not selected
   isToggleable: false,
   // Contains a list of elementIds which are selected (if not grouped then the only ID would be itself)
-  selectedButtons: computed('group.selected', {
+  selectedButtons: computed({
     set: function(param,value) {
       return value;
     },
@@ -231,6 +231,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
     } else {
       selectedButtons.delete(value);
     }
+    console.log('item is setting selectButtons: %o', selectedButtons);
     this.set('selectedButtons', selectedButtons);
   },
   getSelected() {
@@ -327,7 +328,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   // MESSAGING
   buttonActions: {
     notify(self, property) {
-      console.log('notifying');
+      console.log('notifying %s', property);
       self.notifyPropertyChange(property);
     }
   },

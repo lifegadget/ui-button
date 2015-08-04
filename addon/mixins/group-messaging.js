@@ -11,16 +11,6 @@ export default Ember.Mixin.create({
     const _registeredItems = this.get('_registeredItems');
     _registeredItems.pushObject(child);
   },
-  _getItem(id) {
-    const _registeredItems = this.get('_registeredItems');
-    const item = _registeredItems.filterBy('elementId', id);
-    return item ? item[0] : false;
-  },
-  _getItemsByValue(id) {
-    const _registeredItems = this.get('_registeredItems');
-    const items = _registeredItems.filterBy('value', id);
-    return items;
-  },
   /**
    * Receive message from a registered Item
    * @param  {string} cmd    a command name for the message
