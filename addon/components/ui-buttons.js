@@ -23,6 +23,7 @@ const xtend = function (core, options, override=false){
 const CARDINALITY_MIN = 'cardinality-min-threashold';
 const CARDINALITY_MAX = 'cardinality-max-threashold';
 const VALUES_CARDINALITY_ERROR = 'values-cardinality-error';
+const SET_WITH_CARDINALITY = 'set-with-cardinality-0';
 
 const uiButtons = Ember.Component.extend(GroupMessaging,{
 
@@ -59,7 +60,6 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       values = values.split(',');
     }
     values = values ? values : [];
-    console.log('values is now: %o. Cardinality: %s:%s', values, _cardinality.min, _cardinality.max);
     if(_cardinality.max === 'M' || _cardinality.max >= values.length ) {
       selectedButtons.clear();
       for(var i of values) {
@@ -101,7 +101,6 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   setValue(value) {
       const {selectedButtons, _cardinality} = this.getProperties('selectedButtons','_cardinality');
       if(_cardinality.max !== 0) {
-        console.log('setting value to: %o', value);
         if(value) {
           this._activateButton(value, true);
         } else {
@@ -109,12 +108,11 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
           this.notifyPropertyChange('selectedMutex');
         }
       } else {
-        console.log('Trying to set value[%o] of "%s" with a cardinality of 0', value, this.get('elementId'));
+        this.sendAction('error', SET_WITH_CARDINALITY, `Trying to set value[${value}] with a cardinality of 0`);
       }
   },
   getValue() {
     const {selectedButtons, _cardinality} = this.getProperties('selectedButtons','_cardinality');
-    console.log('getting value [%s]: %o. (%o)', this.get('elementId'), Array.from(selectedButtons), _cardinality);
     if(_cardinality.max === 1) {
       return selectedButtons.size > 0 ? Array.from(selectedButtons)[0] : null;
     } else if (_cardinality.max === 0) {
@@ -160,7 +158,6 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       if(differential > 0) {
         const removal = Array.from(selectedButtons).slice(differential * -1);
         for(var item of removal) {
-          console.log('deactivating: %s', item);
           selectedButtons.delete(item);
         }
         console.log('after deactivation: %o, %o', selectedButtons, this.get('selectedButtons'));
@@ -382,7 +379,6 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       const groupValue = self.get('value');
       const itemValue = item.get('value');
       if(groupValue && groupValue === itemValue) {
-        console.log('activating: %o, %o', groupValue, self.get('_cardinality'));
         self._activateButton(groupValue);
         run.next(()=> {
           /**
