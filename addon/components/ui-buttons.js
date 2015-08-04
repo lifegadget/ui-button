@@ -25,6 +25,7 @@ const CARDINALITY_MAX = 'cardinality-max-threashold';
 const VALUES_CARDINALITY_ERROR = 'values-cardinality-error';
 
 const uiButtons = Ember.Component.extend(GroupMessaging,{
+
   layout: layout,
   tagName: 'div',
   classNames: ['ui-button', 'btn-group'],
@@ -347,9 +348,9 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
      * @return {boolean}  passes back a boolean response to the requestor to indicate whether or not the request has been granted
      */
      pressed(self, item){
-      console.log('buttons pressed: %o', item);
       const selectedButtons = self.get('selectedButtons');
       const value = item.get('value');
+      self.sendAction('action', 'pressed', item);
       if(selectedButtons.has(value)) {
         // asking for deactivation
         self._deactivateButton(value);

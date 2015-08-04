@@ -34,9 +34,16 @@ export default Ember.Controller.extend({
   activeButtonMood: 'warning',
   inactiveButtonMood: 'default',
 
+
   actions: {
     changed: function(newValue,oldValue) {
       window.alert(`Value changed from "${oldValue}" to "${newValue}"`);
+    },
+    disablement(cmd, item) {
+      if(cmd === 'toggled') {
+        console.log('setting d to %s', item.get('value'));
+        this.set('d', item.get('value'));
+      }
     }
   }
 

@@ -58,7 +58,8 @@
     <h4>Block Scope & Registration</h4>
     Associating the button with the <code>ui-buttons</code> component is achieved by setting the <code>group</code> property to the yielded value of buttons component. This automatically takes care of item registration and allows the container to orchestrate global properties like sizing, enablement/disablement, etc.<br/>
     <p class="downer">
-      {{ui-toggle-button on='enable the group' off='disable the group' value=d }}
+      {{ui-toggle-button on='enable the group' off='disable the group' onValue=true offValue=false action='disablement'}}
+      {{ui-toggle-button on='enable foo' off='disable foo' onValue='foo' offValue=false action='disablement'}}
       <br/>
       <p class="downer">
         {{ui-buttons buttons='small,normal,large' value=s size='small' cardinality='1:1'}}
@@ -129,7 +130,7 @@
 <div class="row">
   <div class="col-xs-5 col-sm-3 col-lg-3">
     {{ui-buttons
-      type='radio'
+      cardinality='0:2'
       buttons='Foo,Bar,Baz'
       disabled='baz'
       activeMood='success'
@@ -139,7 +140,7 @@
   <div class="col-xs-3 col-sm-3 col-lg-4 monospace">
   <b>\{{ui-buttons </b><br/>
   &nbsp;&nbsp;buttons='Foo,Bar,Baz' <br/>
-  &nbsp;&nbsp;type='radio'<br/>
+  &nbsp;&nbsp;cardinality='0:2'<br/>
   &nbsp;&nbsp;disabled='baz'<br/>
   &nbsp;&nbsp;activeMood='success'<br/>
   &nbsp;&nbsp;defaultValue='bar'<br/>
