@@ -30,7 +30,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
       return new Set();
     }
   }),
-  disabled: computed('disabledButtons', {
+  disabled: computed('group.disabledMutex', {
     set: function(_, value) {
       this.setDisabled(value);
       return value;
@@ -41,8 +41,8 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   }),
   setDisabled(value) {
     const {elementId, disabledButtons} = this.getProperties('elementId','disabledButtons');
+    const id = this.get('value');
     const doItNow = value => {
-      const id = this.get('elementId');
       if(value) {
         disabledButtons.add(id);
         this.set('disabledButtons', disabledButtons);
@@ -63,8 +63,8 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
     }
   },
   getDisabled() {
-    let {disabledButtons,elementId} = this.getProperties('disabledButtons','elementId');
-    return disabledButtons ? disabledButtons.has(elementId) : false;
+    let {disabledButtons,value} = this.getProperties('disabledButtons','value');
+    return disabledButtons ? disabledButtons.has(value) : false;
   },
 
   enabled: computed('disabled', {

@@ -161,7 +161,6 @@
 <div class="row">
   <div class="col-xs-5 col-sm-3 col-lg-3">
     {{ui-buttons
-      type='radio'
       buttons=dynButtons
       size=size
       moodActive='warning'
@@ -172,7 +171,7 @@
   <div class="col-xs-3 col-sm-3 col-lg-4 monospace">
   <b>\{{ui-buttons </b><br/>
   &nbsp;&nbsp;buttons='{{dynButtons}}' <br/>
-  &nbsp;&nbsp;type='radio'<br/>
+  &nbsp;&nbsp;cardinality='0:1'<br/>
   &nbsp;&nbsp;moodActive='success'<br/>
   &nbsp;&nbsp;defaultValue='bar'<br/>{{#if size}}
   &nbsp;&nbsp;size='{{size}}'<br/>{{/if}}{{#if cardinality}}
@@ -189,12 +188,12 @@
       <br/>
       <div class="col-xs-3">Active Mood</div>
       <div class="col-xs-9">
-         {{ui-buttons type='radio' value=activeButtonMood buttons='default,warning,danger'}}
+         {{ui-buttons cardinality='0:1' value=activeButtonMood buttons='default,warning,danger'}}
       </div>
       <br/>
       <div class="col-xs-3 downer">size</div>
       <div class="col-xs-9 downer">
-        {{ui-buttons buttons=sizes size='small' type='radio' value=size }}
+        {{ui-buttons buttons=sizes size='small' cardinality='0:1' value=size }}
       </div>
       <br/>
       <div class="col-xs-3 downer">cardinality</div>
@@ -213,7 +212,7 @@
           buttons='none,both,active,inactive'
           value=iconStrategy
           size='small'
-          type='radio'
+          cardinality='1:1'
           defaultValue='none'
           canBeEmpty=false
         }}
@@ -229,7 +228,7 @@
 <div class="row">
   <div class="col-xs-5 col-sm-3 col-lg-3">
     {{ui-buttons
-      type='radio'
+      cardinality='0:1'
       buttons='Foo,Bar,Baz'
       defaultValue='bar'
       value=listenDontTalk
@@ -239,7 +238,7 @@
   <div class="col-xs-3 col-sm-3 col-lg-4 monospace">
   <b>\{{ui-buttons </b><br/>
   &nbsp;&nbsp;buttons='Foo,Bar,Baz' <br/>
-  &nbsp;&nbsp;type='radio'<br/>
+  &nbsp;&nbsp;cardinality='0:1'<br/>
   &nbsp;&nbsp;defaultValue='bar'<br/>
   &nbsp;&nbsp;value=listenDontTalk<br/>
   &nbsp;&nbsp;changed="changed"<br/>

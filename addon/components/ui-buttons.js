@@ -97,6 +97,20 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       return this.getValue();
     }
   }),
+  setValue(value) {
+      const {selectedButtons, _cardinality} = this.getProperties('selectedButtons','_cardinality');
+      if(_cardinality.max !== 0) {
+        console.log('setting value to: %o', value);
+        if(value) {
+          this._activateButton(value, true);
+        } else {
+          selectedButtons.clear();
+          this.notifyPropertyChange('selectedMutex');
+        }
+      } else {
+        console.log('Trying to set value[%o] of "%s" with a cardinality of 0', value, this.get('elementId'));
+      }
+  },
   getValue() {
     const {selectedButtons, _cardinality} = this.getProperties('selectedButtons','_cardinality');
     console.log('getting value [%s]: %o. (%o)', this.get('elementId'), Array.from(selectedButtons), _cardinality);
@@ -109,20 +123,6 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       console.log('GET value: %o', csvValue);
       return csvValue ? csvValue : null;
     }
-  },
-  setValue(value) {
-      const {selectedButtons, _cardinality} = this.getProperties('selectedButtons','_cardinality');
-      if(_cardinality.max !== 0) {
-        console.log('setting value to: %o', value);
-        if(value) {
-          this._activateButton(value, true);
-        } else {
-          selectedButtons.clear();
-          this.notifyPropertyChange('selectedMutex');
-        }
-      } else {
-        console.log('Trying to set value[%o] with a cardinality of 0', value);
-      }
   },
   // CARDINALITY
   defaultCardinality: {min: 0, max: 0},
@@ -190,69 +190,73 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   * Regardless of disabled type, disabledButtons will be an ES6 Set which indicates
   * which elementId's should be disabled.
   */
-  disabled: false,
-  disabledButtons: computed('disabled',{
+  disabledMutex: null,
+  disabled: computed({
     set(_,value) {
-      this.set('_disabledButtons', value);
+      // debug('ui-buttons: it is bad practice to directly set the _disabled property');
+      this.setDisabled(value);
       return value;
     },
     get() {
-      return this.getDisabledButtons();
+      return this.getDisabled();
     }
   }),
-  getDisabledButtons() {
-    const disabled = this.get('disabled');
-    const disabledButtons = this.get('_disabledButtons') || new Set();
-    const _registeredItems = this.get('_registeredItems');
-    if (typeOf(disabled) === 'object' && disabled.size) {
-      return disabled;
-    }
-    disabledButtons.clear();
-    // get elementIds from registered buttons
-    const ids = new Set(_registeredItems.map(item => {
-      return item.get('elementId');
-    }));
-    const processArray = (disabledArray) => {
-      for (let disabledItem of disabledArray) {
-        console.log('processing %s', disabledItem);
-        if(disabledItem.substr(0,5) === 'ember') {
-          if(ids.has(disabledItem)) {
-            disabledButtons.delete(disabledItem);
-          } else {
-            disabledButtons.add(disabledItem);
-          }
-        } else {
-          const idsWithValue = _registeredItems.filterBy('value',disabledItem).map(item => {
-            return item.get('elementId');
-          });
-          for(let i of idsWithValue) {
-              disabledButtons.add(i);
-          }
-        }
+  setDisabled(value) {
+    const disabledButtons = this.get('disabledButtons');
+    const process = (cmd, values) => {
+      console.log('%s: %o', cmd, values);
+      disabledButtons.clear();
+      for(var i of values) {
+        console.log('%s: %o', cmd, i);
+        disabledButtons[cmd](i);
       }
+      return cmd === 'add' ? true : false;
     };
-    if(typeOf(disabled) === 'string') {
-      const disabledArray = disabled.split(',');
-      processArray(disabledArray);
-    }
-    if(typeOf(disabled) === 'array') {
-      processArray(disabled);
-    }
-    if(typeOf(disabled) === 'boolean' ) {
-      if(disabled) {
-        console.log('disabling all');
-        for(let i of ids) {
-          disabledButtons.add(i);
+    switch(typeOf(value)) {
+      case 'boolean':
+        const getRegisteredValues = () => {
+          return this.get('_registeredItems').map(item => {
+            return item.get('value');
+          });
+        };
+        if(this.get('_registrationComplete')) {
+          if(value) {
+            process('add', getRegisteredValues());
+          } else {
+            process('delete', getRegisteredValues());
+          }
         }
-      } else {
-        console.log('enabling all');
-        disabledButtons.clear();
-      }
-    }
-    console.log('returning: %o', disabledButtons);
+        run.next(()=>{
+          if(value) {
+            process('add', getRegisteredValues());
+          } else {
+            process('delete', getRegisteredValues());
+          }
+        });
+        break;
 
-    return disabledButtons;
+      case 'string':
+        value = value.split(',');
+        process('add',value);
+        break;
+
+      case 'number':
+        value = [value];
+        process('add',value);
+        break;
+
+      case 'array':
+        process('add',value);
+        break;
+    }
+    this.notifyPropertyChange('disabledMutex');
   },
+  getDisabled() {
+    return Array.from(this.get('disabledButtons'));
+  },
+  disabledButtons: computed(function() {
+    return new Set();
+  }),
 
   icon: null,
   iconActive: null,
@@ -308,8 +312,9 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   },
   _deactivateButton(value) {
     const {_cardinality,selectedButtons} = this.getProperties('_cardinality','selectedButtons');
-    console.log('%s asking for deactivation', value);
+    console.log('"%s" asking for deactivation', value);
     if(selectedButtons.size <= _cardinality.min) {
+      console.log('can not disable: %o', value);
       this.sendAction('onError', CARDINALITY_MIN, `there must be at least ${_cardinality.min} buttons`);
       return false;
     }
@@ -348,8 +353,8 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
      * @return {boolean}  passes back a boolean response to the requestor to indicate whether or not the request has been granted
      */
      pressed(self, item){
-      const selectedButtons = self.get('selectedButtons');
       const value = item.get('value');
+      const {selectedButtons} = self.getProperties('selectedButtons');
       self.sendAction('action', 'pressed', item);
       if(selectedButtons.has(value)) {
         // asking for deactivation
