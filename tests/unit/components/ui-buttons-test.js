@@ -253,3 +253,23 @@ test('Activating and deactivating buttons', function(assert) {
     assert.equal(bazButton.get('selected'), false, 'the button "baz" should not be selected');
   });
 });
+
+test('Setting explicit values with inline form', function(assert) {
+  let component = this.subject({
+    cardinality: '1:M',
+    buttons: 'Foo::1,Bar::hello dolly,Baz:::null,Monkey:::false'
+  });
+  this.render();
+  Ember.run.next(()=> {
+    const registeredButtons = component.get('_registeredItems');
+    const fooButton = registeredButtons.filterBy('title','Foo')[0];
+    const barButton = registeredButtons.filterBy('title','Bar')[0];
+    const bazButton = registeredButtons.filterBy('title','Baz')[0];
+    const monkeyButton = registeredButtons.filterBy('title','Monkey')[0];
+    assert.equal(registeredButtons.length, 4, 'all buttons registered');
+    assert.equal(fooButton.get('value'), 1, 'Foo should be a numeric 1');
+    assert.equal(barButton.get('value'), 'hello dolly', 'Bar should be a string');
+    assert.equal(bazButton.get('value'), null, 'Baz should be null');
+    assert.equal(monkeyButton.get('value'), false, 'Monkey should be false');
+  });
+});

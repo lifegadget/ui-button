@@ -40,7 +40,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
     }
   }),
   setDisabled(value) {
-    const {elementId, disabledButtons} = this.getProperties('elementId','disabledButtons');
+    const {disabledButtons} = this.getProperties('disabledButtons');
     const id = this.get('value');
     const doItNow = value => {
       if(value) {
@@ -54,7 +54,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
       }
     }; // end doItNow
     // defer setting if elementId isn't ready
-    if(elementId) {
+    if(value) {
       doItNow(value);
     } else {
       run.next(() => {
@@ -247,20 +247,31 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
     const {selectedButtons,value, isSelectable} = this.getProperties('selectedButtons','value','isSelectable');
     debug('calling the setter of selected is considered bad practice, try to use "selectedButtons" instead');
     if(selected && isSelectable) {
-      selectedButtons.add(value);
+      selectedButtons.add(value === null ? null : value);
     } else {
-      selectedButtons.delete(value);
+      selectedButtons.delete(value === null ? null : value);
     }
     console.log('item is setting selectButtons: %o', selectedButtons);
     this.set('selectedButtons', selectedButtons);
   },
   getSelected() {
+
     const {isSelectable, selectedButtons, value} = this.getProperties('isSelectable', 'selectedButtons', 'value');
     if(!isSelectable) {
       return false;
     }
 
-    return selectedButtons ? selectedButtons.has(value) : false;
+    const isSelected = selectedButtons ? selectedButtons.has(value) : false;
+    if(isSelected !== this.get('_selected')) {
+      console.log('firing select effect: %o', isSelected);
+      if(isSelected) {
+        this.applyEffect('activeEffect');
+      } else {
+        this.applyEffect('inactiveEffect');
+      }
+    }
+    this.set('_selected', isSelected);
+    return isSelected;
   },
   toggled: false,
 
@@ -290,6 +301,8 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   clickEffect: null,
   enabledEffect: null,
   disabledEffect: null,
+  activeEffect: null,
+  inactiveEffect: null,
   onEffect: null,
   offEffect: null,
   applyEffect(effectType) {
@@ -350,6 +363,10 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
     notify(self, property) {
       console.log('notifying %s', property);
       self.notifyPropertyChange(property);
+    },
+    applyEffect(self, effect) {
+      console.log('[%s] applying item effect: %s', self.get('elementId'), effect);
+      self.applyEffect(effect);
     }
   },
   // EVENTS

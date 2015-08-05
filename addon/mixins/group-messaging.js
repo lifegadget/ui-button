@@ -29,14 +29,13 @@ export default Ember.Mixin.create({
   },
   /**
    * Send a specific command to a registered Item
-   * @param  {string}    id     reference to the objects elementId property
+   * @param  {string}    id     reference to the objects value property
    * @param  {string}    cmd    command/action for item to process
    * @param  {mixed}     args   any other arguments needed for command
    * @return {boolean}
    */
   _tellItem: function(id, cmd, ...args) {
-    // console.log('telling item [%s,%s]: %o', id, cmd, args);
-    const item = this.get('_registeredItems').findBy('elementId', id);
+    const item = this.get('_registeredItems').findBy('value', id);
     if(item) {
       item._groupMessage(cmd, ...args);
     }

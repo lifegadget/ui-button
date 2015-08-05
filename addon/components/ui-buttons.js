@@ -79,7 +79,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   },
   getValues() {
     const selectedButtons = this.get('selectedButtons');
-    console.log('GET values: %o', Array.from(selectedButtons));
+    console.log('GET valueS: %o', Array.from(selectedButtons));
 
     return Array.from(selectedButtons);
   },
@@ -113,6 +113,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   },
   getValue() {
     const {selectedButtons, _cardinality} = this.getProperties('selectedButtons','_cardinality');
+    console.log('GET value: %o', Array.from(selectedButtons));
     if(_cardinality.max === 1) {
       return selectedButtons.size > 0 ? Array.from(selectedButtons)[0] : null;
     } else if (_cardinality.max === 0) {
@@ -172,6 +173,11 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   makeSelectable: computed('_cardinality.max',function() {
     const max = this.get('_cardinality.max');
     return max === 'M' || max > 0;
+  }),
+  nullIsValidValue: computed('_registeredItems.length', function() {
+    return new Set(this.get('_registeredItems')
+      .map(function(item){ return item.get('value'); }))
+      .has(null);
   }),
  /**
   * The API exposes the 'disabled' property, when it changes disabledButtons responds to that
@@ -316,10 +322,11 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
     }));
   }),
   _activateButton(value, forcedClear=false) {
-    const {_cardinality,selectedButtons} = this.getProperties('_cardinality','selectedButtons');
+    const {_cardinality,selectedButtons,nullIsValidValue} = this.getProperties('_cardinality','selectedButtons','nullIsValidValue');
     if(forcedClear) {
       selectedButtons.clear();
     }
+    console.log('activating: %o', value);
     if(_cardinality.max === 1 && selectedButtons.size === 1) {
       selectedButtons.clear();
       selectedButtons.add(value);
@@ -329,6 +336,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
     } else {
       selectedButtons.add(value);
     }
+
     this.sendAction('action', 'selected', value);
     this.notifyPropertyChange('selectedMutex');
     return true;
@@ -339,6 +347,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
     if(selectedButtons.size <= _cardinality.min) {
       console.log('can not disable: %o', value);
       this.sendAction('onError', CARDINALITY_MIN, `there must be at least ${_cardinality.min} buttons`);
+      this._tellItem(value, 'applyEffect', 'cardinalityEffect');
       return false;
     }
     selectedButtons.delete(value);
@@ -394,11 +403,29 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       const disabledButtons = computed.alias('group.disabledButtons');
       const makeSelectable = computed.alias('group.makeSelectable');
       const size = computed.alias('group.size');
+      const clickEffect = computed.alias('group.clickEffect');
+      const onEffect = computed.alias('group.onEffect');
+      const offEffect = computed.alias('group.offEffect');
+      const toggleEffect = computed.alias('group.toggleEffect');
+      const enabledEffect = computed.alias('group.enabledEffect');
+      const disabledEffect = computed.alias('group.disabledEffect');
+      const activeEffect = computed.alias('group.activeEffect');
+      const inactiveEffect = computed.alias('group.inactiveEffect');
+      const cardinalityEffect = computed.alias('group.cardinalityEffect');
       _registeredItems.pushObject(item);
       // link globally managed properties back to item ("data down")
       Ember.defineProperty(item,'selectedButtons',selectedButtons);
       Ember.defineProperty(item,'disabledButtons',disabledButtons);
       Ember.defineProperty(item,'isSelectable',makeSelectable);
+      Ember.defineProperty(item,'clickEffect',clickEffect);
+      Ember.defineProperty(item,'onEffect',onEffect);
+      Ember.defineProperty(item,'offEffect',offEffect);
+      Ember.defineProperty(item,'toggleEffect',toggleEffect);
+      Ember.defineProperty(item,'enabledEffect',enabledEffect);
+      Ember.defineProperty(item,'disabledEffect',disabledEffect);
+      Ember.defineProperty(item,'activeEffect',activeEffect);
+      Ember.defineProperty(item,'inactiveEffect',inactiveEffect);
+      Ember.defineProperty(item,'cardinalityEffect',cardinalityEffect);
       Ember.defineProperty(item,'size',size);
       // if groups value is already set, check against item's value
       const groupValue = self.get('value');
