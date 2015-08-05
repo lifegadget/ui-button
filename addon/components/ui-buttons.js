@@ -268,15 +268,6 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   }),
   _getItems() {
     let items = this.get('items');
-    // const getGroupBaseline = props => {
-    //   let globalBaseline = {};
-    //   for(var i of props) {
-    //     if(!isEmpty(this.get(i))) {
-    //       globalBaseline[i] = this.get(i);
-    //     }
-    //   }
-    //   return globalBaseline;
-    // };
     items = items ? items : [];
     items = typeOf(items) === 'string' ? items.split(',') : items;
     items = typeOf(items) === 'array' ? items : [items];
@@ -309,8 +300,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
         return {title: title, value: value};
       };
       const {title,value} = getTitleValue(item);
-      return typeOf(item) === 'object' ? item : { value: value, title: title, mood: 'default' };
-      // return Object.assign(getGroupBaseline(globalItemProps),specifics);
+      return typeOf(item) === 'object' ? item : { value: value, title: title };
     });
   },
   _activateButton(value, forcedClear=false) {
@@ -410,6 +400,13 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       const createComputed = prop => {
         return computed.alias(`group.${prop}`);
       };
+      const isNotSet = (prop,value) => {
+        const defaultValues = new Map([
+          ['size','normal'],
+          ['mood','default']
+        ]);
+        return isEmpty(value) || defaultValues.get(prop) === value;
+      };
 
       // Register button
       const _registeredItems = self.get('_registeredItems');
@@ -421,7 +418,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
         Ember.defineProperty(item, i, cp);
       }
       for(var i2 of containerBackup) {
-        if(isEmpty(item.get(i2)) ) {
+        if(isNotSet(i2, item.get(i2)) ) {
           const cp2 = createComputed(i2);
           Ember.defineProperty(item, i2, cp2);
         }
@@ -455,6 +452,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   _ia: on('didInitAttrs', function() { return this.didInitAttrs(); }),
   _r: on('willRender', function() { return this.willRender(); }),
   _d: on('willDestroyElement', function() { return this.willDestroyElement(); }),
+  _dr: on('afterRender', function() { return this.didRender(); }),
 
   _init() {
     // nothing yet
@@ -471,6 +469,9 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   },
   willDestroyElement() {
     // nothing yet
+  },
+  didRender() {
+    this._tellItems('rendered');
   }
 
 });

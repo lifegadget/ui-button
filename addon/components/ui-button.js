@@ -251,9 +251,8 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
     } else {
       selectedButtons.delete(value === null ? null : value);
     }
-    console.log('item is setting selectButtons: %o', selectedButtons);
-    this.set('selectedButtons', selectedButtons);
-    // this.notifyPropertyChange('group.selectedMutex');
+    // this.set('selectedButtons', selectedButtons);
+    this.notifyPropertyChange('group.selectedMutex');
   },
   getSelected() {
     const {isSelectable, selectedButtons, value} = this.getProperties('isSelectable', 'selectedButtons', 'value');
@@ -306,8 +305,8 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   offEffect: null,
   applyEffect(effectType) {
     const effect = this.get(effectType);
-    const _visible = this.get('_visible');
-    if(!effect || !_visible) {
+    const _rendered = this.get('_rendered');
+    if(!effect || !_rendered) {
       return false;
     }
     try {
@@ -364,6 +363,9 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
     },
     applyEffect(self, effect) {
       self.applyEffect(effect);
+    },
+    rendered(self) {
+      self._rendered = true;
     }
   },
   // RUN LOOP
@@ -371,10 +373,10 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   _i: on('init', function() { return this._init(); }),
   _ia: on('didInitAttrs', function() { return this.didInitAttrs(); }),
   _r: on('willRender', function() { return this.willRender(); }),
-  _di: on('afterRender', function() { return this.afterRender(); }),
+  _dr: on('afterRender', function() { return this.didRender(); }),
   _d: on('willDestroyElement', function() { return this.willDestroyElement(); }),
   _initialized: false,
-  _visible: false,
+  _rendered: false,
   _init() {
     this._tellGroup('registration', this);
     this.setupTooltip();
@@ -386,8 +388,10 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
     this.setDefaultValues();
     this._initialized = true;
   },
-  afterRender() {
-    this._visible = true;
+  didRender() {
+    if(!this.group) {
+      this._rendered = true;
+    }
   },
   willDestroyElement() {
     if(this.get('tooltip')){
