@@ -13,7 +13,7 @@ export default Ember.Controller.extend({
   sizes: [
     { title: 'Tiny', value: 'tiny' },
     { title: 'Small', value: 'small' },
-    { title: 'Default', value: null },
+    { title: 'Default', value: null, selected: true},
     { title: 'Large', value: 'large' },
     { title: 'Huge', value: 'huge' }
   ],

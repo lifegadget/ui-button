@@ -28,7 +28,6 @@ var SharedStyle = Ember.Mixin.create({
           return sizer(value);
         case 'height':
           let width = this.get('width');
-          console.log('getting height where width is %o', width);
           if(!width || String(width).substr(-2) !== 'px') {
             return sizer(value);
           }

@@ -143,15 +143,30 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   },
   // ICON
   icon: null,
-  _icon: computed('icon','onIcon','offIcon','toggled',function() {
-      const {icon,onIcon,offIcon,toggled} = this.getProperties('icon','onIcon','offIcon', 'toggled');
-      if (icon) {
-        return icon;
+  _icon: computed('icon','onIcon','offIcon','toggled','selected','activeIcon','inactiveIcon',{
+    set(_,value) {
+      debug('You should not directly set the "_icon" property.');
+      return value;
+    },
+    get() {
+      return this.getIcon();
+    }
+  }),
+  getIcon() {
+    const {icon,toggled,isToggleable,selected} = this.getProperties('icon', 'toggled','isToggleable', 'selected');
+    const toggleProperty = toggled ? 'onIcon' : 'offIcon';
+    const selectProperty = selected ? 'activeIcon' : 'inactiveIcon';
+
+    if (icon) {
+      return icon;
+    } else {
+      if(selected || !isToggleable) {
+        return this.get(selectProperty) ? this.get(selectProperty) : null;
       } else {
-        return toggled ? onIcon : offIcon;
+        return this.get(toggleProperty) ? this.get(toggleProperty) : null;
       }
     }
-  ),
+  },
   // MOOD
   mood: null,
   _mood: computed('mood','onMood','offMood','toggled','selected','activeMood','inactiveMood', {

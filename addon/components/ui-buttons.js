@@ -191,7 +191,6 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   disabledMutex: null,
   disabled: computed({
     set(_,value) {
-      // debug('ui-buttons: it is bad practice to directly set the _disabled property');
       this.setDisabled(value);
       return value;
     },
@@ -202,7 +201,6 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   setDisabled(value) {
     const disabledButtons = this.get('disabledButtons');
     const process = (cmd, values) => {
-      console.log('%s: %o', cmd, values);
       disabledButtons.clear();
       for(var i of values) {
         console.log('%s: %o', cmd, i);
@@ -286,7 +284,34 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
     items = typeOf(items) === 'string' ? items.split(',') : new A(items);
 
     return new A(items.map( item => {
-      const baseline = typeOf(item) === 'object' ? item : { value: dasherize(item), title: item, mood: 'default' };
+      const getTitleValue = (item) => {
+        if(typeOf(item) === 'object') {
+          return [null,null];
+        }
+        const elements = typeOf(item) === 'string' ? item.split('::') : [item];
+        const extractLiteral = x => {
+          if(String(x).substr(0,1) === ':') {
+            switch(x.substr(1)) {
+              case 'true':
+                return true;
+              case 'false':
+                return false;
+              case 'null':
+                return null;
+              default:
+                debug(`literal value "${x}" passed into inline ui-buttons was not understood`);
+                return 'unknown';
+            }
+          }
+
+          return x;
+        };
+        let [title,value] = elements;
+        value = value ? extractLiteral(value) : dasherize(title);
+        return {title: title, value: value};
+      };
+      const {title,value} = getTitleValue(item);
+      const baseline = typeOf(item) === 'object' ? item : { value: value, title: title, mood: 'default' };
       return xtend(baseline,getPropertyValues(globalItemProps));
     }));
   }),
