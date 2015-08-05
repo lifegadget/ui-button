@@ -273,3 +273,24 @@ test('Setting explicit values with inline form', function(assert) {
     assert.equal(monkeyButton.get('value'), false, 'Monkey should be false');
   });
 });
+
+test('Setting active and inactive icons', function(assert) {
+  let component = this.subject({
+    cardinality: '1:M',
+    buttons: 'foo,bar,baz',
+    activeIcon: 'circle'
+  });
+  this.render();
+  Ember.run.next(()=> {
+    const registeredButtons = component.get('_registeredItems');
+    const fooButton = registeredButtons.filterBy('value','foo')[0];
+    const barButton = registeredButtons.filterBy('value','bar')[0];
+    const bazButton = registeredButtons.filterBy('value','baz')[0];
+    assert.equal(component.get('activeIcon'), 'circle', 'activeIcon starts as circle');
+    component.set('value','foo');
+    assert.equal(fooButton.get('selected'), true, 'the foo button should be selected');
+    assert.equal(fooButton.get('activeIcon'), 'circle', 'foo has been passed groups value');
+    assert.equal(fooButton.get('_icon'), 'circle', 'foo returns the selected icon');
+    assert.equal(barButton.get('_icon'), null, 'bar returns no icon');
+  });
+});

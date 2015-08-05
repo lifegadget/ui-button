@@ -153,7 +153,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
     }
   }),
   getIcon() {
-    const {icon,toggled,isToggleable,selected} = this.getProperties('icon', 'toggled','isToggleable', 'selected');
+    const {icon,toggled,isToggleable,selected} = this.getProperties('icon','toggled','isToggleable','selected');
     const toggleProperty = toggled ? 'onIcon' : 'offIcon';
     const selectProperty = selected ? 'activeIcon' : 'inactiveIcon';
 
@@ -234,7 +234,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   }),
   // SELECTED
   isSelectable: false,
-  selected: computed('selectedButtons','isSelectable','group.selectedMutex','value',{
+  selected: computed('selectedButtons','isSelectable','group.selectedMutex',{
     set:function(_,value) {
       this.setSelected(value);
       return value;
@@ -255,7 +255,6 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
     this.set('selectedButtons', selectedButtons);
   },
   getSelected() {
-
     const {isSelectable, selectedButtons, value} = this.getProperties('isSelectable', 'selectedButtons', 'value');
     if(!isSelectable) {
       return false;
@@ -263,7 +262,6 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
 
     const isSelected = selectedButtons ? selectedButtons.has(value) : false;
     if(isSelected !== this.get('_selected')) {
-      console.log('firing select effect: %o', isSelected);
       if(isSelected) {
         this.applyEffect('activeEffect');
       } else {
@@ -307,8 +305,8 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   offEffect: null,
   applyEffect(effectType) {
     const effect = this.get(effectType);
-    const initialized = this.get('initialized');
-    if(!effect || !initialized) {
+    const _visible = this.get('_visible');
+    if(!effect || !_visible) {
       return false;
     }
     try {
@@ -361,21 +359,21 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   // MESSAGING
   buttonActions: {
     notify(self, property) {
-      console.log('notifying %s', property);
       self.notifyPropertyChange(property);
     },
     applyEffect(self, effect) {
-      console.log('[%s] applying item effect: %s', self.get('elementId'), effect);
       self.applyEffect(effect);
     }
   },
-  // EVENTS
+  // RUN LOOP
   // -------------------------
   _i: on('init', function() { return this._init(); }),
   _ia: on('didInitAttrs', function() { return this.didInitAttrs(); }),
   _r: on('willRender', function() { return this.willRender(); }),
+  _di: on('afterRender', function() { return this.afterRender(); }),
   _d: on('willDestroyElement', function() { return this.willDestroyElement(); }),
-
+  _initialized: false,
+  _visible: false,
   _init() {
     this._tellGroup('registration', this);
     this.setupTooltip();
@@ -384,8 +382,11 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
     // nothing yet
   },
   didInitAttrs() {
-    this.set('initialized', true);
     this.setDefaultValues();
+    this._initialized = true;
+  },
+  afterRender() {
+    this._visible = true;
   },
   willDestroyElement() {
     if(this.get('tooltip')){

@@ -199,6 +199,8 @@
       <li><b>inactiveEffect</b> - when a button becomes inactive</li>
       <li><b>cardinalityEffect</b> - when the user has run into a cardinality constraint</li>
     </ul>
+    While this example uses the <i>inline</i> form it is usable in <i>block</i> style so long
+    as the buttons are registered.
   </div>
 </div>
 
@@ -211,6 +213,8 @@
       size=size
       activeMood=activeButtonMood
       inactiveMood=inactiveButtonMood
+      activeIcon=activeIcon
+      inactiveIcon=inactiveIcon
       defaultValue='baz'
       cardinality=cardinality
     }}
@@ -224,8 +228,8 @@
   &nbsp;&nbsp;size='{{size}}'<br/>{{/if}}{{#if cardinality}}
   &nbsp;&nbsp;cardinality='{{cardinality}}'<br/>{{/if}}{{#if activeIcon}}
   &nbsp;&nbsp;activeIcon='{{activeIcon}}'<br/>{{/if}}{{#if inactiveIcon}}
-  &nbsp;&nbsp;activeIcon='{{inactiveIcon}}'<br/>{{/if}}{{#if icon}}
-  &nbsp;&nbsp;activeIcon='{{icon}}'<br/>{{/if}}
+  &nbsp;&nbsp;inactiveIcon='{{inactiveIcon}}'<br/>{{/if}}{{#if icon}}
+  &nbsp;&nbsp;icon='{{icon}}'<br/>{{/if}}
   <b>}}</b>
   </div>
   <div class="col-xs-12 col-sm-6 col-lg-5">
@@ -238,7 +242,7 @@
         {{text-input value=dynButtons }}
       </div>
       <br/>
-      <div class="col-xs-3 downer">Active Mood</div>
+      <div class="col-xs-3 downer">active mood</div>
       <div class="col-xs-9 downer">
          {{ui-buttons cardinality='0:1' size='small' value=activeButtonMood buttons='default,success,primary,warning,danger'}}
       </div>
@@ -262,17 +266,30 @@
           cardinality='1:1'
           defaultValue='1:1'
         }}
-      </div><br/>
-      <div class="col-xs-3 downer">icons</div>
+      </div>
+      <br/>
+      <div class="col-xs-3 downer">active icon</div>
       <div class="col-xs-9 downer">
         {{ui-buttons
-          buttons='none,both,active,inactive'
-          value=iconStrategy
+          buttons='none:::false,circle,square,checkbox::check-square-o,dot::dot-circle-o'
+          value=activeIcon
           size='small'
           cardinality='1:1'
-          defaultValue='none'
+          defaultValue='check-square-o'
         }}
-      </div><br/>
+      </div>
+      <br/>
+      <div class="col-xs-3 downer">inactive icon</div>
+      <div class="col-xs-9 downer">
+        {{ui-buttons
+          buttons='none:::false,circle::circle-o,square::minus-square-o,checkbox::square-o,dot::circle-o-notch'
+          value=inactiveIcon
+          size='small'
+          cardinality='1:1'
+          defaultValue='square-o'
+        }}
+      </div>
+      <br/>
     </div>
   </div>
 </div>
@@ -355,8 +372,13 @@
     <span class="col-sm-5"></span>
   </div>
 </desc>
-
-
+<h4>Actions</h4>
 <desc>
-  <note>Note: this component is still a work in progress, feel free to contribute with a PR.</note>
+  <p>
+    The actions that a container can bind to are:
+  </p>
+  <div class="row">
+    <img class="col-xs-12 col-sm-7" src="images/ui-buttons-actions.png" alt="Key attributes">
+    <span class="col-sm-5"></span>
+  </div>
 </desc>
