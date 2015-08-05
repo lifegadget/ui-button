@@ -10,7 +10,6 @@ const propertyIsSet = thingy => {
 const isUndefined = thingy => {
   return Ember.typeOf(thingy) === 'undefined';
 };
-const globalItemProps = ['mood','activeMood','inactiveMood','size','icon','activeIcon','inactiveIcon'];
 const CARDINALITY_MIN = 'cardinality-min-threashold';
 const CARDINALITY_MAX = 'cardinality-max-threashold';
 const VALUES_CARDINALITY_ERROR = 'values-cardinality-error';
@@ -315,7 +314,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
     });
   },
   _activateButton(value, forcedClear=false) {
-    const {_cardinality,selectedButtons,nullIsValidValue} = this.getProperties('_cardinality','selectedButtons','nullIsValidValue');
+    const {_cardinality,selectedButtons} = this.getProperties('_cardinality','selectedButtons');
     if(forcedClear) {
       selectedButtons.clear();
     }
@@ -397,7 +396,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
      */
     registration(self,item) {
       // properties which container will take over from buttons
-      const containerProperties = ['selectedButtons','disabledButtons'];
+      const containerProperties = ['selectedButtons','disabledButtons','isSelectable'];
       // properties which container will take over if NOT set by buttons
       const effects = [
         'clickEffect', 'onEffect', 'offEffect', 'toggleEffect',
@@ -421,28 +420,12 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
         const cp = createComputed(i);
         Ember.defineProperty(item, i, cp);
       }
-      for(var i of containerBackup) {
-        if(isEmpty(item.get(i)) && !isEmpty(self.get(i))) {
-          const cp2 = createComputed(i);
-          Ember.defineProperty(item, i, cp2);
+      for(var i2 of containerBackup) {
+        if(isEmpty(item.get(i2)) ) {
+          const cp2 = createComputed(i2);
+          Ember.defineProperty(item, i2, cp2);
         }
       }
-
-      // const selectedButtons = computed.alias('group.selectedButtons');
-      // const cardinalityEffect = computed.alias('group.cardinalityEffect');
-      // Ember.defineProperty(item,'selectedButtons',selectedButtons);
-      // Ember.defineProperty(item,'disabledButtons',disabledButtons);
-      // Ember.defineProperty(item,'isSelectable',isSelectable);
-      // Ember.defineProperty(item,'clickEffect',clickEffect);
-      // Ember.defineProperty(item,'onEffect',onEffect);
-      // Ember.defineProperty(item,'offEffect',offEffect);
-      // Ember.defineProperty(item,'toggleEffect',toggleEffect);
-      // Ember.defineProperty(item,'enabledEffect',enabledEffect);
-      // Ember.defineProperty(item,'disabledEffect',disabledEffect);
-      // Ember.defineProperty(item,'activeEffect',activeEffect);
-      // Ember.defineProperty(item,'inactiveEffect',inactiveEffect);
-      // Ember.defineProperty(item,'cardinalityEffect',cardinalityEffect);
-      // Ember.defineProperty(item,'size',size);
 
       // if groups value is already set, check against item's value
       const groupValue = self.get('value');

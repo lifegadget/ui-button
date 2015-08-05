@@ -285,7 +285,6 @@ test('Setting active and inactive icons', function(assert) {
     const registeredButtons = component.get('_registeredItems');
     const fooButton = registeredButtons.filterBy('value','foo')[0];
     const barButton = registeredButtons.filterBy('value','bar')[0];
-    const bazButton = registeredButtons.filterBy('value','baz')[0];
     assert.equal(component.get('activeIcon'), 'circle', 'activeIcon starts as circle');
     component.set('value','foo');
     assert.equal(fooButton.get('selected'), true, 'the foo button should be selected');

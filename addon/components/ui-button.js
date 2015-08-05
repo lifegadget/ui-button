@@ -40,7 +40,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
     }
   }),
   setDisabled(value) {
-    const {disabledButtons} = this.getProperties('disabledButtons');
+    const {disabledButtons,elementId} = this.getProperties('disabledButtons','elementId');
     const id = this.get('value');
     const doItNow = value => {
       if(value) {
@@ -54,7 +54,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
       }
     }; // end doItNow
     // defer setting if elementId isn't ready
-    if(value) {
+    if(elementId) {
       doItNow(value);
     } else {
       run.next(() => {
@@ -234,7 +234,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
   }),
   // SELECTED
   isSelectable: false,
-  selected: computed('selectedButtons','isSelectable','group.selectedMutex',{
+  selected: computed('selectedButtons','isSelectable','group.selectedMutex','value',{
     set:function(_,value) {
       this.setSelected(value);
       return value;
@@ -253,6 +253,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
     }
     console.log('item is setting selectButtons: %o', selectedButtons);
     this.set('selectedButtons', selectedButtons);
+    // this.notifyPropertyChange('group.selectedMutex');
   },
   getSelected() {
     const {isSelectable, selectedButtons, value} = this.getProperties('isSelectable', 'selectedButtons', 'value');

@@ -18,19 +18,6 @@ export default Ember.Controller.extend({
     { title: 'Huge', value: 'huge' }
   ],
   dynButtons: 'Foo,Bar,Baz',
-  icon: computed('iconStrategy', function() {
-    const strategy = this.get('iconStrategy');
-    return strategy === 'both' ? 'chevron-circle-right' : false;
-  }),
-  iconActive: computed('iconStrategy', function() {
-    const strategy = this.get('iconStrategy');
-    return strategy === 'active' ? 'circle' : false;
-  }),
-  iconInactive: computed('iconStrategy', function() {
-    const strategy = this.get('iconStrategy');
-    return strategy === 'inactive' ? 'circle-o' : false;
-  }),
-  iconStrategy: 'none',
   activeButtonMood: 'success',
   inactiveButtonMood: 'default',
 
