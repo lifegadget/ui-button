@@ -22,39 +22,47 @@
 </div>
 <div class="row">
     <div class="col-xs-2">
-        {{ui-toggle-button value=true onStyle='success' toggleEffect='swing'}}
+        {{ui-toggle-button value=true onMood='success' toggleEffect='tada'}}
     </div>
     <div class="snippet col-xs-10">
-        \{{ui-toggle-button value=true onStyle='success' toggleEffect='swing'}}
+        \{{ui-toggle-button value=true onMood='success' toggleEffect='tada'}}
     </div>
 </div>
 <div class="row">
     <div class="col-xs-2">
-        {{ui-toggle-button onStyle='success' offStyle='danger' width='50px'}}
-        {{ui-toggle-button value=true onStyle='success' offStyle='danger' width='50px'}}
+        {{ui-toggle-button value=true onMood='primary' toggleEffect=null onEffect='tada' offEffect='bounce'}}
     </div>
     <div class="snippet col-xs-10">
-        <span class="text-muted">\{{ui-toggle-button onStyle='success' offStyle='danger' width='50px'}}</span> <br/>
-        <span class="text-muted">\{{ui-toggle-button value=true onStyle='success' offStyle='danger' width='50px'}}</span>
+        \{{ui-toggle-button value=true onMood='primary' toggleEffect=null onEffect='tada' offEffect='bounce'}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{ui-toggle-button onMood='success' offMood='danger' width='50px'}}
+        {{ui-toggle-button value=true onMood='success' offMood='danger' width='50px'}}
+    </div>
+    <div class="snippet col-xs-10">
+        <span class="text-muted">\{{ui-toggle-button onMood='success' offMood='danger' width='50px'}}</span> <br/>
+        <span class="text-muted">\{{ui-toggle-button value=true onMood='success' offMood='danger' width='50px'}}</span>
     </div>
 </div>
 
 <div class="row">
     <div class="col-xs-2">
-        {{ui-toggle-button onStyle='success' icon='dot-circle-o'}}
+        {{ui-toggle-button onMood='success' icon='dot-circle-o'}}
     </div>
     <div class="snippet col-xs-10">
       Static icon, dynamic mood <br/>
-      <span class="text-muted">\{{ui-toggle-button onStyle='success' icon='dot-circle-o'}}</span>
+      <span class="text-muted">\{{ui-toggle-button onMood='success' icon='dot-circle-o'}}</span>
     </div>
 </div>
 <div class="row">
     <div class="col-xs-2">
-        {{ui-toggle-button onStyle='success' offIcon='circle-thin' onIcon='dot-circle-o'}}
+        {{ui-toggle-button onMood='success' offIcon='circle-thin' onIcon='dot-circle-o'}}
     </div>
     <div class="snippet col-xs-10">
       Dynamic icon, dynamic mood <br/>
-      <span class="text-muted">\{{ui-toggle-button onStyle='success' offIcon='circle-thin' onIcon='dot-circle-o'}}</span>
+      <span class="text-muted">\{{ui-toggle-button onMood='success' offIcon='circle-thin' onIcon='dot-circle-o'}}</span>
     </div>
 </div>
 
@@ -64,6 +72,6 @@
     </div>
     <div class="snippet col-xs-10">
       Toggling non-boolean values: {{fruit}}<br/>
-      <span class="text-muted">\{{ui-toggle-button on='Apple' onValue='apple' off="Orange" offValue='orange'}}</span>
+      <span class="text-muted">\{{ui-toggle-button value=fruit on='Apple' onValue='apple' off="Orange" offValue='orange'}}</span>
     </div>
 </div>

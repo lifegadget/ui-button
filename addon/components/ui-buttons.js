@@ -1,70 +1,255 @@
 import Ember from 'ember';
-const { computed, observer, $, A, run, on, typeOf, debug, keys, get, set, inject, merge } = Ember;    // jshint ignore:line
+const { computed, observer, $, A, run, on, typeOf, debug, isEmpty } = Ember;    // jshint ignore:line
 import layout from '../templates/components/ui-buttons';
 import GroupMessaging from 'ui-button/mixins/group-messaging';
 const dasherize = Ember.String.dasherize;
-const globalItemProps = ['mood','moodActive','moodInactive','size','icon','iconActive','iconInactive'];
-const xtend = (core, options, override=false) => {
-  for (var index in options) {
-    if(override || !core[index]) {
-      core[index] = options[index];
-    }
-  }
-
-  return core;
+const capitalize = Ember.String.capitalize;
+const propertyIsSet = thingy => {
+  return typeOf(thingy) !== 'null' && typeOf(thingy) !== 'undefined';
 };
+const isUndefined = thingy => {
+  return Ember.typeOf(thingy) === 'undefined';
+};
+const CARDINALITY_MIN = 'cardinality-min-threshold';
+const CARDINALITY_MAX = 'cardinality-max-threshold';
+const VALUES_CARDINALITY_ERROR = 'values-cardinality-error';
+const SET_WITH_CARDINALITY = 'set-with-cardinality-0';
 
-export default Ember.Component.extend(GroupMessaging,{
+const uiButtons = Ember.Component.extend(GroupMessaging,{
+
   layout: layout,
   tagName: 'div',
   classNames: ['ui-button', 'btn-group'],
   classNameBindings: ['disabled:disabled:enabled'],
-  selected: null, // TODO: make this into a proper one-way binding
-  selectedItem: computed('selected', function() {
-    const { selected, _registeredItems} = this.getProperties('selected', '_registeredItems');
-    return new A(_registeredItems).findBy('elementId', selected);
-  }),
-  selectedValue: computed('selected', function() {
-    const { selected, _registeredItems} = this.getProperties('selected', '_registeredItems');
-    const valueObject = new A(_registeredItems).findBy('elementId', selected);
-    return valueObject ? valueObject.get('value') : null;
-  }),
-  value: computed('selected', {
-    set: function() {
-      return this.get('selectedItem.value');
+
+  // SELECTED BUTTONS
+  // Contains a list of elementIds which are selected
+  selectedMutex: true,
+  selectedButtons: computed({
+    set: function(_,value) {
+      this.notifyPropertyChange('selectedMutex');
+      return value;
     },
     get: function() {
-      return this.get('selectedItem.value');
+      return new Set();
     }
   }),
-  defaultValue: null,
-  // set default after 'init' but before 'render'
-  _setDefaultValue: on('didInsertElement', function() {
-    const defaultValue = this.get('defaultValue');
-    const defaultButton = this.get('_registeredItems').findBy('value', defaultValue);
+  // VALUES
+  values: computed('selectedMutex',{
+    set: function(_,values,oldValue) {
+      this.setValues(values,oldValue);
+      return values ? values : []; // This may be a bad idea but idea is to force to array at all times
+    },
+    get: function() {
+      return this.getValues();
+    }
+  }),
+  setValues(values,oldValue) {
+    let {selectedButtons,_cardinality} = this.getProperties('selectedButtons', '_cardinality');
+    if(typeOf(values) === 'string') {
+      values = values.split(',');
+    }
+    values = values ? values : [];
+    if(_cardinality.max === 'M' || _cardinality.max >= values.length ) {
+      selectedButtons.clear();
+      for(var i of values) {
+        this._activateButton(i);
+      }
+      this.notifyPropertyChange('selectedMutex');
+    } else {
+      this.sendAction('error', VALUES_CARDINALITY_ERROR, `Couldn't set the "values" property because it did not meet the cardinality constraints [${_cardinality.min}:${_cardinality.max}]`);
+      run.next(()=>{
+        for(var i of oldValue) {
+          this._activateButton(i);
+        }
+      });
+    }
+  },
+  getValues() {
+    const selectedButtons = Array.from(this.get('selectedButtons'));
 
-    this.set('selected', defaultButton ? defaultButton.get('elementId') : null);
+    return selectedButtons;
+  },
+
+  /**
+   * VALUE
+   * Returns a scalar value which represents the first element in the
+   * values array; null if empty values
+   */
+  value: computed('selectedMutex',{
+    set: function(_,value) {
+      this.setValue(value);
+      return value;
+    },
+    get: function() {
+      return this.getValue();
+    }
   }),
-  emptyNestObserver: on('init',observer('selected','canBeEmpty', function() {
-    const { selected, canBeEmpty, _registeredItems } = this.getProperties('selected', 'value', 'canBeEmpty', '_registeredItems' );
-    if (!canBeEmpty && !selected && _registeredItems.length > 0) {
-      this._tellItem(_registeredItems[0].get('elementId'), 'activate');
+  setValue(value) {
+      const {selectedButtons, _cardinality} = this.getProperties('selectedButtons','_cardinality');
+      if(_cardinality.max !== 0) {
+        if(value) {
+          this._activateButton(value, true);
+        } else {
+          selectedButtons.clear();
+          this.notifyPropertyChange('selectedMutex');
+        }
+      } else {
+        this.sendAction('error', SET_WITH_CARDINALITY, `Trying to set value[${value}] with a cardinality of 0`);
+      }
+  },
+  getValue() {
+    const {selectedButtons, _cardinality} = this.getProperties('selectedButtons','_cardinality');
+    if(_cardinality.max === 1) {
+      return selectedButtons.size > 0 ? Array.from(selectedButtons)[0] : null;
+    } else if (_cardinality.max === 0) {
+      return null;
+    } else {
+      const csvValue = Array.from(selectedButtons).join(',');
+      return csvValue ? csvValue : null;
     }
-  })),
-  canBeEmpty: true,
+  },
+  // CARDINALITY
+  defaultCardinality: {min: 0, max: 0},
+  cardinality: null,
+  _cardinality: computed('cardinality', {
+    set: function(_,value) {
+      return value;
+    },
+    get: function() {
+      return this._getCardinality();
+    }
+  }),
+  _getCardinality() {
+    const {cardinality, defaultCardinality} = this.getProperties('cardinality', 'defaultCardinality');
+    let value;
+    if(typeOf(cardinality) === 'string') {
+      let [min,max] = cardinality.split(':');
+      if (!max) {
+        max = min;
+      }
+    min = Number(min);
+    max = Number.isInteger(Number(max)) ? Number(max) : 'M';
+
+    value = {min: min, max: max};
+    } else if(typeOf(value) === 'object' && value.min && value.max) {
+      value = cardinality;
+    } else {
+      value = defaultCardinality;
+    }
+    // reduce set buttons to no more than max
+    if(value.max !== 'M') {
+      const selectedButtons = this.get('selectedButtons');
+      const differential = Number(selectedButtons.size - value.max);
+      if(differential > 0) {
+        const removal = Array.from(selectedButtons).slice(differential * -1);
+        for(var item of removal) {
+          selectedButtons.delete(item);
+        }
+        run.next(()=>{
+          this.notifyPropertyChange('selectedMutex');
+        });
+      }
+    }
+
+    return value;
+  },
+  isSelectable: computed('_cardinality.max',function() {
+    const max = this.get('_cardinality.max');
+    return max === 'M' || max > 0;
+  }),
+  nullIsValidValue: computed('_registeredItems.length', function() {
+    return new Set(this.get('_registeredItems')
+      .map(function(item){ return item.get('value'); }))
+      .has(null);
+  }),
+ /**
+  * The API exposes the 'disabled' property, when it changes disabledButtons responds to that
+  * depending on the type of input received:
+  *
+  *    - If a BOOLEAN all of the registered controls are added/removed from the set.
+  *    - If a STRING it will check first to see if the string starts with "ember..."
+  *      if so then it will assume this is a direct reference to the elementId,
+  *      otherwise it will assume its a value and any items which match this value will
+  *      have their elementId looked up.
+  *    - If an ARRAY it will just convert to a Set
+  *    - If a SET is passed in then it will just proxy it across
+  *
+  * Regardless of disabled type, disabledButtons will be an ES6 Set which indicates
+  * which elementId's should be disabled.
+  */
+  disabledMutex: null,
+  disabled: computed({
+    set(_,value,oldValue) {
+      this.setDisabled(value,oldValue);
+      return value;
+    },
+    get() {
+      return this.getDisabled();
+    }
+  }),
+  setDisabled(value) {
+    const disabledButtons = this.get('disabledButtons');
+    const process = (cmd, values) => {
+      disabledButtons.clear();
+      for(var i of values) {
+        disabledButtons[cmd](i);
+      }
+      return cmd === 'add' ? true : false;
+    };
+    switch(typeOf(value)) {
+      case 'boolean':
+        const getRegisteredValues = () => {
+          return this.get('_registeredItems').map(item => {
+            return item.get('value');
+          });
+        };
+        if(this.get('_registrationComplete')) {
+          if(value) {
+            process('add', getRegisteredValues());
+          } else {
+            process('delete', getRegisteredValues());
+          }
+        }
+        run.next(()=>{
+          if(value) {
+            process('add', getRegisteredValues());
+          } else {
+            process('delete', getRegisteredValues());
+          }
+        });
+        break;
+
+      case 'string':
+        value = value.split(',');
+        process('add',value);
+        break;
+
+      case 'number':
+        value = [value];
+        process('add',value);
+        break;
+
+      case 'array':
+        process('add',value);
+        break;
+    }
+    this.sendAction('changed', 'disabled', Array.from(disabledButtons));
+    this.notifyPropertyChange('disabledMutex');
+  },
+  getDisabled() {
+    const disabledButtons = Array.from(this.get('disabledButtons'));
+    this.sendAction('changed', 'disabled', disabledButtons);
+    return disabledButtons;
+  },
+  disabledButtons: computed(function() {
+    return new Set();
+  }),
+
   icon: null,
-  iconActive: null,
-  iconInactive: null,
-  disabled: null,
-  // Disable (false), Enable(true), by value (array/string), or ignore (null) Item's disablement state
-  disabledObserver: on('didInsertElement',observer('disabled', function() {
-    const disabled = this.get('disabled');
-    const disabledItems = typeOf(disabled) === 'boolean' ? null : new A(typeOf(disabled) === 'array' ? disabled : String(disabled).split(','));
-    if(disabled !== null) {
-      this._tellItems('disable', disabled ? true : false, disabledItems);
-    }
-  })),
-  howMany: computed.alias('_registeredItems.length'),
+  activeIcon: null,
+  inactiveIcon: null,
+
   type: null,
   _type: computed('type', function() {
     const type = this.get('type');
@@ -75,50 +260,237 @@ export default Ember.Component.extend(GroupMessaging,{
   // --------------------
   buttons: computed.alias('items'),
   items: null,
-  _items: computed('items', function() {
-    let items = this.get('items');
-    const getPropertyValues = props => {
-      let obj = {};
-      new A(props).forEach( prop => {
-        const propValue = this.get(prop);
-        if (propValue) {
-          obj[prop] = propValue;
-        }
-      });
-      return obj;
-    };
-
-    items = items ? items : [];
-    items = typeOf(items) === 'string' ? items.split(',') : new A(items);
-
-    return new A(items.map( item => {
-        const baseline = typeOf(item) === 'object' ? item : { value: dasherize(item), title: item };
-        return xtend(baseline,getPropertyValues(globalItemProps));
-    }));
+  _items: computed('items', {
+    set(_,value) {
+      debug('you should not directly set the _items CP');
+      return value;
+    },
+    get() {
+      return this._getItems();
+    }
   }),
+  _getItems() {
+    let items = this.get('items');
+    items = items ? items : [];
+    items = typeOf(items) === 'string' ? items.split(',') : items;
+    items = typeOf(items) === 'array' ? items : [items];
 
-  buttonActions: {
-    activate: function(self, item){
-      self.sendAction('changed', item ? item.value : null, self.get('selectedValue'), item); // new value, old value, object
-      self.set('selected', item.get('elementId'));
-      self.sendAction('activated', item); // specific action
-      return true;
-    },
-    deactivate: function(self, item) {
-      // reject single-item states which can not be empty
-      if(!self.get('canBeEmpty') && typeOf(self.selected) !== 'array') {
-        return false;
+    return items.map( item => {
+      const getTitleValue = (item) => {
+        if(typeOf(item) === 'object') {
+          return [null,null];
+        }
+        const elements = typeOf(item) === 'string' ? item.split('::') : [item];
+        const extractLiteral = x => {
+          if(String(x).substr(0,1) === ':') {
+            switch(x.substr(1)) {
+              case 'true':
+                return true;
+              case 'false':
+                return false;
+              case 'null':
+                return null;
+              default:
+                debug(`literal value "${x}" passed into inline ui-buttons was not understood`);
+                return 'unknown';
+            }
+          }
+
+          return x;
+        };
+        let [title,value] = elements;
+        value = value ? extractLiteral(value) : dasherize(title);
+        return {title: title, value: value};
+      };
+      const {title,value} = getTitleValue(item);
+      return typeOf(item) === 'object' ? item : { value: value, title: title };
+    });
+  },
+  _activateButton(value, forcedClear=false) {
+    const {_cardinality,selectedButtons} = this.getProperties('_cardinality','selectedButtons');
+    if(forcedClear) {
+      selectedButtons.clear();
+    }
+    if(_cardinality.max === 1 && selectedButtons.size === 1) {
+      selectedButtons.clear();
+      selectedButtons.add(value);
+    } else if(Number.isInteger(_cardinality.max) && selectedButtons.size >= _cardinality.max) {
+      this.sendAction('error', CARDINALITY_MAX, `there must be no more than ${_cardinality.max} buttons`);
+      return false;
+    } else {
+      selectedButtons.add(value);
+    }
+    if(this._rendered) {
+      this.sendAction('action', 'selected', this, value);
+      this.sendAction('changed', 'values', Array.from(selectedButtons));
+    } else {
+      this.sendAction('action', 'initiated', this, value);
+    }
+    this.notifyPropertyChange('selectedMutex');
+    return true;
+  },
+  _deactivateButton(value) {
+    const {_cardinality,selectedButtons} = this.getProperties('_cardinality','selectedButtons');
+    if(selectedButtons.size <= _cardinality.min) {
+      this.sendAction('error', CARDINALITY_MIN, `there must be at least ${_cardinality.min} button(s)`);
+      this._tellItem(value, 'applyEffect', 'cardinalityEffect');
+      return false;
+    }
+    selectedButtons.delete(value);
+    if(this._rendered) {
+      this.sendAction('action', 'unselected', this, value);
+      this.sendAction('changed', 'values', Array.from(selectedButtons));
+    } else {
+      this.sendAction('action', 'initiated', this, value); // TODO: does this make sense?
+    }
+
+    this.notifyPropertyChange('selectedMutex');
+    return true;
+  },
+  // if cardinality.min is non-zero ensure button is selected
+  selectButtonIfNotSelected() {
+    run.next(()=>{
+      const {_cardinality,selectedButtons} = this.getProperties('_cardinality', 'selectedButtons');
+      if(_cardinality.min === 1 && selectedButtons.size === 0) {
+        this._activateButton(this.get('_registeredItems.0.value'));
       }
-      self.sendAction('changed', null, self.get('selectedValue'), item); // general action gets the value
-      self.set('selected', null);
-      self.sendAction('deactivated', item); // specific action gets the "deactivated item"
-      return true;
-    },
-    registration: function(self,item) {
-      const _registeredItems = self.get('_registeredItems');
-      _registeredItems.pushObject(item);
-      self.sendAction('registered', item); // specific action only
+    });
+  },
+
+  setDefaultPropertyValues() {
+    const properties = ['value'];
+    for(var prop of properties) {
+      const propValue = this.get(prop);
+      const defaultValue = this.get('default' + capitalize(prop));
+      if(propertyIsSet(defaultValue) && isUndefined(propValue)) {
+        console.log('defaultValue for group prop [%s] is: %s', this.get('elementId'),defaultValue);
+        this.set(prop, defaultValue);
+      }
     }
   },
 
+  buttonActions: {
+    /**
+     * When a button is clicked, it requests through this message to be toggled between active/inactive state (aka, button's "selected" prop).
+     * @param  {object}   self reference to ui-buttons instance
+     * @param  {object}   item reference to the requesting instance
+     * @return {boolean}  passes back a boolean response to the requestor to indicate whether or not the request has been granted
+     */
+     pressed(self, item){
+      const value = item.get('value');
+      const {selectedButtons} = self.getProperties('selectedButtons');
+      self.sendAction('action', 'pressed', item);
+      if(selectedButtons.has(value)) {
+        // asking for deactivation
+        self._deactivateButton(value);
+      } else {
+        // asking for activation
+        self._activateButton(value);
+      }
+      return true;
+    },
+    /**
+     * Registration allows the container to add buttons to its registry but it
+     * also is used to link button properties back to global/container properties
+     * so that management can be handled at container level where appropriate
+     * @param  {object} self I need to find a way to remove this but for now its needed for container ref
+     * @param  {object} item A reference to the item registering itself
+     * @return {void}
+     */
+    registration(self,item) {
+      // properties which container will take over from buttons
+      const containerProperties = ['selectedButtons','disabledButtons','isSelectable'];
+      // properties which container will take over if NOT set by buttons
+      const effects = [
+        'clickEffect', 'onEffect', 'offEffect', 'toggleEffect',
+        'enabledEffect', 'disabledEffect', 'activeEffect', 'inactiveEffect','cardinalityEffect'
+      ];
+      const uiFeatures = [
+        'size', 'mood', 'activeMood', 'inactiveMood', 'icon', 'activeIcon', 'inactiveIcon'
+      ];
+      const containerBackup = [ ...effects, ...uiFeatures];
+      // Helper functions
+      const createComputed = prop => {
+        return computed.alias(`group.${prop}`);
+      };
+      const isNotSet = (prop,value) => {
+        const defaultValues = new Map([
+          ['size','normal'],
+          ['mood','default']
+        ]);
+        return isEmpty(value) || defaultValues.get(prop) === value;
+      };
+
+      // Register button
+      const _registeredItems = self.get('_registeredItems');
+      _registeredItems.pushObject(item);
+
+      // Setup CP's
+      for(var i of containerProperties) {
+        const cp = createComputed(i);
+        Ember.defineProperty(item, i, cp);
+      }
+      for(var i2 of containerBackup) {
+        if(isNotSet(i2, item.get(i2)) ) {
+          const cp2 = createComputed(i2);
+          Ember.defineProperty(item, i2, cp2);
+        }
+      }
+
+      // if groups value is already set, check against item's value
+      const groupValue = self.get('value');
+      const itemValue = item.get('value');
+      if(groupValue && groupValue === itemValue) {
+        self._activateButton(groupValue);
+        run.next(()=> {
+          /**
+           * there seems to be a small break in Ember where setting a property
+           * before it is fully _initialized doesn't propagate observer events
+           */
+          self.notifyPropertyChange('selectedMutex');
+        });
+      }
+
+      run.debounce(self, self.registrationComplete, 1);
+      self.sendAction('registered', item); // specific action only
+    },
+    btnEvent(self, evt, ...args) {
+      console.log('button event: %s: %o', evt,args);
+    },
+  },
+
+  // EVENTS
+  // -------------------------
+  _i: on('init', function() { return this._init(); }),
+  _ia: on('didInitAttrs', function() { return this.didInitAttrs(); }),
+  _r: on('willRender', function() { return this.willRender(); }),
+  _d: on('willDestroyElement', function() { return this.willDestroyElement(); }),
+  _dr: on('afterRender', function() { return this.didRender(); }),
+  _rendered: false,
+
+  _init() {
+    // nothing yet
+  },
+  willRender() {
+    // nothing yet
+  },
+  registrationComplete() {
+    this.set('_registrationComplete', true);
+    this.selectButtonIfNotSelected();
+  },
+  didInitAttrs() {
+    this.setDefaultPropertyValues();
+  },
+  willDestroyElement() {
+    // nothing yet
+  },
+  didRender() {
+    this._tellItems('rendered');
+    this._rendered = true;
+  }
+
 });
+
+export default uiButtons;
+uiButtons[Ember.NAME_KEY] = 'UI Buttons';
+

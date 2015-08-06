@@ -324,6 +324,11 @@ heading {
     margin-bottom: 15px;
 }
 
+h4 {
+  margin-top: 0px;
+  margin-bottom: 6px;
+}
+
 .components code {
     padding: 6px !important;
 }
@@ -347,4 +352,13 @@ ul.components {
 
 .downer {
   padding-top: 15px;
+}
+
+.flashy {
+  position: fixed;
+  top: 20px;
+  left: 25%;
+  width: 50%;
+  z-index: 999;
+  text-align: center;
 }

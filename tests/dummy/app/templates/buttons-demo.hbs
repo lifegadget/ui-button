@@ -1,14 +1,14 @@
-<h3><code>ui-buttons</code></h3>
+<div class="row">
+  <div class="col-xs-12">
+    <h3><code>ui-buttons</code></h3>
+    <h3>Buttons Component</h3>
+    <desc>
+      The buttons component is a <i>grouping</i> of buttons that can be used in a template as either <b>block</b> or <b>inline</b> component. The examples below illustrate both styles.
+    </desc>
+  </div>
+</div>
 
-<h3>Buttons Component</h3>
-<desc>
-  The primary "grouping" components, it groups buttons together by wrapping them in the <code>div</code> of class <em>btn-group</em>. This naming convention is consistent with Bootstrap and leverages the CSS that comes with CSS to make everything look right. In a broader fashion, this component is about bringing "together" button widgets (of various types) that contextually are related and allowing them to behave in a coordinated fashion as well as visually to present themselves as a group entity.
-</desc>
-<desc>
-  <note>Note: this component is still a work in progress, feel free to contribute with a PR.</note>
-</desc>
-
-<h3>Basics</h3>
+<h3>Block Style</h3>
 <hr>
 <div class="row">
   <div class="col-xs-4 col-sm-3 col-lg-2">
@@ -18,7 +18,7 @@
       {{ui-button title='baz'}}
     {{/ui-buttons}}
   </div>
-  <div class="col-xs-4 col-sm-4 col-lg-5 monospace">
+  <div class="col-xs-4 col-sm-5 col-lg-5 monospace">
   <b>\{{#ui-buttons}}</b><br/>
     &nbsp;&nbsp;\{{ui-button title='foo'}}<br/>
     &nbsp;&nbsp;\{{ui-button title='bar'}}<br/>
@@ -26,173 +26,270 @@
   <b>\{{/ui-buttons}}</b>
   </div>
   <div class="col-xs-4 col-sm-4 col-lg-5">
+    <h4>Basic Styling</h4>
     Illustrates the most basic usage of this component. Basically all you're getting here is some additional bootstrap styling which rounds the corners in a pleasing way.
   </div>
 </div>
 <hr>
 <div class="row">
   <div class="col-xs-4 col-sm-3 col-lg-2">
-    {{#ui-buttons howMany=howMany disabled=isDisabled as |group|}}
-      {{ui-button title='foo' group=group}}
-      {{ui-button title='bar' group=group}}
-      {{ui-button title='baz' group=group}}
-    {{/ui-buttons}}<br/>
-    # registered: {{howMany}}
+    {{#ui-buttons howMany=howMany disabled=d size=s value=v1 as |g1|}}
+      {{ui-button title='foo' group=g1}}
+      {{ui-button title='bar' group=g1}}
+      {{ui-button title='baz' group=g1}}
+    {{/ui-buttons}}
+    <br/>
+    <p class='downer'>
+      <i>&nbsp;&nbsp; where d = {{d}}</i>
+      <br/>
+      <i>&nbsp;&nbsp; and s = {{s}}</i>
+    </p>
+
+
   </div>
-  <div class="col-xs-4 col-sm-4 col-lg-5 monospace">
-  <b>\{{#ui-buttons howMany=howMany as |group|}}</b><br/>
-    &nbsp;&nbsp;\{{ui-button title='foo' group=group}}<br/>
-    &nbsp;&nbsp;\{{ui-button title='bar' group=group}}<br/>
-    &nbsp;&nbsp;\{{ui-button title='baz' group=group}}<br/>
-  <b>\{{/ui-buttons}}</b><br/>
-  # registered: \{{howMany}}
+  <div class="col-xs-4 col-sm-5 col-lg-5 monospace">
+  <b>\{{#ui-buttons disabled=d size=s as |g1|}}</b><br/>
+    &nbsp;&nbsp;\{{ui-button title='foo' group=g1}}<br/>
+    &nbsp;&nbsp;\{{ui-button title='bar' group=g1}}<br/>
+    &nbsp;&nbsp;\{{ui-button title='baz' group=g1}}<br/>
+  <b>\{{/ui-buttons}}</b>
   </div>
   <div class="col-xs-4 col-sm-4 col-lg-5">
-    When a button detects its <code>group</code> property has been set then it uses this to register itself
-    with the group. Registration allows the <code>ui-buttons</code> component to orchestrate certain things like
-    sizing, enablement/disablement, etc.<br/>
+    <h4>Block Scope & Registration</h4>
+    Associating the button with the <code>ui-buttons</code> component is achieved by setting the <code>group</code> property to the yielded value of buttons component. This automatically takes care of item registration and allows the container to orchestrate global properties like sizing, enablement/disablement, etc.<br/>
     <p class="downer">
-      {{ui-toggle-button on='enable the group' off='disable the group' value=isDisabled}}
+      {{ui-toggle-button on='enable the group' off='disable the group' onValue=true offValue=false action='disablement'}}
+      {{ui-toggle-button on='enable foo' off='disable foo' onValue='foo' offValue=false action='disablement'}}
+      <br/>
+      <p class="downer">
+        {{ui-buttons buttons='small,normal,large' value=s size='small' cardinality='1:1'}}
+      </p>
+
     </p>
   </div>
 </div>
-
 <hr>
-
 <div class="row">
   <div class="col-xs-4 col-sm-3 col-lg-2">
-    {{#ui-buttons as |group2|}}
-      {{ui-radio-button title='foo' group=group2}}
-      {{ui-radio-button title='bar' group=group2}}
-      {{ui-radio-button title='baz' group=group2}}
+    {{#ui-buttons cardinality=c values=vs2 as |g2|}}
+      {{ui-button title='foo' group=g2}}
+      {{ui-button title='bar' group=g2}}
+      {{ui-button title='baz' group=g2}}
     {{/ui-buttons}}
+    <br/>
+    <p class='downer'>
+      <i>&nbsp;&nbsp; where c = {{c}}</i>
+    </p>
+    <hr>
+    <p class='downer'>
+      VALUES are <i>&nbsp;&nbsp; {{vs2}}</i>
+    </p>
   </div>
-  <div class="col-xs-4 col-sm-4 col-lg-5 monospace">
-  <b>\{{#ui-buttons as |group2|}}</b><br/>
-    &nbsp;&nbsp;\{{ui-radio-button title='foo' group=group2}}<br/>
-    &nbsp;&nbsp;\{{ui-radio-button title='bar' group=group2}}<br/>
-    &nbsp;&nbsp;\{{ui-radio-button title='baz' group=group2}}<br/>
+  <div class="col-xs-4 col-sm-5 col-lg-5 monospace">
+  <b>\{{#ui-buttons cardinality=c as |g2|}}</b><br/>
+    &nbsp;&nbsp;\{{ui-button title='foo' group=g2}}<br/>
+    &nbsp;&nbsp;\{{ui-button title='bar' group=g2}}<br/>
+    &nbsp;&nbsp;\{{ui-button title='baz' group=g2}}<br/>
   <b>\{{/ui-buttons}}</b><br/>
   </div>
   <div class="col-xs-4 col-sm-4 col-lg-5">
-    Up to now we were just using the regular old <code>ui-button</code> button but more often then not when're grouping buttons we're going to want to use either a <em>radio</em> or <em>checkbox</em> styled button which contains some "state". In the case of a
-    radio button, you can see that only one button at a time can be picked.
-  </div>
-</div>
-
-<hr>
-
-<div class="row">
-  <div class="col-xs-4 col-sm-3 col-lg-2">
-    {{ui-buttons
-      type='radio'
-      buttons='Foo,Bar,Baz'
-    }}
-  </div>
-  <div class="col-xs-4 col-sm-4 col-lg-5 monospace">
-  <b>\{{ui-buttons </b><br/>
-  &nbsp;&nbsp;buttons='Foo,Bar,Baz' <br/>
-  &nbsp;&nbsp;type='radio'<br/>
-  }}
-  </div>
-  <div class="col-xs-4 col-sm-4 col-lg-5">
-    This should produce similar results but uses the more compact "inline" form. The only thing to pay attention to right now is that
+    <h4>Cardinality &nbsp;{{ui-buttons buttons='0:0,0:1,1:1,1:2,0:M' value=c size='tiny' cardinality='1:1' defaultValue='1:1'}}</h4>
+    The cardinality of this component has both a <code>min</code> and <code>max</code> property. Setting the cardinality away from the default state of '0:0' results in the registered buttons being told they can now be selected. The <i>max</i> component indicates how many buttons can be highlighted at one time.
+    <br/>
+    <note>
+      <b>Note</b>: when max is set to 1 the buttons will act like radio buttons and toggle the selected state
+    </note>
   </div>
 </div>
 <hr>
+
+
 
 <br/>
-
-<h3>Managing at Group Level</h3>
+<h3>Inline Style</h3>
 <hr>
 <div class="row">
-  <div class="col-xs-5 col-sm-4 col-lg-3">
+  <div class="col-xs-12 col-sm-3 col-lg-3">
     {{ui-buttons
-      type='radio'
-      buttons='Foo,Bar,Baz'
-      disabled='baz'
-      moodActive='success'
-      defaultValue='bar'
+      buttons='Foo,Bar,Baz 2'
+      value=basicValue
+      cardinality='1:1'
     }}
+    <p class="downer">value: {{basicValue}}</p>
   </div>
-  <div class="col-xs-3 col-sm-3 col-lg-4 monospace">
+  <div class="col-xs-12 col-sm-3 col-lg-4 monospace">
   <b>\{{ui-buttons </b><br/>
-  &nbsp;&nbsp;buttons='Foo,Bar,Baz' <br/>
-  &nbsp;&nbsp;type='radio'<br/>
-  &nbsp;&nbsp;disabled='baz'<br/>
-  &nbsp;&nbsp;moodActive='success'<br/>
-  &nbsp;&nbsp;defaultValue='bar'<br/>
+  &nbsp;&nbsp;buttons='Foo,Bar,Baz 2'<br/>
+  &nbsp;&nbsp;cardinality='1:1'<br/>
   }}
   </div>
-  <div class="col-xs-4 col-sm-4 col-lg-5">
-    Here we see the more compact yet highly capable inline form of the component. A things to take note of:
-    <ul>
-      <li>
-        <b>CSV Loading</b> - for many properties which can take on multiple values you can obviously bind to an array in the container but you may also use a CSV string in the template to load the values. Here you see that in <code>buttons</code> and <code>disabled</code>. Also note, in the case of <i>buttons</i> the CSV input sets the 'title' as the literal string passed in but the 'value' is a <i>dasherized</i> version of the string.
-      </li>
-      <li><b>Global Properties</b> - properties like <code>moodActive</code> (as well as <code>size</code> and others)</li>
-    </ul>
-    More on these properties later ...
+  <div class="col-xs-12 col-sm-6 col-lg-5">
+    <h4>Basic Inline</h4>
+
+    The basic inline syntax.<br/>
+
+    <note class="note"><b>Note</b>:   by default the values that each button take on
+      are dasherized version of the string and button type is <code>ui-button</code>.</note>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-sm-3 col-lg-3">
+    {{ui-buttons
+      buttons='Foo::1,Bar::2'
+      value=explicitValue
+      cardinality='1:1'
+    }}
+    <p class="downer">value: {{explicitValue}}</p>
+  </div>
+  <div class="col-xs-12 col-sm-3 col-lg-4 monospace">
+  <b>\{{ui-buttons </b><br/>
+  &nbsp;&nbsp;buttons='Foo::1,Bar::2'<br/>
+  &nbsp;&nbsp;cardinality='1:1'<br/>
+  }}
+  </div>
+  <div class="col-xs-12 col-sm-6 col-lg-5">
+    However, if you want to keep to the inline style but be explicit with the values then
+    can do this by using the double colon character (e.g., '::'). See demonstration to left.
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-sm-3 col-lg-3">
+    {{ui-buttons
+      buttons='Foo:::true,Bar:::false'
+      value=literalValue
+      cardinality='1:1'
+    }}
+    <p class="downer">value: {{literalValue}}</p>
+  </div>
+  <div class="col-xs-12 col-sm-3 col-lg-4 monospace">
+  <b>\{{ui-buttons </b><br/>
+  &nbsp;&nbsp;buttons='Foo:::true,Bar:::false'<br/>
+  &nbsp;&nbsp;cardinality='1:1'<br/>
+  }}
+  </div>
+  <div class="col-xs-12 col-sm-6 col-lg-5">
+    You can also state a literal of <i>true</i>, <i>false</i>, or <i>null</i> by using ':::'.
   </div>
 </div>
 <hr>
 <div class="row">
-  <div class="col-xs-5 col-sm-4 col-lg-3">
+  <div class="col-xs-12 col-sm-3 col-lg-3">
     {{ui-buttons
-      type='radio'
+      buttons='Foo,Bar,Baz'
+      value=effectValue1
+      activeEffect='rubberBand'
+      cardinalityEffect='pulse'
+      cardinality='1:1'
+    }}
+    <p class="downer">value: {{effectValue1}}</p>
+  </div>
+  <div class="col-xs-12 col-sm-3 col-lg-4 monospace">
+  <b>\{{ui-buttons </b><br/>
+  &nbsp;&nbsp;buttons='Foo,Bar,Baz'<br/>
+  &nbsp;&nbsp;cardinality='1:1'<br/>
+  &nbsp;&nbsp;activeEffect='rubberBand'<br/>
+  &nbsp;&nbsp;cardinalityEffect='pulse'<br/>
+  }}
+  </div>
+  <div class="col-xs-12 col-sm-6 col-lg-5">
+    <h4>Effects</h4>
+    The CSS animiation effects available in <code>ui-button</code> can be accessed including:
+    <ul>
+      <li><b>activeEffect</b> - when a button becomes active</li>
+      <li><b>inactiveEffect</b> - when a button becomes inactive</li>
+      <li><b>cardinalityEffect</b> - when the user has run into a cardinality constraint</li>
+    </ul>
+    While this example uses the <i>inline</i> form it is usable in <i>block</i> style so long
+    as the buttons are registered.
+  </div>
+</div>
+
+
+<hr>
+<div class="row">
+  <div class="col-xs-12 col-sm-3 col-lg-3">
+    {{ui-buttons
       buttons=dynButtons
       size=size
-      moodActive='warning'
+      activeMood=activeButtonMood
+      inactiveMood=inactiveButtonMood
+      activeIcon=activeIcon
+      inactiveIcon=inactiveIcon
       defaultValue='baz'
-      canBeEmpty=canBeEmpty
+      cardinality=cardinality
     }}
   </div>
-  <div class="col-xs-3 col-sm-3 col-lg-4 monospace">
+  <div class="col-xs-12 col-sm-3 col-lg-4 monospace">
   <b>\{{ui-buttons </b><br/>
   &nbsp;&nbsp;buttons='{{dynButtons}}' <br/>
-  &nbsp;&nbsp;type='radio'<br/>
-  &nbsp;&nbsp;moodActive='success'<br/>
+  &nbsp;&nbsp;activeMood='{{activeButtonMood}}'<br/>
+  &nbsp;&nbsp;inactiveMood='{{inactiveButtonMood}}'<br/>
   &nbsp;&nbsp;defaultValue='bar'<br/>{{#if size}}
-  &nbsp;&nbsp;size='{{size}}'<br/>{{/if}}{{#if canBeEmpty}}
-  &nbsp;&nbsp;canBeEmpty=true<br/>{{/if}}
+  &nbsp;&nbsp;size='{{size}}'<br/>{{/if}}{{#if cardinality}}
+  &nbsp;&nbsp;cardinality='{{cardinality}}'<br/>{{/if}}{{#if activeIcon}}
+  &nbsp;&nbsp;activeIcon='{{activeIcon}}'<br/>{{/if}}{{#if inactiveIcon}}
+  &nbsp;&nbsp;inactiveIcon='{{inactiveIcon}}'<br/>{{/if}}{{#if icon}}
+  &nbsp;&nbsp;icon='{{icon}}'<br/>{{/if}}
   <b>}}</b>
   </div>
-  <div class="col-xs-4 col-sm-4 col-lg-5">
+  <div class="col-xs-12 col-sm-6 col-lg-5">
+    <h4>Interactive Example</h4>
+
     Now play around with a few parameters:
     <div class="row">
-    <div class="col-xs-3">buttons</div>
+      <div class="col-xs-3">buttons</div>
       <div class="col-xs-9">
         {{text-input value=dynButtons }}
-      </div><br/>
+      </div>
+      <br/>
+      <div class="col-xs-3 downer">active mood</div>
+      <div class="col-xs-9 downer">
+         {{ui-buttons cardinality='0:1' size='small' value=activeButtonMood buttons='default,success,primary,warning,danger'}}
+      </div>
+      <br/>
+      <div class="col-xs-3 downer">Inactive</div>
+      <div class="col-xs-9 downer">
+         {{ui-buttons cardinality='0:1' size='small' value=inactiveButtonMood buttons='default,success,primary,warning,danger'}}
+      </div>
+      <br/>
       <div class="col-xs-3 downer">size</div>
       <div class="col-xs-9 downer">
-        {{ui-buttons buttons=sizes size='small' type='radio' value=size }}
-      </div><br/>
-      <div class="col-xs-3 downer">canBeEmpty</div>
+        {{ui-buttons buttons=sizes size='small' cardinality='0:1' value=size }}
+      </div>
+      <br/>
+      <div class="col-xs-3 downer">cardinality</div>
       <div class="col-xs-9 downer">
         {{ui-buttons
-          buttons=canBeEmptyValues
-          value=canBeEmpty
+          buttons='0:0,0:1,1:1,1:M::1:M'
+          value=cardinality
           size='small'
-          type='radio'
-          defaultValue=true
-          icon=icon
-          iconActive=iconActive
-          iconInactive=iconInactive
-          canBeEmpty=false
+          cardinality='1:1'
+          defaultValue='1:1'
         }}
-      </div><br/>
-      <div class="col-xs-3 downer">icons</div>
+      </div>
+      <br/>
+      <div class="col-xs-3 downer">active icon</div>
       <div class="col-xs-9 downer">
         {{ui-buttons
-          buttons='none,both,active,inactive'
-          value=iconStrategy
+          buttons='none:::false,circle,square,checkbox::check-square-o,dot::dot-circle-o'
+          value=activeIcon
           size='small'
-          type='radio'
-          defaultValue='none'
-          canBeEmpty=false
+          cardinality='1:1'
+          defaultValue='check-square-o'
         }}
-      </div><br/>
+      </div>
+      <br/>
+      <div class="col-xs-3 downer">inactive icon</div>
+      <div class="col-xs-9 downer">
+        {{ui-buttons
+          buttons='none:::false,circle::circle-o,square::minus-square-o,checkbox::square-o,dot::circle-o-notch'
+          value=inactiveIcon
+          size='small'
+          cardinality='1:1'
+          defaultValue='square-o'
+        }}
+      </div>
+      <br/>
     </div>
   </div>
 </div>
@@ -202,25 +299,104 @@
 <h3>Data Down, Actions Up</h3>
 <hr>
 <div class="row">
-  <div class="col-xs-5 col-sm-4 col-lg-3">
+  <div class="col-xs-12 col-sm-3 col-lg-3">
     {{ui-buttons
-      type='radio'
+      cardinality='1:2'
       buttons='Foo,Bar,Baz'
       defaultValue='bar'
-      value=listenDontTalk
       changed="changed"
+      action="action"
+      error="error"
+      disabled=d2
+      registration="registration"
     }}<br/>
-    <p class="downer">value: {{listenDontTalk}}</p>  </div>
-  <div class="col-xs-3 col-sm-3 col-lg-4 monospace">
+    <p class="downer">values: {{actionValues}}</p>  </div>
+    <div class="flashy">
+      {{#each flashMessages.queue as |flash|}}
+        {{flash-message flash=flash}}
+      {{/each}}
+    </div>
+  <div class="col-xs-12 col-sm-3 col-lg-4 monospace">
   <b>\{{ui-buttons </b><br/>
   &nbsp;&nbsp;buttons='Foo,Bar,Baz' <br/>
-  &nbsp;&nbsp;type='radio'<br/>
-  &nbsp;&nbsp;defaultValue='bar'<br/>
-  &nbsp;&nbsp;value=listenDontTalk<br/>
+  &nbsp;&nbsp;cardinality='1:2'<br/>
+  &nbsp;&nbsp;disabled={{d2}}<br/>
   &nbsp;&nbsp;changed="changed"<br/>
+  &nbsp;&nbsp;action="action"<br/>
+  &nbsp;&nbsp;error="error"<br/>
+  &nbsp;&nbsp;registration="registration"<br/>
   }}
+  <br/>
+  {{ui-toggle-button on='enable foo' off='disable foo' onValue='foo' offValue=false value=d2}}
   </div>
-  <div class="col-xs-4 col-sm-4 col-lg-5">
-    We're trying to use the now accepted norm of "data down, actions up" to avoid side-effects and therefore when you use the <code>ui-buttons</code> components you can bind input values such as <i>size</i>,
+  <div class="col-xs-4 col-sm-5 col-lg-5">
+    Actions available include (see diagram below for visual representation):
+    <ul>
+      <li><b>action</b> - the default action which gets the majority of the actions sent to it (blue flash msgs).</li>
+      <li><b>changed</b> - fires only when the "values" or "disabled" property changes (green flash msgs).</li>
+      <li><b>error</b> - if any warning/error conditions happen -- like running into a cardinality constraint -- this is fired</li>
+      <li><b>registration</b> - indicates when buttons register with the group and when the group is completed with registration</li>
+    </ul>
   </div>
 </div>
+
+<h3>Shortcut Components</h3>
+<hr>
+<div class="row">
+  <div class="col-xs-12 col-sm-3 col-lg-3">
+    {{radio-buttons
+      buttons='Foo,Bar,Baz'
+      value=radioValue
+    }}<br/>
+    <p class="downer">value: {{radioValue}}</p>  </div>
+  <div class="col-xs-12 col-sm-3 col-lg-4 monospace">
+  <b>\{{radio-buttons </b><br/>
+  &nbsp;&nbsp;buttons='Foo,Bar,Baz' <br/>
+  }}
+  </div>
+  <div class="col-xs-12 col-sm-5 col-lg-5">
+    <h4>Radio Buttons</h4>
+    A simple shortcut/config for ui-buttons ... this simply sets the default
+    cardinality to a default of '1:1'. While this example is <i>inline</i> it
+    could just as easily be used in a block form.
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-sm-3 col-lg-3">
+    {{checkbox-buttons
+      buttons='Foo,Bar,Baz'
+      values=checkValue
+    }}<br/>
+    <p class="downer">values: {{checkValue}}</p>  </div>
+  <div class="col-xs-3 col-sm-3 col-lg-4 monospace">
+  <b>\{{checkbox-buttons </b><br/>
+  &nbsp;&nbsp;buttons='Foo,Bar,Baz' <br/>
+  }}
+  </div>
+  <div class="col-xs-12 col-sm-5 col-lg-5">
+    <h4>Checkbox Buttons</h4>
+    Another simple shortcut/config ... this  sets the default cardinality to '0:M'
+  </div>
+</div>
+
+<h3 id='messaging'>Looking inside</h3>
+<h4>Key Attributes</h4>
+<desc>
+  <p>
+    The key attributes of <code>ui-buttons</code> and their relationships are shown below:
+  </p>
+  <div class="row">
+    <img class="col-xs-12 col-sm-7" src="images/ui-buttons-properties.png" alt="Key attributes">
+    <span class="col-sm-5"></span>
+  </div>
+</desc>
+<h4>Actions</h4>
+<desc>
+  <p>
+    The actions that a container can bind to are:
+  </p>
+  <div class="row">
+    <img class="col-xs-12 col-sm-7" src="images/ui-buttons-actions.png" alt="Key attributes">
+    <span class="col-sm-5"></span>
+  </div>
+</desc>
