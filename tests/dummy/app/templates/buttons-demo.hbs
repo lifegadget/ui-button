@@ -301,24 +301,42 @@
 <div class="row">
   <div class="col-xs-12 col-sm-3 col-lg-3">
     {{ui-buttons
-      cardinality='0:1'
+      cardinality='1:2'
       buttons='Foo,Bar,Baz'
       defaultValue='bar'
-      value=listenDontTalk
       changed="changed"
+      action="action"
+      error="error"
+      disabled=d2
+      registration="registration"
     }}<br/>
-    <p class="downer">value: {{listenDontTalk}}</p>  </div>
+    <p class="downer">values: {{actionValues}}</p>  </div>
+    <div class="flashy">
+      {{#each flashMessages.queue as |flash|}}
+        {{flash-message flash=flash}}
+      {{/each}}
+    </div>
   <div class="col-xs-12 col-sm-3 col-lg-4 monospace">
   <b>\{{ui-buttons </b><br/>
   &nbsp;&nbsp;buttons='Foo,Bar,Baz' <br/>
-  &nbsp;&nbsp;cardinality='0:1'<br/>
-  &nbsp;&nbsp;defaultValue='bar'<br/>
-  &nbsp;&nbsp;value=listenDontTalk<br/>
+  &nbsp;&nbsp;cardinality='1:2'<br/>
+  &nbsp;&nbsp;disabled={{d2}}<br/>
   &nbsp;&nbsp;changed="changed"<br/>
+  &nbsp;&nbsp;action="action"<br/>
+  &nbsp;&nbsp;error="error"<br/>
+  &nbsp;&nbsp;registration="registration"<br/>
   }}
+  <br/>
+  {{ui-toggle-button on='enable foo' off='disable foo' onValue='foo' offValue=false value=d2}}
   </div>
   <div class="col-xs-4 col-sm-5 col-lg-5">
-    We're trying to use the now accepted norm of "data down, actions up" to avoid side-effects and therefore when you use the <code>ui-buttons</code> components you can bind input values such as <i>size</i>,
+    Actions available include (see diagram below for visual representation):
+    <ul>
+      <li><b>action</b> - the default action which gets the majority of the actions sent to it (blue flash msgs).</li>
+      <li><b>changed</b> - fires only when the "values" or "disabled" property changes (green flash msgs).</li>
+      <li><b>error</b> - if any warning/error conditions happen -- like running into a cardinality constraint -- this is fired</li>
+      <li><b>registration</b> - indicates when buttons register with the group and when the group is completed with registration</li>
+    </ul>
   </div>
 </div>
 

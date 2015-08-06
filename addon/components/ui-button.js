@@ -314,7 +314,7 @@ const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
         this.$().addClass('animated ' + effect);
         this.$().one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', () => {
           this.$().removeClass('animated ' + effect);
-          this.sendAction('action', 'effectEnded', 'effectType');
+          this.sendAction('action', 'effectEnded', this, 'effectType');
         });
       });
     } catch (e) {

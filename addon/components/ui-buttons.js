@@ -10,8 +10,8 @@ const propertyIsSet = thingy => {
 const isUndefined = thingy => {
   return Ember.typeOf(thingy) === 'undefined';
 };
-const CARDINALITY_MIN = 'cardinality-min-threashold';
-const CARDINALITY_MAX = 'cardinality-max-threashold';
+const CARDINALITY_MIN = 'cardinality-min-threshold';
+const CARDINALITY_MAX = 'cardinality-max-threshold';
 const VALUES_CARDINALITY_ERROR = 'values-cardinality-error';
 const SET_WITH_CARDINALITY = 'set-with-cardinality-0';
 
@@ -66,9 +66,9 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
     }
   },
   getValues() {
-    const selectedButtons = this.get('selectedButtons');
+    const selectedButtons = Array.from(this.get('selectedButtons'));
 
-    return Array.from(selectedButtons);
+    return selectedButtons;
   },
 
   /**
@@ -180,8 +180,8 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   */
   disabledMutex: null,
   disabled: computed({
-    set(_,value) {
-      this.setDisabled(value);
+    set(_,value,oldValue) {
+      this.setDisabled(value,oldValue);
       return value;
     },
     get() {
@@ -234,10 +234,13 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
         process('add',value);
         break;
     }
+    this.sendAction('changed', 'disabled', Array.from(disabledButtons));
     this.notifyPropertyChange('disabledMutex');
   },
   getDisabled() {
-    return Array.from(this.get('disabledButtons'));
+    const disabledButtons = Array.from(this.get('disabledButtons'));
+    this.sendAction('changed', 'disabled', disabledButtons);
+    return disabledButtons;
   },
   disabledButtons: computed(function() {
     return new Set();
@@ -312,25 +315,35 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       selectedButtons.clear();
       selectedButtons.add(value);
     } else if(Number.isInteger(_cardinality.max) && selectedButtons.size >= _cardinality.max) {
-      this.sendAction('error', CARDINALITY_MAX, 'there must be no more than ${_cardinality.max} buttons');
+      this.sendAction('error', CARDINALITY_MAX, `there must be no more than ${_cardinality.max} buttons`);
       return false;
     } else {
       selectedButtons.add(value);
     }
-
-    this.sendAction('action', 'selected', value);
+    if(this._rendered) {
+      this.sendAction('action', 'selected', this, value);
+      this.sendAction('changed', 'values', Array.from(selectedButtons));
+    } else {
+      this.sendAction('action', 'initiated', this, value);
+    }
     this.notifyPropertyChange('selectedMutex');
     return true;
   },
   _deactivateButton(value) {
     const {_cardinality,selectedButtons} = this.getProperties('_cardinality','selectedButtons');
     if(selectedButtons.size <= _cardinality.min) {
-      this.sendAction('onError', CARDINALITY_MIN, `there must be at least ${_cardinality.min} buttons`);
+      this.sendAction('error', CARDINALITY_MIN, `there must be at least ${_cardinality.min} button(s)`);
       this._tellItem(value, 'applyEffect', 'cardinalityEffect');
       return false;
     }
     selectedButtons.delete(value);
-    this.sendAction('action', 'unselected', value);
+    if(this._rendered) {
+      this.sendAction('action', 'unselected', this, value);
+      this.sendAction('changed', 'values', Array.from(selectedButtons));
+    } else {
+      this.sendAction('action', 'initiated', this, value); // TODO: does this make sense?
+    }
+
     this.notifyPropertyChange('selectedMutex');
     return true;
   },
@@ -453,6 +466,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   _r: on('willRender', function() { return this.willRender(); }),
   _d: on('willDestroyElement', function() { return this.willDestroyElement(); }),
   _dr: on('afterRender', function() { return this.didRender(); }),
+  _rendered: false,
 
   _init() {
     // nothing yet
@@ -472,6 +486,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   },
   didRender() {
     this._tellItems('rendered');
+    this._rendered = true;
   }
 
 });
