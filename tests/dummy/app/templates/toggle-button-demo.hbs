@@ -22,10 +22,18 @@
 </div>
 <div class="row">
     <div class="col-xs-2">
-        {{ui-toggle-button value=true onMood='success' toggleEffect='swing'}}
+        {{ui-toggle-button value=true onMood='success' toggleEffect='tada'}}
     </div>
     <div class="snippet col-xs-10">
-        \{{ui-toggle-button value=true onMood='success' toggleEffect='swing'}}
+        \{{ui-toggle-button value=true onMood='success' toggleEffect='tada'}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        {{ui-toggle-button value=true onMood='primary' toggleEffect=null onEffect='tada' offEffect='bounce'}}
+    </div>
+    <div class="snippet col-xs-10">
+        \{{ui-toggle-button value=true onMood='primary' toggleEffect=null onEffect='tada' offEffect='bounce'}}
     </div>
 </div>
 <div class="row">
@@ -64,6 +72,6 @@
     </div>
     <div class="snippet col-xs-10">
       Toggling non-boolean values: {{fruit}}<br/>
-      <span class="text-muted">\{{ui-toggle-button on='Apple' onValue='apple' off="Orange" offValue='orange'}}</span>
+      <span class="text-muted">\{{ui-toggle-button value=fruit on='Apple' onValue='apple' off="Orange" offValue='orange'}}</span>
     </div>
 </div>

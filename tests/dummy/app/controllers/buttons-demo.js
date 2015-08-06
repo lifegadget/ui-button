@@ -2,8 +2,8 @@ import Ember from 'ember';
 const { computed, observer, $, A, run, on, typeOf, debug, keys, get, set, inject } = Ember;    // jshint ignore:line
 
 export default Ember.Controller.extend({
-
-  isDisabled: false,
+  d: false,
+  s: 'normal',
   howMany: null,
   canBeEmptyValues: [
     { title: 'Yes', value: true },
@@ -12,30 +12,42 @@ export default Ember.Controller.extend({
   sizes: [
     { title: 'Tiny', value: 'tiny' },
     { title: 'Small', value: 'small' },
-    { title: 'Default', value: null },
+    { title: 'Default', value: null, selected: true},
     { title: 'Large', value: 'large' },
     { title: 'Huge', value: 'huge' }
   ],
   dynButtons: 'Foo,Bar,Baz',
-  icon: computed('iconStrategy', function() {
-    const strategy = this.get('iconStrategy');
-    return strategy === 'both' ? 'chevron-circle-right' : false;
-  }),
-  iconActive: computed('iconStrategy', function() {
-    const strategy = this.get('iconStrategy');
-    return strategy === 'active' ? 'circle' : false;
-  }),
-  iconInactive: computed('iconStrategy', function() {
-    const strategy = this.get('iconStrategy');
-    return strategy === 'inactive' ? 'circle-o' : false;
-  }),
-  iconStrategy: 'none',
-  activeButtonMood: 'warning',
+  activeButtonMood: 'success',
   inactiveButtonMood: 'default',
 
+
   actions: {
-    changed: function(newValue,oldValue) {
-      window.alert(`Value changed from "${oldValue}" to "${newValue}"`);
+    changed: function(property,value) {
+      if(property === 'values') {
+        this.get('flashMessages').success(`Value changed to: ${value}`);
+        this.set('actionValues', value);
+      }
+      if(property === 'disabled') {
+        let desc;
+        if(typeOf(value) ==='boolean') {
+          desc = value ? 'true' : 'false';
+        } else {
+          desc = `"${value}"`;
+        }
+        this.get('flashMessages').success(`Disabled changed to: ${desc}`);
+      }
+    },
+    error(code,desc) {
+      this.get('flashMessages').danger(`${desc} [${code}].`);
+    },
+    action(cmd,source) {
+      this.get('flashMessages').info(`"${cmd}" command was sent by ${source.get('value')}`);
+    },
+    disablement(cmd, item) {
+      if(cmd === 'toggled') {
+        console.log('setting d to %s', item.get('value'));
+        this.set('d', item.get('value'));
+      }
     }
   }
 
