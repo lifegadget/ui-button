@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"_tell",
+				"_tellItems	(group-messaging.js)"
+			],
+			[
+				"defva",
+				"defaultValues"
+			],
+			[
 				"global",
 				"globalBaseline"
 			],
@@ -54,10 +62,6 @@
 			[
 				"selectbuons",
 				"selectedButtons"
-			],
-			[
-				"_tell",
-				"_tellItems"
 			],
 			[
 				"noti",
@@ -143,23 +147,15 @@
 			"file": "addon/components/ui-buttons.js",
 			"settings":
 			{
-				"buffer_size": 16911,
+				"buffer_size": 16411,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "/Volumes/PEGASUS/Dropbox/iTerm2/my-zsh",
+			"file": "bower.json",
 			"settings":
 			{
-				"buffer_size": 2540,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Users/Ken/.zshrc",
-			"settings":
-			{
-				"buffer_size": 2398,
+				"buffer_size": 634,
 				"line_ending": "Unix"
 			}
 		},
@@ -175,15 +171,7 @@
 			"file": "addon/templates/components/ui-buttons.hbs",
 			"settings":
 			{
-				"buffer_size": 326,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "tests/dummy/app/templates/buttons-demo.hbs",
-			"settings":
-			{
-				"buffer_size": 12761,
+				"buffer_size": 331,
 				"line_ending": "Unix"
 			}
 		},
@@ -191,7 +179,7 @@
 			"file": "tests/dummy/app/controllers/buttons-demo.js",
 			"settings":
 			{
-				"buffer_size": 1476,
+				"buffer_size": 1541,
 				"line_ending": "Unix"
 			}
 		},
@@ -199,7 +187,7 @@
 			"file": "tests/unit/components/ui-buttons-test.js",
 			"settings":
 			{
-				"buffer_size": 17167,
+				"buffer_size": 17099,
 				"line_ending": "Unix"
 			}
 		},
@@ -207,7 +195,7 @@
 			"file": "addon/components/ui-button.js",
 			"settings":
 			{
-				"buffer_size": 11931,
+				"buffer_size": 11988,
 				"line_ending": "Unix"
 			}
 		},
@@ -264,23 +252,11 @@
 	"command_palette":
 	{
 		"height": 375.0,
-		"last_filter": "bash",
+		"last_filter": "stat",
 		"selected_items":
 		[
 			[
-				"bash",
-				"Set Syntax: Shell Script (Bash)"
-			],
-			[
-				"status",
-				"Git: Status"
-			],
-			[
-				"statu",
-				"Git: Status"
-			],
-			[
-				"sta",
+				"stat",
 				"Git: Status"
 			],
 			[
@@ -288,7 +264,19 @@
 				"Git: Push"
 			],
 			[
-				"stat",
+				"status",
+				"Git: Status"
+			],
+			[
+				"bash",
+				"Set Syntax: Shell Script (Bash)"
+			],
+			[
+				"statu",
+				"Git: Status"
+			],
+			[
+				"sta",
 				"Git: Status"
 			],
 			[
@@ -525,13 +513,10 @@
 		"/Volumes/PEGASUS/repos/mine/ui-button",
 		"/Volumes/PEGASUS/repos/mine/ui-button/addon",
 		"/Volumes/PEGASUS/repos/mine/ui-button/addon/components",
-		"/Volumes/PEGASUS/repos/mine/ui-button/bower_components",
-		"/Volumes/PEGASUS/repos/mine/ui-button/bower_components/animate.css",
-		"/Volumes/PEGASUS/repos/mine/ui-button/bower_components/animate.css/source",
-		"/Volumes/PEGASUS/repos/mine/ui-button/bower_components/babel-polyfill",
 		"/Volumes/PEGASUS/repos/mine/ui-button/docs",
 		"/Volumes/PEGASUS/repos/mine/ui-button/docs/assets",
 		"/Volumes/PEGASUS/repos/mine/ui-button/docs/assets/images",
+		"/Volumes/PEGASUS/repos/mine/ui-button/node_modules",
 		"/Volumes/PEGASUS/repos/mine/ui-button/tests",
 		"/Volumes/PEGASUS/repos/mine/ui-button/tests/dummy",
 		"/Volumes/PEGASUS/repos/mine/ui-button/tests/dummy/public",
@@ -542,10 +527,17 @@
 	],
 	"file_history":
 	[
-		"/Volumes/PEGASUS/repos/mine/ui-button/bower.json",
+		"/Volumes/PEGASUS/repos/mine/ui-button/tests/dummy/app/templates/buttons-demo.hbs",
 		"/Volumes/PEGASUS/repos/mine/ui-button/package.json",
-		"/Volumes/PEGASUS/repos/mine/ui-button/addon/templates/components/ui-button.hbs",
+		"/Volumes/PEGASUS/repos/mine/ui-button/tests/dummy/app/templates/index.hbs",
+		"/Volumes/PEGASUS/repos/mine/ui-button/index.js",
+		"/Volumes/PEGASUS/repos/mine/ui-button/divshot.json",
 		"/Volumes/PEGASUS/repos/mine/ui-button/tests/dummy/app/styles/app.css",
+		"/Volumes/PEGASUS/repos/mine/trainer/trainer.sublime-project",
+		"/Users/Ken/.zshrc",
+		"/Volumes/PEGASUS/Dropbox/iTerm2/my-zsh",
+		"/Volumes/PEGASUS/repos/mine/ui-button/bower.json",
+		"/Volumes/PEGASUS/repos/mine/ui-button/addon/templates/components/ui-button.hbs",
 		"/Volumes/PEGASUS/repos/mine/ui-button/addon/mixins/shared-style.js",
 		"/Volumes/PEGASUS/repos/mine/ui-button/tests/integration/components/ui-button-test.js",
 		"/Volumes/PEGASUS/repos/mine/ui-button/tests/integration/components/checkbox-buttons-test.js",
@@ -556,17 +548,12 @@
 		"/Volumes/PEGASUS/repos/mine/ui-button/config/ember-try.js",
 		"/Volumes/PEGASUS/repos/mine/ui-button/.travis.yml",
 		"/Volumes/PEGASUS/repos/mine/ui-button/tests/dummy/app/controllers/button-demo.js",
-		"/Volumes/PEGASUS/repos/mine/ui-button/tests/dummy/app/templates/index.hbs",
 		"/Volumes/PEGASUS/repos/mine/ui-button/tests/unit/components/ui-buttons-test.js",
 		"/Volumes/PEGASUS/repos/mine/ui-button/tests/dummy/app/router.js",
 		"/Volumes/PEGASUS/repos/mine/ui-button/addon/mixins/group-messaging.js",
 		"/Volumes/PEGASUS/repos/mine/ui-button/addon/mixins/item-messaging.js",
 		"/Volumes/PEGASUS/repos/mine/ui-button/ember-cli-build.js",
-		"/Volumes/PEGASUS/repos/mine/ui-button/index.js",
-		"/Volumes/PEGASUS/Dropbox/iTerm2/my-zsh",
-		"/Users/Ken/.zshrc",
 		"/Users/Ken/.bash_profile",
-		"/Volumes/PEGASUS/repos/mine/ui-button/tests/dummy/app/templates/buttons-demo.hbs",
 		"/Volumes/PEGASUS/repos/mine/ui-button/ui-button.sublime-project",
 		"/Volumes/PEGASUS/repos/mine/ui-button/tests/unit/components/ui-toggle-button-test.js",
 		"/Volumes/PEGASUS/repos/mine/ui-button/tests/unit/mixins/shared-style-test.js",
@@ -635,7 +622,6 @@
 		"/Users/Ken/Library/Application Support/Sublime Text 3/Packages/User/Base File.sublime-settings",
 		"/Volumes/PEGASUS/repos/mine/trainer/app/templates/clients/client/goals.hbs",
 		"/Volumes/PEGASUS/repos/mine/trainer/app/controllers/workouts/workout.js",
-		"/Volumes/PEGASUS/repos/mine/trainer/trainer.sublime-project",
 		"/Users/Ken/sublime/ui-list.sublime-project",
 		"/Volumes/PEGASUS/repos/mine/ui-list/addon/templates/components/ui-list.hbs",
 		"/Users/Ken/reference_data.json",
@@ -675,6 +661,21 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"threashold",
+			"thre",
+			"disable foo",
+			"sendAction('changed",
+			"'changed'",
+			"there must be ",
+			"disablement",
+			".sendAction('action'",
+			"item",
+			"_visible",
+			"afterRender",
+			"item",
+			"set('selectButtons",
+			"inactive",
+			"nullIsValidValue",
 			"inactive",
 			"makeSelectable",
 			".observer",
@@ -787,22 +788,7 @@
 			"init",
 			"_style",
 			"height",
-			"li",
-			"workflow",
-			"cp",
-			"clients",
-			"filtered",
-			"    ",
-			"all",
-			"start",
-			"set:",
-			"store.find",
-			"inject",
-			"store",
-			"findAll",
-			"CTRL V",
-			"ALT SHIFT F",
-			"ALT SHIFT "
+			"li"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -810,6 +796,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"threshold",
+			"_rendered",
 			"isSelectable",
 			"_initialized",
 			"selectedButtons",
@@ -828,7 +816,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 3,
 			"sheets":
 			[
 				{
@@ -837,15 +825,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 16911,
+						"buffer_size": 16411,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								16565,
-								16565
+								804,
+								804
 							]
 						],
 						"settings":
@@ -918,94 +906,6 @@
 							"word_wrap": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 7116.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "/Volumes/PEGASUS/Dropbox/iTerm2/my-zsh",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2540,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								241,
-								241
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content"
-							],
-							"syntax": "Packages/ShellScript/Shell-Unix-Generic.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
@@ -1013,20 +913,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "/Users/Ken/.zshrc",
+					"buffer": 1,
+					"file": "bower.json",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2398,
+						"buffer_size": 634,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								160,
-								160
+								519,
+								519
 							]
 						],
 						"settings":
@@ -1090,17 +990,22 @@
 								"bh_regex_close",
 								"bh_regex_content"
 							],
-							"syntax": "Packages/ShellScript/Shell-Unix-Generic.tmLanguage"
+							"editorconfig": true,
+							"ensure_newline_at_eof_on_save": true,
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
+							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 2,
 					"file": "addon/mixins/group-messaging.js",
 					"semi_transient": false,
 					"settings":
@@ -1126,56 +1031,56 @@
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
-								"bh_round_content"
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
 							"editorconfig": true,
 							"ensure_newline_at_eof_on_save": true,
@@ -1185,27 +1090,27 @@
 							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 251.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 3,
 					"file": "addon/templates/components/ui-buttons.hbs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 326,
+						"buffer_size": 331,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								266,
-								266
+								305,
+								305
 							]
 						],
 						"settings":
@@ -1213,46 +1118,11 @@
 							"BracketHighlighterBusy": false,
 							"bh_regions":
 							[
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
 								"bh_angle_close",
 								"bh_angle_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
@@ -1263,6 +1133,41 @@
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
@@ -1273,12 +1178,104 @@
 							"ensure_newline_at_eof_on_save": false,
 							"history_list_is_closing": true,
 							"syntax": "Packages/Handlebars/Handlebars.tmLanguage",
-							"tab_size": 2,
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true,
 							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "tests/dummy/app/controllers/buttons-demo.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1541,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								732,
+								732
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"editorconfig": true,
+							"ensure_newline_at_eof_on_save": true,
+							"syntax": "Packages/JavaScriptNext - ES6 Syntax/JavaScriptNext.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
+							"trim_trailing_white_space_on_save": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 180.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 5,
@@ -1286,19 +1283,19 @@
 				},
 				{
 					"buffer": 5,
-					"file": "tests/dummy/app/templates/buttons-demo.hbs",
+					"file": "tests/unit/components/ui-buttons-test.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 12761,
+						"buffer_size": 17099,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								12156,
-								12156
+								16404,
+								16404
 							]
 						],
 						"settings":
@@ -1311,154 +1308,61 @@
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content"
-							],
-							"editorconfig": true,
-							"ensure_newline_at_eof_on_save": false,
-							"history_list_is_closing": true,
-							"syntax": "Packages/Handlebars/grammars/Handlebars.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"trim_trailing_white_space_on_save": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 6909.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "tests/dummy/app/controllers/buttons-demo.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1476,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1119,
-								1119
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
 								"bh_single_quote",
 								"bh_single_quote_center",
 								"bh_single_quote_open",
 								"bh_single_quote_close",
 								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
-								"bh_round_content"
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
 							"editorconfig": true,
 							"ensure_newline_at_eof_on_save": true,
 							"syntax": "Packages/JavaScriptNext - ES6 Syntax/JavaScriptNext.tmLanguage",
-							"tab_size": 2,
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true,
 							"trim_trailing_white_space_on_save": true
 						},
@@ -1466,99 +1370,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "tests/unit/components/ui-buttons-test.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 17167,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5441,
-								5441
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content"
-							],
-							"editorconfig": true,
-							"ensure_newline_at_eof_on_save": true,
-							"syntax": "Packages/JavaScriptNext - ES6 Syntax/JavaScriptNext.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"trim_trailing_white_space_on_save": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1082.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
+					"stack_index": 6,
 					"type": "text"
 				}
 			]
@@ -1568,20 +1380,20 @@
 			"sheets":
 			[
 				{
-					"buffer": 8,
+					"buffer": 6,
 					"file": "addon/components/ui-button.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 11931,
+						"buffer_size": 11988,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								7788,
-								7788
+								11487,
+								11487
 							]
 						],
 						"settings":
@@ -1594,56 +1406,56 @@
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
-								"bh_round_content"
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
 							"editorconfig": true,
 							"ensure_newline_at_eof_on_save": true,
@@ -1654,14 +1466,14 @@
 							"word_wrap": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 4648.0,
+						"translation.y": 6211.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 7,
 					"file": "addon/mixins/item-messaging.js",
 					"semi_transient": false,
 					"settings":
@@ -1754,7 +1566,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 8,
 					"file": "tests/dummy/app/templates/button-demo.hbs",
 					"semi_transient": false,
 					"settings":
@@ -1835,7 +1647,7 @@
 							"ensure_newline_at_eof_on_save": false,
 							"history_list_is_closing": true,
 							"syntax": "Packages/Handlebars/grammars/Handlebars.tmLanguage",
-							"tab_size": 2,
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true,
 							"trim_trailing_white_space_on_save": true
 						},
@@ -1843,11 +1655,11 @@
 						"translation.y": 3566.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
-					"buffer": 11,
+					"buffer": 9,
 					"file": "tests/unit/components/ui-button-test.js",
 					"semi_transient": false,
 					"settings":
@@ -1859,8 +1671,8 @@
 						"selection":
 						[
 							[
-								258,
-								258
+								9574,
+								9574
 							]
 						],
 						"settings":
@@ -1873,56 +1685,56 @@
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
-								"bh_round_content"
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
 							"editorconfig": true,
 							"ensure_newline_at_eof_on_save": true,
@@ -1934,10 +1746,10 @@
 							"word_wrap": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 3814.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 7,
 					"type": "text"
 				}
 			]
@@ -2001,7 +1813,7 @@
 	"project": "ui-button.sublime-project",
 	"replace":
 	{
-		"height": 66.0
+		"height": 46.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -2011,16 +1823,28 @@
 		"selected_items":
 		[
 			[
-				"bowr",
-				"bower.json"
+				"pack",
+				"package.json"
 			],
 			[
 				"bower",
 				"bower.json"
 			],
 			[
-				"pack",
-				"package.json"
+				"indexhbs",
+				"tests/dummy/app/templates/index.hbs"
+			],
+			[
+				"inde",
+				"index.js"
+			],
+			[
+				"css",
+				"tests/dummy/app/styles/app.css"
+			],
+			[
+				"bowr",
+				"bower.json"
 			],
 			[
 				"uibuthbs",
@@ -2029,10 +1853,6 @@
 			[
 				"group",
 				"addon/mixins/group-messaging.js"
-			],
-			[
-				"css",
-				"tests/dummy/app/styles/app.css"
 			],
 			[
 				"buttonsdemojs",
@@ -2089,10 +1909,6 @@
 			[
 				"item",
 				"addon/mixins/item-messaging.js"
-			],
-			[
-				"inde",
-				"index.js"
 			],
 			[
 				"cli",
@@ -2297,10 +2113,6 @@
 			[
 				"serverac",
 				"server/mocks/activities.js"
-			],
-			[
-				"indexhbs",
-				"app/templates/sessions/session/index.hbs"
 			],
 			[
 				"users",

@@ -10,12 +10,12 @@
     "animate.css": "~3.2.6",
     "bootstrap": "~3.3.4",
     "fontawesome": "~4.3.0",
-    "babel-polyfill": "~0.0.1"
   },
   "devDependencies": {
     "loader.js": "ember-cli/loader.js#3.2.0",
     "jquery": "^1.11.1",
     "ember-resolver": "~0.1.18",
+    "babel-polyfill": "~0.0.1",
     "qunit": "~1.17.1",
     "fastclick": "~1.0.6"
   }
