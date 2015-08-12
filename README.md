@@ -1,4 +1,4 @@
-# ui-button ![ ](https://travis-ci.org/lifegadget/ui-button.svg) [![npm version](https://badge.fury.io/js/ui-button.svg)](http://badge.fury.io/js/ui-button)[![Code Climate](https://codeclimate.com/github/lifegadget/ui-button/badges/gpa.svg)](https://codeclimate.com/github/lifegadget/ui-button)
+# ui-button ![ ](https://travis-ci.org/lifegadget/ui-button.svg) [![npm version](https://badge.fury.io/js/ui-button.svg)](http://badge.fury.io/js/ui-button) [![Code Climate](https://codeclimate.com/github/lifegadget/ui-button/badges/gpa.svg)](https://codeclimate.com/github/lifegadget/ui-button)
 > Dancing, shiny buttons with Bootstrap styling.
 
 ## Install ##
