@@ -18,15 +18,15 @@ module.exports = function(environment) {
       // when it is created
     },
     contentSecurityPolicy: {
-      'default-src': "'unsafe-eval' http://cloudfront.net",
+      'default-src': " ",
       'script-src': "'self'",
-      'font-src': "'self' http://fonts.gstatic.com http://fonts.googleapis.com",
+      'font-src': "'self' ",
       'connect-src': "'self'",
       'img-src': "'self'",
-      'style-src': "'self' 'unsafe-inline' http://fonts.googleapis.com",
+      'style-src': "'self' 'unsafe-inline'",
       'media-src': "'self'"
     }
-    
+
   };
 
   if (environment === 'development') {
