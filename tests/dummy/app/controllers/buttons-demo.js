@@ -45,7 +45,6 @@ export default Ember.Controller.extend({
     },
     disablement(cmd, item) {
       if(cmd === 'toggled') {
-        console.log('setting d to %s', item.get('value'));
         this.set('d', item.get('value'));
       }
     }

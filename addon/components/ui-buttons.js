@@ -363,7 +363,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       const propValue = this.get(prop);
       const defaultValue = this.get('default' + capitalize(prop));
       if(propertyIsSet(defaultValue) && isUndefined(propValue)) {
-        console.log('defaultValue for group prop [%s] is: %s', this.get('elementId'),defaultValue);
+        // console.log('defaultValue for group prop [%s] is: %s', this.get('elementId'),defaultValue);
         this.set(prop, defaultValue);
       }
     }

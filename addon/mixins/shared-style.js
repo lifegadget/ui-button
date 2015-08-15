@@ -1,24 +1,21 @@
 import Ember from 'ember';
 const { keys, create } = Object; // jshint ignore:line
 const {computed, observer, $, A, run, on, typeOf, debug, defineProperty, get, set, inject, isEmpty} = Ember;  // jshint ignore:line
-const htmlSafe = Ember.String.htmlSafe;
-const dasherize = Ember.String.dasherize;
 const _styleProperties = ['maxWidth', 'width', 'minWidth','height','fontSize','fontFamily','fontWeight','fontStyle'];
 const GOLDEN_RATIO = 1.618;
 const ASPECT_RATIO = 1.3;
 
 var SharedStyle = Ember.Mixin.create({
-  attributeBindings: ['_style:style'],
-  concatenatedProperties: ['classNames', 'classNameBindings', 'attributeBindings','_propertyUnset'],
+  concatenatedProperties: ['classNames', 'classNameBindings', '_propertyUnset'],
 
-  _propertyUnset: _styleProperties, // properties to UNSET on a component so component can manage them instead of base class
-
-  _style: computed(..._styleProperties, function() {
-    const styles = this.getProperties(..._styleProperties);
+  _style: observer(..._styleProperties, function() {
+    this._setStyle();
+  }),
+  _setStyle() {
+    const styleProperties = this.getProperties(..._styleProperties);
     const sizer = size => {
       return Number(size) === size ? size + 'px' : size;
     };
-
     const stylist = (style, value) => {
       switch(style) {
         case 'fontSize':
@@ -41,22 +38,19 @@ var SharedStyle = Ember.Mixin.create({
           }
           return value;
         default:
+          if(new A(['undefined','null']).contains(typeOf(value))) {
+            return null;
+          }
           return value;
       }
     };
-    return htmlSafe(keys(styles).filter( key => {
-      return styles[key];
-    }).map( key => {
-      return dasherize(key) + ': ' + stylist(key, get(this,key));
-    }).join('; '));
-  }),
-
-  _propertyRemapping: on('init', function() {
-    const props = new A(this.get('_propertyUnset'));
-    props.forEach( prop => {
-      new A(this.get('attributeBindings')).removeObject(prop);
+    run.schedule('afterRender', ()=> {
+      let style = this.get('element').style;
+      keys(styleProperties).map(item => {
+        style[item] = stylist(item,styleProperties[item]);
+      });
     });
-  }),
+  },
 
 });
 
