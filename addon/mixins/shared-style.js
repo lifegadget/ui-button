@@ -1,13 +1,11 @@
 import Ember from 'ember';
-const { keys, create } = Object; // jshint ignore:line
-const {computed, observer, $, A, run, on, typeOf, debug, defineProperty, get, set, inject, isEmpty} = Ember;  // jshint ignore:line
+const { keys } = Object;
+const {observer, A, run, typeOf} = Ember;
 const _styleProperties = ['maxWidth', 'width', 'minWidth','height','fontSize','fontFamily','fontWeight','fontStyle'];
 const GOLDEN_RATIO = 1.618;
 const ASPECT_RATIO = 1.3;
 
-var SharedStyle = Ember.Mixin.create({
-  concatenatedProperties: ['classNames', 'classNameBindings', '_propertyUnset'],
-
+var AddonStylist = Ember.Mixin.create({
   _style: observer(..._styleProperties, function() {
     this._setStyle();
   }),
@@ -16,6 +14,12 @@ var SharedStyle = Ember.Mixin.create({
     const sizer = size => {
       return Number(size) === size ? size + 'px' : size;
     };
+    /**
+     * Provides a per-type styler that allows for some sensible defaults
+     * @param  {string} style The style property being evaluated
+     * @param  {string} value The suggested value for this style property
+     * @return {string}       A mildly processed/improved variant on the input
+     */
     const stylist = (style, value) => {
       switch(style) {
         case 'fontSize':
@@ -44,15 +48,26 @@ var SharedStyle = Ember.Mixin.create({
           return value;
       }
     };
+    /**
+     * Ensures that the value has been escaped before allowing through to the DOM
+     * @param  {mixed}  input API or addon provided value
+     * @return {string}       HTML escaped string
+     */
+    const securitize = input => {
+      if(typeOf(input) === 'object') {
+        input = input.toString();
+      }
+      return Ember.Handlebars.Utils.escapeExpression(input);
+    };
     run.schedule('afterRender', ()=> {
       let style = this.get('element').style;
       keys(styleProperties).map(item => {
-        style[item] = stylist(item,styleProperties[item]);
+        style[item] = securitize(stylist(item,styleProperties[item]));
       });
     });
   },
 
 });
 
-SharedStyle[Ember.NAME_KEY] = 'Shared Style Manager';
-export default SharedStyle;
+AddonStylist[Ember.NAME_KEY] = 'Addon Stylist';
+export default AddonStylist;
