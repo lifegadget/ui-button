@@ -1,4 +1,7 @@
 import Ember from 'ember';
+const { keys, create } = Object; // jshint ignore:line
+const {computed, observer, $, A, run, on, typeOf, debug, defineProperty, get, set, inject, isEmpty} = Ember;  // jshint ignore:line
+
 import { moduleForComponent, test } from 'ember-qunit';
 
 moduleForComponent('ui-buttons', 'Unit | Component | ui-buttons', {
@@ -273,6 +276,27 @@ test('Setting explicit values with inline form', function(assert) {
     assert.equal(monkeyButton.get('value'), false, 'Monkey should be false');
   });
 });
+
+test('Setting explicit numeric values with inline form', function(assert) {
+  let component = this.subject({
+    cardinality: '1:M',
+    buttons: 'Foo:::1,Bar:::-22,Baz::3,4'
+  });
+  this.render();
+  Ember.run.next(()=> {
+    const registeredButtons = component.get('_registeredItems');
+    const fooButton = registeredButtons.filterBy('title','Foo')[0];
+    const barButton = registeredButtons.filterBy('title','Bar')[0];
+    const bazButton = registeredButtons.filterBy('title','Baz')[0];
+    const monkeyButton = registeredButtons.filterBy('title','4')[0];
+    assert.equal(registeredButtons.length, 4, 'all buttons registered');
+    assert.equal(typeOf(fooButton.get('value')), 'number', 'Foo should be a numeric');
+    assert.equal(typeOf(barButton.get('value')), 'number', 'Bar should be a numeric');
+    assert.equal(typeOf(bazButton.get('value')), 'string', 'Baz should be a string');
+    assert.equal(typeOf(monkeyButton.get('value')), 'string', 'Monkey should be a string');
+  });
+});
+
 
 test('Setting active and inactive icons', function(assert) {
   let component = this.subject({

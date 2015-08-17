@@ -9,11 +9,11 @@ const isInitialized = value => {
   return typeOf(value) !== 'null' && typeOf(value) !== 'undefined';
 };
 import layout from '../templates/components/ui-button';
-import SharedStyle from 'ui-button/mixins/shared-style';
+import SharedStylist from 'ember-cli-stylist/mixins/shared-stylist';
 import ItemMessaging from 'ui-button/mixins/item-messaging';
 const MOOD_DEFAULT = 'default';
 
-const uiButton = Ember.Component.extend(SharedStyle,ItemMessaging,{
+const uiButton = Ember.Component.extend(SharedStylist,ItemMessaging,{
   layout: layout,
 	tagName: 'button',
   group: null,

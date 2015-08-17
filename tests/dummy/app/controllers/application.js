@@ -24,5 +24,4 @@ export default Ember.Controller.extend({
       window.alert('Button pressed with a parameter of type "' + type + '": ' + param);
     }
   }
-
 });

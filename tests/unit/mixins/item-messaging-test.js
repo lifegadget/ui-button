@@ -6,7 +6,10 @@ module('Unit | Mixin | item messaging');
 
 // Replace this with your real tests.
 test('it works', function(assert) {
-  var ItemMessagingObject = Ember.Object.extend(ItemMessagingMixin);
-  var subject = ItemMessagingObject.create();
-  assert.ok(subject);
+  Ember.run(()=>{
+    var ItemMessagingObject = Ember.Object.extend(ItemMessagingMixin);
+    var subject = ItemMessagingObject.create();
+    assert.ok(subject);
+  });
+
 });
