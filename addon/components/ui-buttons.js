@@ -294,6 +294,12 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
                 if(!Number.isNaN(Number(x.substr(1)))) {
                   return Number(x.substr(1));
                 }
+                // check for array literal
+                if(x.split('|').length > 1) {
+                  return x.substr(1).split('|').map(item => {
+                    return Number.isNaN(Number(item)) ? item : Number(item);
+                  });
+                }
                 debug(`literal value "${x}" passed into inline ui-buttons was not understood`);
                 return 'unknown';
             }

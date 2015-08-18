@@ -297,6 +297,25 @@ test('Setting explicit numeric values with inline form', function(assert) {
   });
 });
 
+test('Setting explicit array values with inline form', function(assert) {
+  let component = this.subject({
+    cardinality: '1:M',
+    buttons: 'Foo:::1|2|3,Bar:::foo|bar|baz'
+  });
+  this.render();
+  Ember.run.next(()=> {
+    const registeredButtons = component.get('_registeredItems');
+    const fooButton = registeredButtons.filterBy('title','Foo')[0];
+    const barButton = registeredButtons.filterBy('title','Bar')[0];
+    assert.equal(registeredButtons.length, 2, 'all buttons registered');
+    assert.equal(typeOf(fooButton.get('value')), 'array', 'Foo should be an array: ' + JSON.stringify(fooButton.get('value')));
+    assert.equal(typeOf(fooButton.get('value.0')), 'number', 'Foo values shoud be numbers');
+    assert.equal(typeOf(barButton.get('value')), 'array', 'Bar should be an array');
+    assert.equal(typeOf(barButton.get('value.0')), 'string', 'Bar values should be strings');
+  });
+});
+
+
 
 test('Setting active and inactive icons', function(assert) {
   let component = this.subject({
