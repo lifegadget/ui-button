@@ -360,7 +360,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   selectButtonIfNotSelected() {
     run.next(()=>{
       const {_cardinality,selectedButtons} = this.getProperties('_cardinality', 'selectedButtons');
-      if(_cardinality.min === 1 && selectedButtons.size === 0) {
+      if(_cardinality && _cardinality.min === 1 && selectedButtons.size === 0) {
         this._activateButton(this.get('_registeredItems.0.value'));
       }
     });
@@ -372,7 +372,6 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       const propValue = this.get(prop);
       const defaultValue = this.get('default' + capitalize(prop));
       if(propertyIsSet(defaultValue) && isUndefined(propValue)) {
-        // console.log('defaultValue for group prop [%s] is: %s', this.get('elementId'),defaultValue);
         this.set(prop, defaultValue);
       }
     }

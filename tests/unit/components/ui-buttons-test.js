@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import Ember from 'ember'; //jshint ignore:line
 const { keys, create } = Object; // jshint ignore:line
 const {computed, observer, $, A, run, on, typeOf, debug, defineProperty, get, set, inject, isEmpty} = Ember;  // jshint ignore:line
 
@@ -315,8 +315,6 @@ test('Setting explicit array values with inline form', function(assert) {
   });
 });
 
-
-
 test('Setting active and inactive icons', function(assert) {
   let component = this.subject({
     cardinality: '1:M',
@@ -334,5 +332,16 @@ test('Setting active and inactive icons', function(assert) {
     assert.equal(fooButton.get('activeIcon'), 'circle', 'foo has been passed groups value');
     assert.equal(fooButton.get('_icon'), 'circle', 'foo returns the selected icon');
     assert.equal(barButton.get('_icon'), null, 'bar returns no icon');
+  });
+});
+
+test('Setting empty array for buttons does not error', function(assert) {
+  let component = this.subject({
+    buttons: []
+  });
+  this.render();
+  Ember.run.next(()=> {
+    const registeredButtons = component.get('_registeredItems');
+    assert.equal(registeredButtons.length, 0);
   });
 });

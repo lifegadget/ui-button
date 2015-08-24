@@ -143,15 +143,11 @@ const uiButton = Ember.Component.extend(SharedStylist,ItemMessaging,{
   },
   // ICON
   icon: null,
-  _icon: computed('icon','onIcon','offIcon','toggled','selected','activeIcon','inactiveIcon',{
-    set(_,value) {
-      debug('You should not directly set the "_icon" property.');
-      return value;
-    },
-    get() {
-      return this.getIcon();
-    }
-  }),
+  _iconObserver: on('init',observer('icon','onIcon','offIcon','toggled','selected','activeIcon','inactiveIcon',function() {
+    run.debounce( () => {
+      this.set('_icon', this.getIcon());
+    },5,true);
+  })),
   getIcon() {
     const {icon,toggled,isToggleable,selected} = this.getProperties('icon','toggled','isToggleable','selected');
     const toggleProperty = toggled ? 'onIcon' : 'offIcon';
@@ -169,14 +165,11 @@ const uiButton = Ember.Component.extend(SharedStylist,ItemMessaging,{
   },
   // MOOD
   mood: null,
-  _mood: computed('mood','onMood','offMood','toggled','selected','activeMood','inactiveMood', {
-    set: function(_,value) {
-      return value;
-    },
-    get: function() {
-      return this.getMood();
-    }
-  }),
+  _moodObserver: on('init',observer('mood','onMood','offMood','toggled','selected','activeMood','inactiveMood', function() {
+    run.debounce(()=>{
+      this.set('_mood', this.getMood());
+    },5,true);
+  })),
   getMood() {
     const {mood,toggled,isToggleable,selected} = this.getProperties('mood', 'toggled','isToggleable', 'selected');
     const toggleProperty = toggled ? 'onMood' : 'offMood';
