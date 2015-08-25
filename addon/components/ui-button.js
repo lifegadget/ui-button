@@ -143,7 +143,7 @@ const uiButton = Ember.Component.extend(SharedStylist,ItemMessaging,{
   },
   // ICON
   icon: null,
-  _iconObserver: on('init',observer('icon','onIcon','offIcon','toggled','selected','activeIcon','inactiveIcon',function() {
+  _iconObserver: on('didInitAttrs',observer('icon','onIcon','offIcon','toggled','selected','activeIcon','inactiveIcon',function() {
     run.debounce( () => {
       this.set('_icon', this.getIcon());
     },5,true);
@@ -165,7 +165,7 @@ const uiButton = Ember.Component.extend(SharedStylist,ItemMessaging,{
   },
   // MOOD
   mood: null,
-  _moodObserver: on('init',observer('mood','onMood','offMood','toggled','selected','activeMood','inactiveMood', function() {
+  _moodObserver: on('didInitAttrs',observer('mood','onMood','offMood','toggled','selected','activeMood','inactiveMood', function() {
     run.debounce(()=>{
       this.set('_mood', this.getMood());
     },5,true);

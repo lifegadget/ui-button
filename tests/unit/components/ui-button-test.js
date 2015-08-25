@@ -45,10 +45,11 @@ test('size, mood, icon, and value private CP\'s set', function(assert) {
 test('icon toggled between on,off states', function(assert) {
   assert.expect(3);
   run(()=>{
-    let component = this.subject();
-    component.set('onIcon', 'envelope');
-    component.set('offIcon', 'clock');
-    component.set('isToggleable', true);
+    let component = this.subject({
+      onIcon: 'envelope',
+      offIcon: 'clock',
+      isToggleable: true
+    });
     this.render();
     assert.equal(component.get('_icon'), 'clock');
     Ember.run.next(()=> {
@@ -63,10 +64,11 @@ test('icon toggled between on,off states', function(assert) {
 test('mood toggled between on,off states', function(assert) {
   assert.expect(3);
   run(()=>{
-    let component = this.subject();
-    component.set('offMood', 'error');
-    component.set('onMood', 'warning');
-    component.set('isToggleable', true);
+    let component = this.subject({
+      offMood: 'error',
+      onMood: 'warning',
+      isToggleable: true
+    });
     this.render();
     assert.equal(component.get('_mood'), 'btn-error');
     Ember.run.next(()=> {
@@ -81,10 +83,11 @@ test('mood toggled between on,off states', function(assert) {
 test('value toggled between on,off states', function(assert) {
   assert.expect(3);
   run(()=>{
-    let component = this.subject();
-    component.set('offValue', false);
-    component.set('onValue', true);
-    component.set('isToggleable', true);
+    let component = this.subject({
+      offValue: false,
+      onValue: true,
+      isToggleable: true
+    });
     this.render();
     assert.equal(component.get('value'), false);
     Ember.run.next(()=> {
@@ -120,10 +123,11 @@ test('value defaults to elementId if not set (and no title set)', function(asser
 test('value set back and forth with setter and toggling (toggleable button)', function(assert) {
   assert.expect(8);
   run(()=>{
-    let component = this.subject();
-    component.set('isToggleable', true);
-    component.set('offValue', false);
-    component.set('onValue', true);
+    let component = this.subject({
+      isToggleable:true,
+      offValue: false,
+      onValue: true
+    });
     this.render();
     assert.equal(component.get('value'),false, 'value starts in the offValue state of false');
     Ember.run.next(()=> {
@@ -144,10 +148,11 @@ test('value set back and forth with setter and toggling (toggleable button)', fu
 test('value toggling ignored on non-toggleable button', function(assert) {
   assert.expect(3);
   run(()=>{
-    let component = this.subject();
-    component.set('isToggleable', false);
-    component.set('offValue', false);
-    component.set('onValue', true);
+    let component = this.subject({
+      isToggleable: false,
+      offValue: false,
+      onValue: true
+    });
     this.render();
     assert.equal(
       component.get('value'),
