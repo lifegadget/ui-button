@@ -191,7 +191,7 @@ const uiButton = Ember.Component.extend(SharedStylist,ItemMessaging,{
   size: 'normal',
   width: null,
   keepFocus: false, // keep focus on button after clicking?
-	_size: Ember.computed('size', function() {
+	_sizeObserver: on('didInitAttrs', observer('size', function() {
     let size = this.get('size');
     if(!size) {
       size = 'normal';
@@ -205,8 +205,8 @@ const uiButton = Ember.Component.extend(SharedStylist,ItemMessaging,{
       large: 'btn-lg',
       huge: 'btn-huge'
     };
-    return mapper[this.get('size')];
-	}),
+    this.set('_size',mapper[this.get('size')]);
+	})),
   tooltip: false,
   tooltipPlacement: 'auto top',
   tooltipDelay: 500,

@@ -487,7 +487,9 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
     this.selectButtonIfNotSelected();
   },
   didInitAttrs() {
-    this.setDefaultPropertyValues();
+    run.next(()=> {
+      this.setDefaultPropertyValues();
+    });
   },
   willDestroyElement() {
     // nothing yet
