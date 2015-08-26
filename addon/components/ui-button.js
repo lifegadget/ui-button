@@ -191,8 +191,9 @@ const uiButton = Ember.Component.extend(SharedStylist,ItemMessaging,{
   size: 'normal',
   width: null,
   keepFocus: false, // keep focus on button after clicking?
-	_sizeObserver: on('didInitAttrs', observer('size', function() {
-    let size = this.get('size');
+	_sizeObserver: on('willRender', observer('size','group.size', function() {
+    let groupSize = this.get('group.size');
+    let size = groupSize ? groupSize : this.get('size');
     if(!size) {
       size = 'normal';
     }
