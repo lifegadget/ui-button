@@ -1,4 +1,7 @@
 import Ember from 'ember';
+const { keys, create } = Object; // jshint ignore:line
+const {computed, observer, $, A, run, on, typeOf, debug, defineProperty, get, set, inject, isEmpty} = Ember;  // jshint ignore:line
+
 
 export default Ember.Controller.extend({
 
@@ -19,9 +22,8 @@ export default Ember.Controller.extend({
       if(type === 'object') {
         value = JSON.stringify(value);
       }
-      const message = `Button[${elementId}] pressed with a parameter of type "${type}": ${value}`;
-      console.log(message);
-      window.alert(message);
+      const flashMessages = Ember.get(this, 'flashMessages');
+      flashMessages.success(`${elementId} button pressed with value: ${value} [${type}]`);
     }
   }
 

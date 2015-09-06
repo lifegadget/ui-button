@@ -20,7 +20,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   layout: layout,
   tagName: 'div',
   classNames: ['ui-button', 'btn-group'],
-  classNameBindings: ['disabled:disabled:enabled'],
+  classNameBindings: ['disabled:disabled:enabled','stretch'],
 
   // SELECTED BUTTONS
   // Contains a list of elementIds which are selected

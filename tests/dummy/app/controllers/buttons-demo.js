@@ -19,6 +19,8 @@ export default Ember.Controller.extend({
   dynButtons: 'Foo,Bar,Baz',
   activeButtonMood: 'success',
   inactiveButtonMood: 'default',
+  size: null,
+  cardinality: null,
 
 
   actions: {
