@@ -34,7 +34,7 @@ export default Ember.Mixin.create({
   },
 
   // --------------------- MESSAGE HANDLING -----------------------
-  buttonSelectionChanged(self, selectedButtons) {
+  buttonSelectionChanged(self) {
     self.notifyPropertyChange('selectedButtons');
   },
   notify(self, property) {

@@ -315,18 +315,15 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       if(typeOf(value) !== 'array') { value = [value]; }
       value.forEach(v => {
         if(_cardinality.max === 1 && selectedButtons.size === 1) {
-          console.log('clearing: %s, %s', v, JSON.stringify(selectedButtons));
           selectedButtons.clear();
         }
 
         if(!selectedButtons.has(v)) {
-          console.log('processing: %s, %s', v, JSON.stringify(selectedButtons));
           if(Number.isInteger(_cardinality.max) && selectedButtons.size >= _cardinality.max) {
             this.sendAction('error', CARDINALITY_MAX, `there must be no more than ${_cardinality.max} buttons`);
             status.error.push(CARDINALITY_MAX);
           } else {
             selectedButtons.add(v);
-            console.log('added: %s, %s', v, JSON.stringify(selectedButtons));
             status.updated = true;
             if(this._rendered) {
               this.sendAction('action', 'selected', this, v);
@@ -343,7 +340,6 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       this.notifyPropertyChange('selectedMutex');
       this._tellItems('button-selection-changed', selectedButtons);
     }
-    console.log('finishin: %o, %s', value, JSON.stringify(selectedButtons));
 
     return true;
   },
@@ -361,7 +357,6 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   _deactivateButton(value) {
     const {_cardinality,selectedButtons} = this.getProperties('_cardinality','selectedButtons');
     let status = {error: [], updated: false};
-    console.log('deactiving: ', value);
     if(typeOf(value) === 'null' && this.nullNotValidOption()) {
       selectedButtons.clear();
       status.updated = true;
@@ -531,7 +526,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       self.sendAction('registered', item); // specific action only
     },
     btnEvent(self, evt, ...args) {
-      console.log('button event: %s: %o', evt,args);
+      // console.log('button event: %s: %o', evt,args);
     },
   },
 
