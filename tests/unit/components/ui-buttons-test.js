@@ -71,7 +71,7 @@ test('Setting value', function(assert) {
 
 test('Setting values', function(assert) {
   let component = this.subject({
-    cardinality: '1:M',
+    cardinality: '0:M',
     buttons: 'Foo,Bar,Baz'
   });
   this.render();
@@ -110,7 +110,7 @@ test('Setting values', function(assert) {
     assert.equal(selectedButtons.size, 0, 'no items should be in selectedButtons');
     // check underlying buttons
     fooButton = component.get('_registeredItems').filterBy('value','foo')[0];
-    assert.equal(fooButton.get('selected'), false, 'the button "foo" should be selected');
+    assert.equal(fooButton.get('selected'), false, 'the button "foo" should NOT be selected');
   });
 });
 
@@ -343,5 +343,108 @@ test('Setting empty array for buttons does not error', function(assert) {
   Ember.run.next(()=> {
     const registeredButtons = component.get('_registeredItems');
     assert.equal(registeredButtons.length, 0);
+  });
+});
+
+test('null value passed-in selects button with null value', function(assert) {
+  let component = this.subject({
+    buttons: ['One','Two','Three:::null'],
+    cardinality: '1:1',
+    value: null
+  });
+  this.render();
+  run.next(()=> {
+    const registeredButtons = component.get('_registeredItems');
+    assert.deepEqual(registeredButtons.map(item => item.get('value')), ['one', 'two', null], 'registered buttons have appropriate values');
+    assert.equal(component.get('value'), null, 'ui-buttons value set');
+    assert.deepEqual(component.get('values'), [null], 'ui-buttons values set');
+    assert.equal(component.get('selectedButtons').has(null), true, 'selectedButtons includes null value');
+  });
+});
+test('false value passed-in selects button with false value', function(assert) {
+  let component = this.subject({
+    buttons: ['One','Two','Three:::false'],
+    cardinality: '1:1',
+    value: false
+  });
+  this.render();
+  run.next(()=> {
+    const registeredButtons = component.get('_registeredItems');
+    assert.deepEqual(registeredButtons.map(item => item.get('value')), ['one', 'two', false], 'registered buttons have appropriate values');
+    assert.equal(component.get('value') === false, true, 'ui-buttons "value" set');
+    run.next(() => {
+      assert.deepEqual(component.get('values'), [false], 'ui-buttons "values" set');
+      assert.equal(component.get('selectedButtons').has(false), true, 'selectedButtons includes false value');
+    });
+  });
+});
+test('Switching to null value after initial render (where null IS valid)', function(assert) {
+  var value = 'two';
+  let component = this.subject({
+    buttons: ['One','Two','Three:::null'],
+    cardinality: '0:1',
+    value: value
+  });
+  this.render();
+  run.next(()=> {
+    const registeredButtons = component.get('_registeredItems');
+    assert.deepEqual(registeredButtons.map(item => item.get('value')), ['one', 'two', null], 'PREP: registered buttons have appropriate values, including null');
+    assert.equal(component.nullValidOption(), true, 'PREP: null has been marked as a "valid option"');
+    assert.equal(component.get('value'), value, 'PREP: ui-buttons "value" set');
+    assert.deepEqual(component.get('values'), [value], 'PREP: ui-buttons "values" set');
+    assert.equal(component.get('selectedButtons').has(value), true, 'PREP: selectedButtons includes value');
+    component.set('value', null);
+    run.next(()=> {
+      assert.equal(component.get('value'), null, 'ui-buttons value set to null');
+      assert.deepEqual(component.get('values'), [null], 'ui-buttons values set');
+      assert.equal(component.get('selectedButtons').has(null), true, 'selectedButtons includes null');
+    });
+  });
+});
+test('Switching to null value after initial render (where null IS NOT valid value)', function(assert) {
+  var value = 'two';
+  let component = this.subject({
+    buttons: ['One','Two','Three'],
+    cardinality: '0:1',
+    value: value
+  });
+  this.render();
+  run.next(()=> {
+    const registeredButtons = component.get('_registeredItems');
+    assert.deepEqual(registeredButtons.map(item => item.get('value')), ['one', 'two', 'three'], 'PREP: registered buttons have appropriate values');
+    assert.equal(component.nullValidOption(), false, 'PREP: null has been marked as an "invalid option"');
+    assert.equal(component.get('value'), value, 'PREP: ui-buttons "value" set');
+    assert.deepEqual(component.get('values'), [value], 'PREP: ui-buttons "values" set');
+    assert.equal(component.get('selectedButtons').has(value), true, 'PREP: selectedButtons includes value');
+    component.set('value', null);
+    run.next(()=> {
+      assert.equal(component.get('value'), null, 'ui-buttons value set to null');
+      assert.deepEqual(component.get('values'), [], 'ui-buttons values set to []');
+      assert.equal(component.get('selectedButtons').has(null), false, 'selectedButtons does not includes null');
+    });
+  });
+});
+
+test('Switching to false value after initial render', function(assert) {
+  var value = 'two';
+  let component = this.subject({
+    buttons: ['One','Two','Three:::false'],
+    cardinality: '1:1',
+    value: value
+  });
+  this.render();
+  run.next(()=> {
+    const registeredButtons = component.get('_registeredItems');
+    assert.deepEqual(registeredButtons.map(item => item.get('value')), ['one', 'two', false], 'PREP: registered buttons have appropriate values');
+    assert.equal(component.get('value'), value, 'PREP: ui-buttons value set');
+    assert.deepEqual(component.get('values'), [value], 'PREP: ui-buttons values set');
+    assert.equal(component.get('selectedButtons').has(value), true, 'PREP: selectedButtons includes value');
+    component.set('value', false);
+    run.next(()=> {
+      assert.equal(component.get('value'), false, 'ui-buttons value set to false');
+      assert.deepEqual(component.get('values'), [false], 'ui-buttons values set');
+      let selectedButtons = component.get('selectedButtons');
+      assert.equal(selectedButtons.has(false), true, 'selectedButtons includes "false": ' + JSON.stringify(selectedButtons));
+    });
   });
 });

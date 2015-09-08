@@ -22,7 +22,6 @@ export default Ember.Controller.extend({
   size: null,
   cardinality: null,
 
-
   actions: {
     changed: function(property,value) {
       if(property === 'values') {

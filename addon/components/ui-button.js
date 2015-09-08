@@ -350,18 +350,6 @@ const uiButton = Ember.Component.extend(SharedStylist,ItemMessaging,{
       });
     }
   },
-  // MESSAGING
-  buttonActions: {
-    notify(self, property) {
-      self.notifyPropertyChange(property);
-    },
-    applyEffect(self, effect) {
-      self.applyEffect(effect);
-    },
-    rendered(self) {
-      self._rendered = true;
-    }
-  },
   // RUN LOOP
   // -------------------------
   _i: on('init', function() { return this._init(); }),

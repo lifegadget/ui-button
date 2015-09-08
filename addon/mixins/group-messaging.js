@@ -42,12 +42,15 @@ export default Ember.Mixin.create({
   },
   /** Send a specific command to ALL registered Items */
   _tellItems: function(cmd, ...args) {
-    // console.log('telling all items: %s, %o', cmd, args);
     const items = this.get('_registeredItems');
-    // console.log('telling all items: %o', items);
-    items.forEach(item => {
-      item._groupMessage(cmd, ...args);
-    });
+    if(!items) {
+      debug(`Received "${cmd}" to communicate to registered items but there are NOT any currently registered!`);
+    }
+    else {
+      items.forEach(item => {
+        item._groupMessage(cmd, ...args);
+      });
+    }
   },
 
 });

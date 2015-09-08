@@ -149,7 +149,7 @@
   }}
   </div>
   <div class="col-xs-12 col-sm-6 col-lg-5">
-    However, if you want to keep to the inline style but be explicit with the values then
+    However, if you want to keep to the inline style but be explicit with the values then you
     can do this by using the double colon character (e.g., '::'). See demonstration to left.
   </div>
 </div>
@@ -158,7 +158,7 @@
     {{ui-buttons
       buttons='Foo:::true,Bar:::false'
       value=literalValue
-      cardinality='1:2'
+      cardinality='1:1'
     }}
     <p class="downer">value: {{literalValue}}</p>
   </div>
@@ -262,7 +262,7 @@
       <div class="col-xs-3 downer">cardinality</div>
       <div class="col-xs-9 downer">
         {{ui-buttons
-          buttons='0:0,0:1,1:1,1:M::1:M'
+          buttons='0:0,0:1,1:1::1:1,1:M::1:M'
           value=cardinality
           size='small'
           cardinality='1:1'
