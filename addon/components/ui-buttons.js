@@ -524,10 +524,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
 
       run.debounce(self, self.registrationComplete, 1);
       self.sendAction('registered', item); // specific action only
-    },
-    btnEvent(self, evt, ...args) {
-      // console.log('button event: %s: %o', evt,args);
-    },
+    }
   },
 
   // EVENTS
