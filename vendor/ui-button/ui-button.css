@@ -16,6 +16,7 @@ button.delayed-hover {
 /* STRECH  */
 .ui-button.btn-group.stretch {
   display: flex;
+  flex: 1 1;
 }
 .ui-button.btn-group.stretch >.btn {
   flex: 1 1;
