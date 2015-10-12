@@ -1,3 +1,4 @@
+{{#demo-css}}
 <div class="row">
   <div class="col-xs-12">
     <h3><code>ui-buttons</code></h3>
@@ -148,7 +149,7 @@
   }}
   </div>
   <div class="col-xs-12 col-sm-6 col-lg-5">
-    However, if you want to keep to the inline style but be explicit with the values then
+    However, if you want to keep to the inline style but be explicit with the values then you
     can do this by using the double colon character (e.g., '::'). See demonstration to left.
   </div>
 </div>
@@ -217,20 +218,21 @@
       inactiveIcon=inactiveIcon
       defaultValue='bar'
       cardinality=cardinality
+      stretch=stretch
     }}
   </div>
   <div class="col-xs-12 col-sm-3 col-lg-4 monospace">
-  <b>\{{ui-buttons </b><br/>
-  &nbsp;&nbsp;buttons='{{dynButtons}}' <br/>
-  &nbsp;&nbsp;activeMood='{{activeButtonMood}}'<br/>
-  &nbsp;&nbsp;inactiveMood='{{inactiveButtonMood}}'<br/>
-  &nbsp;&nbsp;defaultValue='bar'<br/>{{#if size}}
-  &nbsp;&nbsp;size='{{size}}'<br/>{{/if}}{{#if cardinality}}
-  &nbsp;&nbsp;cardinality='{{cardinality}}'<br/>{{/if}}{{#if activeIcon}}
-  &nbsp;&nbsp;activeIcon='{{activeIcon}}'<br/>{{/if}}{{#if inactiveIcon}}
-  &nbsp;&nbsp;inactiveIcon='{{inactiveIcon}}'<br/>{{/if}}{{#if icon}}
-  &nbsp;&nbsp;icon='{{icon}}'<br/>{{/if}}
-  <b>}}</b>
+    {{display-component componentName='ui-buttons'
+        buttons=dynButtons
+        size=size
+        activeMood=activeButtonMood
+        inactiveMood=inactiveButtonMood
+        activeIcon=activeIcon
+        inactiveIcon=inactiveIcon
+        defaultValue='bar'
+        cardinality=cardinality
+        stretch=stretch
+      }}
   </div>
   <div class="col-xs-12 col-sm-6 col-lg-5">
     <h4>Interactive Example</h4>
@@ -249,18 +251,18 @@
       <br/>
       <div class="col-xs-3 downer">Inactive</div>
       <div class="col-xs-9 downer">
-         {{ui-buttons cardinality='0:1' size='small' value=inactiveButtonMood buttons='default,success,primary,warning,danger'}}
+         {{radio-buttons size='small' value=inactiveButtonMood buttons='default,success,primary,warning,danger'}}
       </div>
       <br/>
       <div class="col-xs-3 downer">size</div>
       <div class="col-xs-9 downer">
-        {{ui-buttons buttons=sizes size='small' cardinality='0:1' value=size }}
+        {{ui-buttons buttons='tiny,small,default:::null,large,huge' size='small' cardinality='0:1' value=size }}
       </div>
       <br/>
       <div class="col-xs-3 downer">cardinality</div>
       <div class="col-xs-9 downer">
         {{ui-buttons
-          buttons='0:0,0:1,1:1,1:M::1:M'
+          buttons='0:0,0:1,1:1,1:2,1:M::1:M'
           value=cardinality
           size='small'
           cardinality='1:1'
@@ -290,6 +292,24 @@
         }}
       </div>
       <br/>
+      <div class="col-xs-3 downer">stretch</div>
+      <div class="col-xs-9 downer">
+        {{ui-toggle-button
+          value=stretch
+          size='small'
+          on='stretch' off='no-stretch'
+          onValue=true offValue=false
+        }}
+      </div>
+      <br/>
+      <div class="col-xs-12 downer">
+        <note>
+          <b>Note:</b> <i>stretch</i> switches group to flexbox and individual buttons to flex items to allow each button to evenly take up the full with that the container is providing.
+        </note>
+
+      </div>
+      <br/>
+
     </div>
   </div>
 </div>
@@ -359,6 +379,10 @@
     A simple shortcut/config for ui-buttons ... this simply sets the default
     cardinality to a default of '1:1'. While this example is <i>inline</i> it
     could just as easily be used in a block form.
+    <br/>
+    <note>
+      <b>Note:</b> because the cardinality <i>requires</i> that at least 1 button be selected you'll see that "Foo" button becomes active even though we didn't state a <prop>value</prop> or a <prop>defaultValue</prop>
+    </note>
   </div>
 </div>
 <div class="row">
@@ -400,3 +424,4 @@
     <span class="col-sm-5"></span>
   </div>
 </desc>
+{{/demo-css}}

@@ -12,3 +12,11 @@ button.ui-button.btn-huge, .btn-group-huge > .btn {
 button.delayed-hover {
     transition: background-color 0.5s;
 }
+
+/* STRECH  */
+.ui-button.btn-group.stretch {
+  display: flex;
+}
+.ui-button.btn-group.stretch >.btn {
+  flex: 1 1;
+}

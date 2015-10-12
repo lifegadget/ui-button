@@ -1,3 +1,4 @@
+{{#demo-css}}
 <h3><code>ui-toggle-button</code></h3>
 <h3>Toggle Buttons</h3>
 <desc>
@@ -75,3 +76,34 @@
       <span class="text-muted">\{{ui-toggle-button value=fruit on='Apple' onValue='apple' off="Orange" offValue='orange'}}</span>
     </div>
 </div>
+
+<h3>Actions</h3>
+<div>
+  <widget class="col-xs-2 left">
+    {{ui-toggle-button
+      on='on'
+      off='off'
+      action='buttonAction'
+    }}
+  </widget>
+  <code class="col-xs-3">
+    {{display-component componentName='ui-toggle-button'
+      on='on'
+      off='off'
+      action='buttonAction'
+    }}
+  </code>
+  <description class="col-xs-7">
+    <p>
+      Pressing buttons is no fun unless something happens ... and these buttons are nothing if not fun. Click the button below to fire the general "action" event to the container.
+    </p>
+    <p>
+      This action will return the following:
+      <note>
+        <b>action(</b>action-type, context<b>)</b><br>
+        &nbsp;&nbsp;&nbsp;where <prop>action-type</prop> will be "pressed" and <prop>context</prop> will be a reference to the button object.
+      </note>
+    </p>
+  </description>
+</div>
+{{/demo-css}}

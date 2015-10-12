@@ -10,10 +10,9 @@ export default Ember.Mixin.create({
    * @return {boolean}
    */
   _groupMessage: function(cmd, ...args) {
-    const command = this.buttonActions[camelize(cmd)];
-    // console.log('recieved message %s from %o', cmd, args);
+    const command = this[camelize(cmd)];
     if (command) {
-      return command(this, ...args);
+      return command(this,...args);
     }
 
     return null;
@@ -33,5 +32,19 @@ export default Ember.Mixin.create({
       this.sendAction(cmd, ...args);
     }
   },
+
+  // --------------------- MESSAGE HANDLING -----------------------
+  buttonSelectionChanged(self) {
+    self.notifyPropertyChange('selectedButtons');
+  },
+  notify(self, property) {
+    self.notifyPropertyChange(property);
+  },
+  applyEffect(self, effect) {
+    self.applyEffect(effect);
+  },
+  rendered(self) {
+    self._rendered = true;
+  }
 
 });

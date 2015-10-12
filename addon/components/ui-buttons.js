@@ -1,15 +1,9 @@
 import Ember from 'ember';
-const { computed, observer, $, A, run, on, typeOf, debug, isEmpty } = Ember;    // jshint ignore:line
+const { keys, create } = Object; // jshint ignore:line
+const {computed, observer, $, A, run, on, typeOf, debug, defineProperty, get, set, inject, isEmpty} = Ember;  // jshint ignore:line
 import layout from '../templates/components/ui-buttons';
 import GroupMessaging from 'ui-button/mixins/group-messaging';
 const dasherize = Ember.String.dasherize;
-const capitalize = Ember.String.capitalize;
-const propertyIsSet = thingy => {
-  return typeOf(thingy) !== 'null' && typeOf(thingy) !== 'undefined';
-};
-const isUndefined = thingy => {
-  return Ember.typeOf(thingy) === 'undefined';
-};
 const CARDINALITY_MIN = 'cardinality-min-threshold';
 const CARDINALITY_MAX = 'cardinality-max-threshold';
 const VALUES_CARDINALITY_ERROR = 'values-cardinality-error';
@@ -20,7 +14,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   layout: layout,
   tagName: 'div',
   classNames: ['ui-button', 'btn-group'],
-  classNameBindings: ['disabled:disabled:enabled'],
+  classNameBindings: ['disabled:disabled:enabled','stretch'],
 
   // SELECTED BUTTONS
   // Contains a list of elementIds which are selected
@@ -34,6 +28,14 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       return new Set();
     }
   }),
+  valueOptions: computed(function() {
+    return new Set();
+  }),
+  nullValidOption() {
+    const options = this.get('valueOptions');
+    return options.has(null);
+  },
+  nullNotValidOption() { return !this.nullValidOption(); },
   // VALUES
   values: computed('selectedMutex',{
     set: function(_,values,oldValue) {
@@ -52,16 +54,11 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
     values = values ? values : [];
     if(_cardinality.max === 'M' || _cardinality.max >= values.length ) {
       selectedButtons.clear();
-      for(var i of values) {
-        this._activateButton(i);
-      }
-      this.notifyPropertyChange('selectedMutex');
+      this._activateButton(values);
     } else {
       this.sendAction('error', VALUES_CARDINALITY_ERROR, `Couldn't set the "values" property because it did not meet the cardinality constraints [${_cardinality.min}:${_cardinality.max}]`);
       run.next(()=>{
-        for(var i of oldValue) {
-          this._activateButton(i);
-        }
+        this._activateButton(oldValue);
       });
     }
   },
@@ -88,12 +85,8 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   setValue(value) {
       const {selectedButtons, _cardinality} = this.getProperties('selectedButtons','_cardinality');
       if(_cardinality.max !== 0) {
-        if(value) {
-          this._activateButton(value, true);
-        } else {
-          selectedButtons.clear();
-          this.notifyPropertyChange('selectedMutex');
-        }
+        selectedButtons.clear();
+        this._activateButton(value);
       } else {
         this.sendAction('error', SET_WITH_CARDINALITY, `Trying to set value[${value}] with a cardinality of 0`);
       }
@@ -157,11 +150,6 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
   isSelectable: computed('_cardinality.max',function() {
     const max = this.get('_cardinality.max');
     return max === 'M' || max > 0;
-  }),
-  nullIsValidValue: computed('_registeredItems.length', function() {
-    return new Set(this.get('_registeredItems')
-      .map(function(item){ return item.get('value'); }))
-      .has(null);
   }),
  /**
   * The API exposes the 'disabled' property, when it changes disabledButtons responds to that
@@ -315,46 +303,92 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       return typeOf(item) === 'object' ? item : { value: value, title: title };
     });
   },
-  _activateButton(value, forcedClear=false) {
+  _activateButton(value) {
     const {_cardinality,selectedButtons} = this.getProperties('_cardinality','selectedButtons');
-    if(forcedClear) {
+    const type = typeOf(value);
+    let status = {error:[], updated: false};
+    if((type === 'array' && value.length === 0) || (this.nullNotValidOption() && new Set(['null','undefined']).has(type)) ) {
+      status.updated = true;
       selectedButtons.clear();
     }
-    if(_cardinality.max === 1 && selectedButtons.size === 1) {
-      selectedButtons.clear();
-      selectedButtons.add(value);
-    } else if(Number.isInteger(_cardinality.max) && selectedButtons.size >= _cardinality.max) {
-      this.sendAction('error', CARDINALITY_MAX, `there must be no more than ${_cardinality.max} buttons`);
-      return false;
-    } else {
-      selectedButtons.add(value);
-    }
-    if(this._rendered) {
-      this.sendAction('action', 'selected', this, value);
-      this.sendAction('changed', 'values', Array.from(selectedButtons));
-    } else {
-      this.sendAction('action', 'initiated', this, value);
-    }
-    this.notifyPropertyChange('selectedMutex');
-    return true;
-  },
-  _deactivateButton(value) {
-    const {_cardinality,selectedButtons} = this.getProperties('_cardinality','selectedButtons');
-    if(selectedButtons.size <= _cardinality.min) {
-      this.sendAction('error', CARDINALITY_MIN, `there must be at least ${_cardinality.min} button(s)`);
-      this._tellItem(value, 'applyEffect', 'cardinalityEffect');
-      return false;
-    }
-    selectedButtons.delete(value);
-    if(this._rendered) {
-      this.sendAction('action', 'unselected', this, value);
-      this.sendAction('changed', 'values', Array.from(selectedButtons));
-    } else {
-      this.sendAction('action', 'initiated', this, value); // TODO: does this make sense?
+    else {
+      if(typeOf(value) !== 'array') { value = [value]; }
+      value.forEach(v => {
+        if(_cardinality.max === 1 && selectedButtons.size === 1) {
+          selectedButtons.clear();
+        }
+
+        if(!selectedButtons.has(v)) {
+          if(Number.isInteger(_cardinality.max) && selectedButtons.size >= _cardinality.max) {
+            this.sendAction('error', CARDINALITY_MAX, `there must be no more than ${_cardinality.max} buttons`);
+            status.error.push(CARDINALITY_MAX);
+          } else {
+            selectedButtons.add(v);
+            status.updated = true;
+            if(this._rendered) {
+              this.sendAction('action', 'selected', this, v);
+              this.sendAction('changed', 'values', Array.from(selectedButtons));
+            } else {
+              this.sendAction('action', 'initiated', this, v);
+            }
+          }
+        }
+      });
     }
 
-    this.notifyPropertyChange('selectedMutex');
+    if(status.updated) {
+      this.notifyPropertyChange('selectedMutex');
+      this._tellItems('button-selection-changed', selectedButtons);
+    }
+
     return true;
+  },
+  /**
+   * deactivates a button who's value is passed in. There are two exceptions to behaviour:
+   *
+   *    1. if the value is 'null' and null is not a button value then deactivating 'null'
+   *       will be seen as a request to erase ALL selected buttons.
+   *    2. if an array of values is passed in then all items will be sequentially removed
+   *       followed by a single signal to 'selectedMutex'
+   *
+   * @param  {mixed: scalar|array|null} value
+   * @return {boolean}
+   */
+  _deactivateButton(value) {
+    const {_cardinality,selectedButtons} = this.getProperties('_cardinality','selectedButtons');
+    let status = {error: [], updated: false};
+    if(typeOf(value) === 'null' && this.nullNotValidOption()) {
+      selectedButtons.clear();
+      status.updated = true;
+    }
+    else {
+      if(typeOf(value) !== 'array') { value = [value]; }
+      value.forEach(v => {
+        if(selectedButtons.has(v)) {
+          if(selectedButtons.size <= _cardinality.min) {
+            this.sendAction('error', CARDINALITY_MIN, `there must be at least ${_cardinality.min} button(s)`);
+            this._tellItem(value, 'applyEffect', 'cardinalityEffect');
+            status.error.push(CARDINALITY_MIN);
+          }
+          else {
+            selectedButtons.delete(v);
+            status.updated = true;
+            if(this._rendered) {
+              this.sendAction('action', 'deselected', this, v);
+              this.sendAction('changed', 'values', Array.from(selectedButtons));
+            }
+            else {
+              this.sendAction('action', 'initiated', this, v); // TODO: does this make sense?
+            }
+          }
+        }
+      });
+
+    }
+    if(status.updated) {
+      this.notifyPropertyChange('selectedMutex');
+    }
+    return status.error ? false : true;
   },
   // if cardinality.min is non-zero ensure button is selected
   selectButtonIfNotSelected() {
@@ -366,13 +400,44 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
     });
   },
 
-  setDefaultPropertyValues() {
-    const properties = ['value'];
-    for(var prop of properties) {
-      const propValue = this.get(prop);
-      const defaultValue = this.get('default' + capitalize(prop));
-      if(propertyIsSet(defaultValue) && isUndefined(propValue)) {
-        this.set(prop, defaultValue);
+  /**
+   * Ensures that:
+   *   1. value, values, and selectedButtons are all initialised to the correct values
+   *      when first rendering the component;
+   *   2. defaultValue is applied where appropriate
+   *   3. items object who are listed as "selected" are set at the item level too
+   */
+  initializeValueProperties() {
+    const {value,values,nullValidOption} = this.getProperties('value', 'values','nullValidOption');
+    const parameterKeys = new Set(keys(this.get('attrs') || {}));
+
+    // Set bound Value & Values
+    if(parameterKeys.has('value') || parameterKeys.has('values')) {
+      if (parameterKeys.has('value') && parameterKeys.has('values')) {
+        debug('you have bound both "value" and "values" to ui-buttons; this is could behave inconsistently, if you have cardinality greater than 1 then just bind to values.');
+      }
+      if(parameterKeys.has('value')) {
+        this._activateButton(value);
+      } else {
+        values.forEach(v => this._activateButton(v));
+      }
+    }
+
+
+    // Set default values
+    const defaultValue = this.get('defaultValue');
+    const type = typeOf(value);
+    if(defaultValue && ( type ==='undefined' || (type === 'null' && !nullValidOption ))) {
+      if(typeOf(defaultValue) === 'array') {
+        this.set('values', defaultValue);
+        run.next(() => {
+          this._activateButton(defaultValue);
+        });
+      } else {
+        this.set('value', defaultValue);
+        run.next(() => {
+          this._activateButton(defaultValue);
+        });
       }
     }
   },
@@ -446,25 +511,20 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       }
 
       // if groups value is already set, check against item's value
-      const groupValue = self.get('value');
       const itemValue = item.get('value');
-      if(groupValue && groupValue === itemValue) {
-        self._activateButton(groupValue);
-        run.next(()=> {
-          /**
-           * there seems to be a small break in Ember where setting a property
-           * before it is fully _initialized doesn't propagate observer events
-           */
-          self.notifyPropertyChange('selectedMutex');
-        });
+      const itemSelected = item.get('selected');
+      self.get('valueOptions').add(itemValue);
+      const groupValue = self.get('value');
+      const groupValues = new Set(self.get('values'));
+      if(groupValue === itemValue || groupValues.has(itemValue)) {
+        if(!itemSelected) {
+          self._activateButton(itemValue);
+        }
       }
 
       run.debounce(self, self.registrationComplete, 1);
       self.sendAction('registered', item); // specific action only
-    },
-    btnEvent(self, evt, ...args) {
-      console.log('button event: %s: %o', evt,args);
-    },
+    }
   },
 
   // EVENTS
@@ -480,16 +540,14 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
     // nothing yet
   },
   willRender() {
-    // nothing yet
+    // this.notifyPropertyChange('selectedMutex');
   },
   registrationComplete() {
     this.trySet('_registrationComplete', true);
     this.selectButtonIfNotSelected();
   },
   didInitAttrs() {
-    run.next(()=> {
-      this.setDefaultPropertyValues();
-    });
+    this.initializeValueProperties();
   },
   willDestroyElement() {
     // nothing yet
