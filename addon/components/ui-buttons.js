@@ -483,7 +483,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
     // nothing yet
   },
   registrationComplete() {
-    this.set('_registrationComplete', true);
+    this.trySet('_registrationComplete', true);
     this.selectButtonIfNotSelected();
   },
   didInitAttrs() {
@@ -503,4 +503,3 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
 
 export default uiButtons;
 uiButtons[Ember.NAME_KEY] = 'UI Buttons';
-
