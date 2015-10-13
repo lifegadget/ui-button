@@ -1,6 +1,6 @@
 {
   "name": "ui-button",
-  "version": "0.6.1",
+  "version": "0.6.3",
   "description": "Dancing, shiny buttons (and groups of buttons) with Bootstrap styling.",
   "directories": {
     "doc": "doc",
@@ -33,7 +33,7 @@
   "license": "MIT",
   "devDependencies": {
     "broccoli-asset-rev": "^2.0.2",
-    "demo-helper": "0.0.7",
+    "demo-helper": "0.0.10",
     "ember-cli": "1.13.1",
     "ember-cli-app-version": "0.4.0",
     "ember-cli-content-security-policy": "0.4.0",
