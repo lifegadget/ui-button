@@ -543,8 +543,12 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
     // this.notifyPropertyChange('selectedMutex');
   },
   registrationComplete() {
-    this.trySet('_registrationComplete', true);
-    this.selectButtonIfNotSelected();
+    try {
+      this.set('_registrationComplete', true);
+      this.selectButtonIfNotSelected();
+    } catch(e) {
+      // ignore, object may have been destroyed
+    }
   },
   didInitAttrs() {
     this.initializeValueProperties();
