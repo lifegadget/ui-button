@@ -1,15 +1,6 @@
-<div class="container">
-    <h1 id="title"><a href="https://github.com/lifegadget/ui-button">ui-button</a></h1>
-    <h2>a simple button component which leverages Bootstrap styling</h2>
-
-  {{#if notIndexPage}}
-      {{#link-to 'index'}}
-      <div class="back-navigation">
-          {{ui-icon icon='arrow-circle-left' size='5x' class='animated fadeIn'}}
-      </div>
-      {{/link-to}}
-  {{/if}}
-
- {{outlet}}
-
-</div>
+{{app-page
+  repo='ui-button'
+  repoOwner='lifegadget'
+  subHeading='a simple button component which leverages Bootstrap styling'
+  currentPath=currentPath
+}}
