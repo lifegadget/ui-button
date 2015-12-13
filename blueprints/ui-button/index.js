@@ -7,6 +7,9 @@ module.exports = {
 		// to us
 	},
 	afterInstall: function() {
-		return this.addBowerPackageToProject('animate.css');
+    return this.addBowerPackagesToProject([
+     {name: 'animate.css', target: '3.4.0'},
+     {name: 'babel-polyfill', target: '0.0.1'}
+    ]);
 	}
 };
