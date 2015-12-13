@@ -547,7 +547,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
       this.set('_registrationComplete', true);
       this.selectButtonIfNotSelected();
     } catch(e) {
-      // ignore as this typically means object already destroyed
+      // ignore, object may have been destroyed
     }
   },
   didInitAttrs() {
