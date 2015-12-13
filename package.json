@@ -1,6 +1,6 @@
 {
   "name": "ui-button",
-  "version": "0.6.5",
+  "version": "0.6.6",
   "description": "Dancing, shiny buttons (and groups of buttons) with Bootstrap styling.",
   "directories": {
     "doc": "doc",
@@ -17,7 +17,7 @@
   },
   "author": "Ken Snyder <ken@ken.net>",
   "files": [
-    "Brocfile.js",
+    "ember-build-cli.js",
     "LICENSE.md",
     "README.md",
     "addon",
