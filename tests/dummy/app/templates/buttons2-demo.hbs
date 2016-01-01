@@ -1,0 +1,86 @@
+{{#demo-css}}
+<div class="row">
+  <div class="col-xs-12">
+    <h3><code>ui-buttons</code></h3>
+    <h3>Buttons Component</h3>
+    <desc>
+      The buttons component is a <i>grouping</i> of buttons that can be used in a template as either <b>block</b> or <b>inline</b> component. The examples below illustrate both styles.
+    </desc>
+  </div>
+</div>
+
+<h3>Block Style</h3>
+<hr>
+
+<div class="row">
+  <div class="col-xs-4 col-sm-3 col-lg-2">
+    {{#ui-buttons howMany=howMany disabled=d size=s value=v1 as |g1|}}
+      {{ui-button title='foo' group=g1}}
+      {{ui-button title='bar' group=g1}}
+      {{ui-button title='baz' group=g1}}
+    {{/ui-buttons}}
+    <br/>
+    <p class='downer'>
+      <i>&nbsp;&nbsp; where d = {{d}}</i>
+      <br/>
+      <i>&nbsp;&nbsp; and s = {{s}}</i>
+    </p>
+
+
+  </div>
+  <div class="col-xs-4 col-sm-5 col-lg-5 monospace">
+  <b>\{{#ui-buttons disabled=d size=s as |g1|}}</b><br/>
+    &nbsp;&nbsp;\{{ui-button title='foo' group=g1}}<br/>
+    &nbsp;&nbsp;\{{ui-button title='bar' group=g1}}<br/>
+    &nbsp;&nbsp;\{{ui-button title='baz' group=g1}}<br/>
+  <b>\{{/ui-buttons}}</b>
+  </div>
+  <div class="col-xs-4 col-sm-4 col-lg-5">
+    <h4>Block Scope & Registration</h4>
+    Associating the button with the <code>ui-buttons</code> component is achieved by setting the <code>group</code> property to the yielded value of buttons component. This automatically takes care of item registration and allows the container to orchestrate global properties like sizing, enablement/disablement, etc.<br/>
+    <p class="downer">
+      {{ui-toggle-button on='enable the group' off='disable the group' onValue=true offValue=false action='disablement'}}
+      {{ui-toggle-button on='enable foo' off='disable foo' onValue='foo' offValue=false action='disablement'}}
+      <br/>
+      <p class="downer">
+        {{ui-buttons buttons='small,normal,large' value=s size='small' cardinality='1:1'}}
+      </p>
+    </p>
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-xs-4 col-sm-3 col-lg-2">
+    {{#ui-buttons cardinality=c values=vs2 as |g2|}}
+      {{ui-button title='foo' group=g2}}
+      {{ui-button title='bar' group=g2}}
+      {{ui-button title='baz' group=g2}}
+    {{/ui-buttons}}
+    <br/>
+    <p class='downer'>
+      <i>&nbsp;&nbsp; where c = {{c}}</i>
+    </p>
+    <hr>
+    <p class='downer'>
+      VALUES are <i>&nbsp;&nbsp; {{vs2}}</i>
+    </p>
+  </div>
+  <div class="col-xs-4 col-sm-5 col-lg-5 monospace">
+  <b>\{{#ui-buttons cardinality=c as |g3|}}</b><br/>
+    &nbsp;&nbsp;\{{ui-button title='foo' group=g3}}<br/>
+    &nbsp;&nbsp;\{{ui-button title='bar' group=g2}}<br/>
+    &nbsp;&nbsp;\{{ui-button title='baz' group=g2}}<br/>
+  <b>\{{/ui-buttons}}</b><br/>
+  </div>
+  <div class="col-xs-4 col-sm-4 col-lg-5">
+    <h4>Cardinality &nbsp;{{ui-buttons buttons='0:0,0:1,1:1,1:2,0:M' value=c size='tiny' cardinality='1:1' defaultValue='1:1'}}</h4>
+    The cardinality of this component has both a <code>min</code> and <code>max</code> property. Setting the cardinality away from the default state of '0:0' results in the registered buttons being told they can now be selected. The <i>max</i> component indicates how many buttons can be highlighted at one time.
+    <br/>
+    <note>
+      <b>Note</b>: when max is set to 1 the buttons will act like radio buttons and toggle the selected state
+    </note>
+  </div>
+</div>
+<hr>
+
+{{/demo-css}}

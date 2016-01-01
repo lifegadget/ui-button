@@ -529,18 +529,15 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
 
   // EVENTS
   // -------------------------
-  _i: on('init', function() { return this._init(); }),
-  _ia: on('didInitAttrs', function() { return this.didInitAttrs(); }),
-  _r: on('willRender', function() { return this.willRender(); }),
-  _d: on('willDestroyElement', function() { return this.willDestroyElement(); }),
-  _dr: on('afterRender', function() { return this.didRender(); }),
   _rendered: false,
 
-  _init() {
-    // nothing yet
-  },
-  willRender() {
-    // this.notifyPropertyChange('selectedMutex');
+  init() {
+    this._super(...arguments);
+    run.schedule('afterRender', () => {
+      this.initializeValueProperties();
+      // this._tellItems('rendered');
+      this._rendered = true;
+    });
   },
   registrationComplete() {
     try {
@@ -549,18 +546,7 @@ const uiButtons = Ember.Component.extend(GroupMessaging,{
     } catch(e) {
       // ignore, object may have been destroyed
     }
-  },
-  didInitAttrs() {
-    this.initializeValueProperties();
-  },
-  willDestroyElement() {
-    // nothing yet
-  },
-  didRender() {
-    this._tellItems('rendered');
-    this._rendered = true;
   }
-
 });
 
 export default uiButtons;

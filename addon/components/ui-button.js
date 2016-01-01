@@ -352,30 +352,25 @@ const uiButton = Ember.Component.extend(SharedStylist,ItemMessaging,{
   },
   // RUN LOOP
   // -------------------------
-  _i: on('init', function() { return this._init(); }),
-  _ia: on('didInitAttrs', function() { return this.didInitAttrs(); }),
-  _r: on('willRender', function() { return this.willRender(); }),
-  _dr: on('afterRender', function() { return this.didRender(); }),
-  _d: on('willDestroyElement', function() { return this.willDestroyElement(); }),
+  _ia: on('didInitAttrs', function() { return this.initAttrs(); }),
+  _d: on('willDestroyElement', function() { return this.willDestroy(); }),
   _initialized: false,
   _rendered: false,
-  _init() {
+  init() {
+    this._super(...arguments);
     this._tellGroup('registration', this);
     this.setupTooltip();
+    run.schedule('afterRender', () => {
+      if(!this.group) {
+        this._rendered = true;
+      }
+    });
   },
-  willRender() {
-    // nothing yet
-  },
-  didInitAttrs() {
+  initAttrs() {
     this.setDefaultValues();
     this._initialized = true;
   },
-  didRender() {
-    if(!this.group) {
-      this._rendered = true;
-    }
-  },
-  willDestroyElement() {
+  willDestroy() {
     if(this.get('tooltip')){
       this.$().tooltip('destroy');
     }
@@ -384,4 +379,3 @@ const uiButton = Ember.Component.extend(SharedStylist,ItemMessaging,{
 
 export default uiButton;
 uiButton[Ember.NAME_KEY] = 'UI Button';
-
