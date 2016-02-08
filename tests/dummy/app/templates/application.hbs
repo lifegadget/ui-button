@@ -1,15 +1,18 @@
 <div class="container">
-    <h1 id="title">ui-button</h1>
-    <h2>a simple button component which leverages Bootstrap styling</h2>
+  <h1 class="display-2">
+    {{bs-label title='ui-button' mood='success'}} Addon
+  </h1>
+  {{#bs-navbar onChange=(action 'navChange') as |nav|}}
+    {{nav.brand brand='Overview' routeTo='index'}}
+    {{#nav.items}}
+      {{nav.item title='ui-button' routeTo='ui-button'}}
+      {{nav.item title='ui-toggle-button' routeTo='ui-toggle-button'}}
+      {{nav.item title='ui-buttons' routeTo='ui-buttons'}}
+      {{#nav.right}}
+        <img alt="fury" src="https://badge.fury.io/js/ui-button.svg">
+      {{/nav.right}}
+    {{/nav.items}}
+  {{/bs-navbar}}
 
-  {{#if notIndexPage}}
-      {{#link-to 'index'}}
-      <div class="back-navigation">
-          {{ui-icon icon='arrow-circle-left' size='5x' class='animated fadeIn'}}
-      </div>
-      {{/link-to}}
-  {{/if}}
-
- {{outlet}}
-
+  {{outlet}}
 </div>

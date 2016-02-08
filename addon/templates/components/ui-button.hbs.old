@@ -1,0 +1,4 @@
+{{#if _icon}}<i class="fa fa-fw fa-{{_icon}}"></i>{{#if _title}}&nbsp;{{/if}}{{/if}}
+{{#if title}}{{title}}{{/if}}
+{{#if hasNoContent}}&nbsp;{{/if}}
+{{yield}}

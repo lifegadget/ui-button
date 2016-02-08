@@ -1,0 +1,165 @@
+<p>
+  <br>
+</p>
+{{#markdown-convert style='github'}}
+  ## Overview: `ui-button`
+
+  The diagram below attempts to illustrate the various properties that make up the state of a button. This button can live independently as a single button or can participate in a group of buttons (see `ui-buttons`).
+
+{{/markdown-convert}}
+<div style='text-align: center; margin: 15px 0'>
+  <img src='/images/ui-button-overview.png'>
+</div>
+{{#markdown-convert style='github'}}
+
+  ## Mood
+{{/markdown-convert}}
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button title='Press Me'}}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      inline button
+      <span class="text-muted">(default mood is 'primary')</span>
+      <br>
+      <code>\{{ui-button title='Press Me'}}</code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button title='Press Me' mood='secondary'}}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      inline button, mood selected<br/>
+      <code>\{{ui-button title='Press Me' mood='secondary'}}</code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{#ui-button mood='info'}}Press Me{{/ui-button}}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      block button, mood selected<br/>
+      <code>\{{#ui-button mood='info'}}Press Me\{{/ui-button}}</code>
+    </span>
+  </div>
+</div>
+
+{{#markdown-convert style='github'}}
+
+  ## Sizing
+{{/markdown-convert}}
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button title='Press Me' size='tiny'}}<br>
+  </div>
+  <div class="col-xs-9">
+    <span>
+      inline button, mood selected<br/>
+      <code>\{{ui-button title='Press Me' size='tiny'}}</code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button title='Press Me' size='small'}}<br>
+  </div>
+  <div class="col-xs-9">
+    <span>
+      inline button, mood selected<br/>
+      <code>\{{ui-button title='Press Me' size='small'}}</code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button title='Press Me' size='medium'}}<br>
+  </div>
+  <div class="col-xs-9">
+    <span>
+      inline button, mood selected
+      <span class="text-muted">(default size is 'medium')</span>
+      <br/>
+      <code>\{{ui-button title='Press Me' size='medium'}}</code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button title='Press Me' size='large'}}<br>
+  </div>
+  <div class="col-xs-9">
+    <span>
+      inline button, mood selected
+      <br/>
+      <code>\{{ui-button title='Press Me' size='large'}}</code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button title='Press Me' size='huge'}}<br>
+  </div>
+  <div class="col-xs-9">
+    <span>
+      inline button, mood selected
+      <br/>
+      <code>\{{ui-button title='Press Me' size='huge'}}</code>
+    </span>
+  </div>
+</div>
+
+{{#markdown-convert style='github'}}
+  ## Icon and Tooltip
+
+  > **Note:** usage of `icon` as an inline element leverages the `ui-icon` addon; the default iconset which it uses is FontAwesome but that can be configured. Furthermore, the _tooltips_ are leveraging the `ember-tooltips` addon.
+{{/markdown-convert}}
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button icon='hand-pointer-o' title='Press Me' tooltip='I am a button'}}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      inline button with icon and tooltip
+      <br>
+      <code>\{{ui-button icon='hand-pointer-o' title='Press Me' tooltip='I am a button'}}</code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button icon='cog'}}
+    {{ui-button icon='smile-o' iconSpin=true}}
+    {{ui-button icon='spinner' iconPulse=true}}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      inline button with just icon, and effects
+      <br>
+      <code>
+        \{{ui-button icon='cog'}}<br>
+        \{{ui-button icon='smile-o' iconSpin=true}}<br>
+        \{{ui-button icon='spinner' iconPulse=true}}
+      </code>
+    </span>
+  </div>
+</div>
+
+<p>
+  <br>
+</p>

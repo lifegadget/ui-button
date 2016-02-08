@@ -1,8 +1,15 @@
 button.ui-button.btn-huge, .btn-group-huge > .btn {
-    padding: 14px 20px;
-    font-size: 24px;
+    padding: 1rem 1.5rem;
+    font-size: 1.5rem;
     line-height: 1.6;
-    border-radius: 8px;
+    border-radius: 0.4rem;
+}
+
+button.ui-button.btn-tiny, .btn-group-tiny > .btn {
+    padding: 0.22rem 0.65rem;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    border-radius: 0.2rem;
 }
 
 .ui-button {

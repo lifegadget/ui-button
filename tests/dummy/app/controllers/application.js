@@ -8,20 +8,20 @@ export default Ember.Controller.extend({
   notIndexPage: Ember.computed.not('isIndexPage'),
 
   actions: {
-    toggleRepression: function() {
-      console.log('toggling');
-      this.toggleProperty('isRepressed');
-    },
-    toggleEnablement: function() {
-      console.log('toggling');
-      this.toggleProperty('toggledEnablement');
-    },
-    buttonAction: function(param) {
-      let type = Ember.typeOf(param);
-      if(type === 'object') {
-        param = JSON.stringify(param);
+    navChange: function(args) {
+      const [context] = args;
+      const {routeTo, linkTo} = context.getProperties('routeTo', 'linkTo');
+      if(linkTo) {
+        window.open(linkTo);
       }
-      window.alert('Button pressed with a parameter of type "' + type + '": ' + param);
+      if (routeTo) {
+        if (this.transitionToRoute) {
+
+          this.transitionToRoute(routeTo);
+        } else {
+          console.log('component needs to have transitionToRoute passed in');
+        }
+      }
     }
   }
 

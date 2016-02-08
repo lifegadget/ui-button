@@ -1,3 +1,1 @@
-import uiButton from 'ui-button/components/ui-button';
-
-export default uiButton;
+export { default } from 'ui-button/components/ui-button';

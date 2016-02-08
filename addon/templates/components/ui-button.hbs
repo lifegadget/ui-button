@@ -1,4 +1,21 @@
-{{#if _icon}}<i class="fa fa-fw fa-{{_icon}}"></i>{{#if _title}}&nbsp;{{/if}}{{/if}}
-{{#if title}}{{title}}{{/if}}
-{{#if hasNoContent}}&nbsp;{{/if}}
-{{yield}}
+<button type="button" class="ui-button btn btn-{{mood}} {{_size}}">
+  {{#if hasBlock}}
+    {{yield}}
+  {{else}}
+    <span class="content">
+      {{#if tooltip}}
+        {{#tooltip-on-parent}}{{tooltip}}{{/tooltip-on-parent}}
+      {{/if}}
+      {{#if icon}}
+      <span class="icon">
+        {{ui-icon icon=icon spin=iconSpin pulse=iconPulse}}
+      </span>
+      {{/if}}
+      {{#if title}}
+      <span class="title">
+        {{title}}
+      </span>
+      {{/if}}
+    </span>
+  {{/if}}
+</button>
