@@ -67,7 +67,7 @@
     "button"
   ],
     "dependencies": {
-      "ember-tooltips": "ksnyde/ember-tooltips",
+      "ember-tooltips": "^0.5.8",
       "ember-cli-babel": "^5.1.5",
       "ui-icon": "0.7.4",
       "ember-cli-htmlbars": "^1.0.1"

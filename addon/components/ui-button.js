@@ -10,14 +10,13 @@ import layout from '../templates/components/ui-button';
 
 export default Ember.Component.extend({
   layout: layout,
-  tagName: 'span',
+  tagName: '',
 
   mood: 'primary',
   size: null,
   iconPulse: false,
   iconSpin: false,
-  tooltipPlace: 'auto',
-  tooltipEffect: 'grow',
+  
   _size: computed('size', function() {
     const size = this.get('size');
     switch(size) {
