@@ -1,0 +1,214 @@
+<p>
+  <br>
+</p>
+{{#markdown-convert style='github'}}
+  ## Overview: `ui-toggle-button`
+
+  The diagram below attempts to illustrate the various properties that make up the state of a toggle-button. This button typically lives independently as a single button but can participate in a group of buttons too (see `ui-buttons`). Looking at the diagram, let me just say, the code is less complicated than the picture may indicate. :)
+
+{{/markdown-convert}}
+<div style='text-align: center; margin: 15px 0'>
+  <img src='/images/ui-toggle-button.png' style='height: 596px'>
+</div>
+
+
+{{#markdown-convert style='github'}}
+  ## Demo: _Inline Toggle Buttons_
+
+  Toggle buttons can be both _inline_ and _block_ style but to start we'll just illustate the inline variety.
+{{/markdown-convert}}
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-toggle-button title='Press Me' onToggle=(route-action 'onToggle')}}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      Simple Toggle
+      <br>
+      <code>\{{ui-toggle-button title='Press Me' onToggle=(action 'onToggle')}}</code>
+      <br>
+      <span class="text-muted">
+        Well you can't argue that the value is toggling but it's a bit visually dull.
+      </span>
+    </span>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-toggle-button
+      off='Light me up'
+      on='Cool me down'
+      onToggle=(route-action 'onToggle')
+    }}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      Title Switching
+      <br>
+      <code>\{{ui-toggle-button off='Light me up' on='Cool me down' onToggle=(action 'onToggle')}}</code>
+      <br>
+      <span class="text-muted">
+        Still toggling between boolean values but the title is switching now.
+      </span>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-toggle-button
+      title='Check In'
+      offIcon='square-o'
+      onIcon='check-square-o'
+      onToggle=(route-action 'onToggle')
+    }}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      Icon Switching
+      <br>
+      <code>\{{ui-toggle-button title='Check In' offIcon='square-o' onIcon='check-square-o' onToggle=(action 'onToggle')}}</code>
+      <br>
+      <span class="text-muted">
+        Let's keep a static title but toggle the icon based on state.
+      </span>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-toggle-button
+      on='Angry'
+      off='Happy'
+      onMood='danger'
+      offMood='success'
+      onToggle=(route-action 'onToggle')
+    }}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      <b>Moody Button</b>
+      <br>
+      <pre><code>\{{ui-toggle-button
+  on='Angry'
+  off='Happy'
+  onMood='danger'
+  offMood='success'
+  onToggle=(action 'onToggle')
+}}</code></pre>
+      <br>
+      <span class="text-muted">
+        Let's keep a title static but toggle the icon based on state.
+      </span>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-toggle-button
+      off='Mirror in the Bathroom'
+      offValue='mirror-in-the-bathroom'
+      on='Tears of a Clown'
+      onValue='tears-of-a-clown'
+      onMood='warning'
+      onToggle=(route-action 'onToggle')
+    }}
+  </div>
+  <div class="col-xs-9">
+    <b>Toggled Values</b>
+    <br>
+  <pre><code>\{{ui-toggle-button
+    on='Tears of a Clown'
+    onValue='tears-of-a-clown'
+    off='Mirror in the Bathroom'
+    offValue='mirror-in-the-bathroom'
+    onMood='warning'
+    onToggle=(action 'onToggle')
+}}</code></pre>
+    <hr width='250px' style='float:left'>
+  </div>
+</div>
+{{!------}}
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-toggle-button
+      on='Tears of a Clown'
+      off='Mirror in the Bathroom'
+      valuesAre='dash-case'
+      onMood='warning'
+      onToggle=(route-action 'onToggle')
+    }}
+  </div>
+  <div class="col-xs-9">
+  <pre><code>\{{ui-toggle-button
+    on='Tears of a Clown'
+    off='Mirror in the Bathroom'
+    valuesAre='dash-case'
+    onMood='warning'
+    onToggle=(action 'onToggle')
+}}</code></pre>
+      {{#markdown-convert style='github'}}
+        Up to now all examples have toggled a boolean true/false value but you can toggle between any two values. Here we see two configurations which produce exactly the same results.
+
+        > **Note:** the valid values for `valuesAre` are: snake\_case, dash-case, camelCase, PascalCase, and "equal". Also, for those of you who hate the capitalization and underscore/dash syntax you'll be happy to know you _can_ ignore it and it will still work (but no one will like you or laugh at your jokes).
+      {{/markdown-convert}}
+  </div>
+</div>
+
+{{#markdown-convert style='github'}}
+  ### DDAU and _value_
+
+  We all know that being a good DDAU (_data down, actions up_) citizen is important in this fast paced world so you'll be happy to know that `ui-toggle-button` was designed with this in mind.
+
+  There are two design patterns you can use to reach your DDAU happy place:
+
+  1. **Implicit / Listening.** All component instances start at an "off" toggled state by default (aka, a known state), so if that's an ok starting state then the container can just listen to the `onToggle` event and track any and all state changes. In this mode please note that if you return "false" to the action it will _not_ update the state of the toggle, ensuring the container control of the state mechanism. Finally, if you wish you can set a `defaultValue` which allows for any starting state. If you do, it will fire an 'onToggle' at initialization to achieve that default state (as it is not allowed internally to change the `toggled` state w/o permission from the container).
+
+  2. **Explicit / value setting.** For most people this will be the more intutive pattern and it allows the container to explicitly set starting state to whatever it likes. In this model, the container simply binds to the `value` property. The component itself will never change this variable but it will expect the container to update it's _value_ whenever it approves a change from the `onToggle` event. When using this mechanism there is no need to pass a value back on the action as setting the value will toggle the button appropriately.
+
+      > **Note:** when using the second design pattern we can find situations where the container's value that's passed in does not match either the "on" or "off" values of the toggle. When this happens the `onError` action is fired and the toggle is put into a "disabled" state.
+
+  Well I can tell you're excited so let's play around with it, shall we?
+{{/markdown-convert}}
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-toggle-button
+      on='King Kong'
+      off='Monkey'
+      valuesAre='camelCase'
+      value=ddauExplicit
+      name='ddauExplicit'
+      defaultValue='kingKong'
+      onToggle=(route-action 'onToggle')
+      onError=(route-action 'onError')
+    }}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      <b>Explit Design Pattern</b>
+      <br>
+      <pre><code class='handlebars'>\{{ui-toggle-button
+  off='Monkey'
+  on='King Kong'
+  valuesAre='camelCase'
+  value=ddauExplicit
+  name='ddauExplicit'
+  defaultValue='kingKong'
+  onToggle=(action 'onToggle')
+  onError=(action 'onError')
+}}</code></pre>
+      <p>
+        Container value: {{text-input value=ddauExplicit width='200px'}}
+      </p>
+      <span class="text-muted">
+        Let's keep a title static but toggle the icon based on state.
+      </span>
+    </span>
+  </div>
+</div>

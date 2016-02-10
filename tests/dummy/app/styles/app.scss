@@ -7,3 +7,16 @@
 .row {
   padding: 5px 0;
 }
+
+.flash-messages {
+  position: fixed;
+  top: 50px;
+  left: 25%;
+  width: 50%;
+  text-align: center;
+  z-index: 100;
+}
+
+.tooltip.tooltip-danger {
+  background-color: $brand-danger;
+}

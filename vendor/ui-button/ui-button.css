@@ -19,3 +19,11 @@ button.ui-button.btn-tiny, .btn-group-tiny > .btn {
 button.delayed-hover {
     transition: background-color 0.5s;
 }
+
+.tooltip .tooltip-dark {
+  background-color: #000000;
+}
+
+.tooltip .tooltip-light {
+  background-color: #fafafa;
+}

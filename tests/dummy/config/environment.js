@@ -22,8 +22,8 @@ module.exports = function(environment) {
       'script-src': "'self'",
       'font-src': "'self' http://fonts.gstatic.com http://fonts.googleapis.com",
       'connect-src': "'self'",
-      'img-src': "'self' https://*.cloudfront.net https://badge.fury.io",
-      'style-src': "'self' 'unsafe-inline' http://fonts.googleapis.com",
+      'img-src': "'self' https://*.cloudfront.net https://badge.fury.io http://fonts.gstatic.com http://fonts.googleapis.com",
+      'style-src': "'self' 'unsafe-inline' http://fonts.googleapis.com http://fonts.gstatic.com",
       'media-src': "'self'"
     }
 

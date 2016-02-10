@@ -1,0 +1,9 @@
+{
+  "firebase": "ui-button-2",
+  "public": "dist",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}

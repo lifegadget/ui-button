@@ -1,0 +1,14 @@
+{{#if hasBlock}}
+  {{yield}}
+{{else}}
+
+{{ui-button
+  icon=(if toggled onIcon offIcon)
+  mood=(if toggled onMood offMood)
+  value=(if toggled onValue offValue)
+  title=(if toggled onTitle offTitle)
+  onClick=(action 'onClick')
+  disabled=disabled
+}}
+
+{{/if}}

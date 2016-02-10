@@ -1,0 +1,306 @@
+<p>
+  <br>
+</p>
+{{#markdown-convert style='github'}}
+  ## Overview: `ui-button`
+
+  The diagram below attempts to illustrate the various properties that make up the state of a button. This button can live independently as a single button or can participate in a group of buttons (see `ui-buttons`).
+
+{{/markdown-convert}}
+<div style='text-align: center; margin: 15px 0'>
+  <img src='/images/ui-button-overview.png' style='height: 433px'>
+</div>
+{{#markdown-convert style='github'}}
+
+  ## Mood, Outline, and Disabled
+{{/markdown-convert}}
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button title='Press Me'}}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      inline button
+      <span class="text-muted">(default mood is 'primary')</span>
+      <br>
+      <code>\{{ui-button title='Press Me'}}</code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button title='Press Me' mood='secondary'}}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      inline button, mood selected<br/>
+      <code>\{{ui-button title='Press Me' mood='secondary'}}</code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{#ui-button mood='info'}}Press Me{{/ui-button}}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      block button, mood selected<br/>
+      <code>\{{#ui-button mood='info'}}Press Me\{{/ui-button}}</code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{#ui-button mood='info' outline=true}}Press Me{{/ui-button}}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      block button, mood selected, outline button<br/>
+      <code>\{{#ui-button mood='info' outline=true}}Press Me\{{/ui-button}}</code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button title='Press Me' mood='warning' disabled=false}}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      inline button, mood is warning, button is enabled<br/>
+      <code>\{{ui-button title='Press Me' mood='warning' disabled=false}}</code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button title='Press Me' mood='warning' disabled=true}}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      inline button, mood is warning, button is disabled<br/>
+      <code>\{{ui-button title='Press Me' mood='warning' disabled=true}}</code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button title='Press Me' mood='warning' disabled=true outline=true}}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      inline button, mood is warning, button is disabled, outline-button<br/>
+      <span class="text-muted">Note: this is not styled correctly, assume BS will correct in next beta</span><br>
+      <code>\{{ui-button title='Press Me' mood='warning' disabled=true outline=true}}</code>
+    </span>
+  </div>
+</div>
+
+
+{{#markdown-convert style='github'}}
+
+  ## Sizing
+{{/markdown-convert}}
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button title='Press Me' size='tiny'}}<br>
+  </div>
+  <div class="col-xs-9">
+    <span>
+      Tiny button<br/>
+      <code>\{{ui-button title='Press Me' size='tiny'}}</code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button title='Press Me' size='small'}}<br>
+  </div>
+  <div class="col-xs-9">
+    <span>
+      Small button<br/>
+      <code>\{{ui-button title='Press Me' size='small'}}</code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button title='Press Me' size='medium'}}<br>
+  </div>
+  <div class="col-xs-9">
+    <span>
+      Standard sized button
+      <span class="text-muted">(default size is 'medium')</span>
+      <br/>
+      <code>\{{ui-button title='Press Me' size='medium'}}</code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button title='Press Me' size='large'}}<br>
+  </div>
+  <div class="col-xs-9">
+    <span>
+      Large button
+      <br/>
+      <code>\{{ui-button title='Press Me' size='large'}}</code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button title='Press Me' size='huge' tooltip='man this button is HUGE'}}<br>
+  </div>
+  <div class="col-xs-9">
+    <span>
+      Huge button
+      <br/>
+      <code>\{{ui-button title='Press Me' size='huge'}}</code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button title='Press Me' width='100%' height='4rem'}}<br>
+  </div>
+  <div class="col-xs-9">
+    <span>
+      Fixed size button
+      <br/>
+      <code>\{{ui-button title='Press Me' width='100%' height='4rem'}}</code>
+    </span>
+  </div>
+</div>
+
+{{#markdown-convert style='github'}}
+  ## Icon, Tooltip, and Focus
+
+  > **Note:** usage of `icon` as an inline element leverages the `ui-icon` addon; the default iconset which it uses is FontAwesome but that can be configured. Furthermore, the _tooltips_ are leveraging the `ember-tooltips` addon.
+{{/markdown-convert}}
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button icon='hand-pointer-o' title='Press Me' tooltip='I am a button'}}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      inline button with icon and tooltip
+      <br>
+      <code>\{{ui-button icon='hand-pointer-o' title='Press Me' tooltip='I am a button'}}</code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button title='Press Me' tooltip='I am a button, right?' tooltipPlace='right' tooltipEffectClass='slide'}}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      inline button with tooltip to the right
+      <br>
+      <code>\{{ui-button title='Press Me' tooltip='I am a button, right?' tooltipPlace='right' tooltipEffectClass='slide'}}</code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button title='Do it now!' mood='danger' tooltip='Too late!' tooltipTypeClass='danger'}}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      Changed the tooltipTypeClass <br>
+      <span class="text-muted">
+        (note: you must supply the CSS, this just adds the class {{bs-label title='.tooltip-danger'}} to the tooltip)
+      </span>
+      <br>
+      <code>\{{ui-button title='Do it now!' mood='danger' tooltip='Too late!' tooltipTypeClass='danger'}}</code>
+    </span>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button icon='cog' mood='secondary'}}
+    {{ui-button icon='smile-o' iconSpin=true mood='success'}}
+    {{ui-button icon='spinner' iconPulse=true mood='secondary'}}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      inline button with just icon, and effects
+      <br>
+      <code>
+        \{{ui-button icon='cog' mood='secondary'}}<br>
+        \{{ui-button icon='smile-o' iconSpin=true mood='success'}}<br>
+        \{{ui-button icon='spinner' iconPulse=true mood='secondary'}}
+      </code>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button icon='eye' type='checkbox' size='large' keepFocus=true}}
+    {{ui-button icon='eye-slash' type='checkbox' size='large' }}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      Focus: left maintains, right loses (default)
+      <br>
+      <code>
+        \{{ui-button icon='eye' size='large'  keepFocus=true}}<br>
+        \{{ui-button icon='eye-slash' size='large' }}<br>
+      </code>
+    </span>
+  </div>
+</div>
+
+{{#markdown-convert style='github'}}
+  ## Actions
+
+  > **Note:** This is a 2.x styled addon so it assumes closure actions.
+{{/markdown-convert}}
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-button icon='dot-circle-o' size='huge' onClick=(action 'onClick') value='foobar'}}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      {{#markdown-convert style='github'}}
+      The ui-button exposes a single action:
+
+      - `onClick` which returns an object hash with following properties:
+
+          - `button` - the context object for the "ui-button" component (_DOM-less_)
+          - `context` - the context object for the contained "ui-button-primitive" component
+          - `evt` - the underlying DOM event that was fired
+          - `value` - the value of the button that was clicked
+
+      {{/markdown-convert}}
+      <br>
+      <code>
+        \{{ui-button icon='dot-circle-o' size='huge' onClick=(action 'onClick') value='foobar'}}<br>
+      </code>
+    </span>
+  </div>
+</div>
+
+<p>
+  <br>
+</p>

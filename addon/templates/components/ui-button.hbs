@@ -1,4 +1,17 @@
-<button id="btn-{{elementId}}" type="button" class="ui-button btn btn-{{mood}} {{_size}}">
+{{#ui-button-primative
+  mood=mood
+  type=type
+  size=_size
+  outline=_outline
+  tooltipPlace=tooltipPlace
+  tooltipSpacing=tooltipSpacing
+  tooltipAuto=tooltipAuto
+  tooltipTypeClass=tooltipTypeClass
+  tooltipEffectClass=tooltipEffectClass
+  style=style
+  disabled=disabled
+  onClick=(action "onClick")
+}}
   {{#if hasBlock}}
     {{yield}}
   {{else}}
@@ -18,4 +31,4 @@
       {{/if}}
     </span>
   {{/if}}
-</button>
+{{/ui-button-primative}}

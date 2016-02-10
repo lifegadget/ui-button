@@ -7,8 +7,9 @@ const Router = Ember.Router.extend({
 
 Router.map(function() {
   this.route('ui-button');
-  this.route('ui-toggle-button');
-  this.route('ui-buttons');
+  this.route('demo-toggle-button');
+  this.route('demo-button');
+  this.route('demo-buttons');
 });
 
 export default Router;
