@@ -12,7 +12,8 @@ const conversions = {
   pascalcase: thingy => thingy ? Ember.String.capitalize(Ember.String.camelize(thingy)) : thingy,
   dashcase: thingy => thingy ? Ember.String.dasherize(thingy) : thingy,
   snakecase: thingy => thingy ? Ember.String.underscore(thingy) : thingy,
-  equal: thingy => thingy
+  equal: thingy => thingy,
+  lowercase: thingy => thingy.toLowerCase()
 };
 
 const simplifiedKey = key => key.replace(/[\-\_]/, '').toLowerCase();
@@ -94,9 +95,8 @@ export default Ember.Component.extend({
         }
         return this.get('_oldValue');
       } else {
-        // if container can't set value then just default this to the
-        // off value
-        return offValue;
+        // if container can't set value then toggled defaults to false
+        return false;
       }
     }
   },

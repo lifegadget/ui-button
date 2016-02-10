@@ -92,6 +92,10 @@
   <div class="col-xs-9">
     <span>
       <b>Moody Button</b>
+      <span class="text-muted">
+        <br>
+        Let's keep a title static but toggle the icon based on state.
+      </span>
       <br>
       <pre><code>\{{ui-toggle-button
   on='Angry'
@@ -101,9 +105,6 @@
   onToggle=(action 'onToggle')
 }}</code></pre>
       <br>
-      <span class="text-muted">
-        Let's keep a title static but toggle the icon based on state.
-      </span>
     </span>
   </div>
 </div>
@@ -111,11 +112,11 @@
 <div class="row">
   <div class="col-xs-3">
     {{ui-toggle-button
-      off='Mirror in the Bathroom'
-      offValue='mirror-in-the-bathroom'
       on='Tears of a Clown'
       onValue='tears-of-a-clown'
-      onMood='warning'
+      off='Mirror in the Bathroom'
+      offValue='mirror-in-the-bathroom'
+      onMood='success'
       onToggle=(route-action 'onToggle')
     }}
   </div>
@@ -127,7 +128,7 @@
     onValue='tears-of-a-clown'
     off='Mirror in the Bathroom'
     offValue='mirror-in-the-bathroom'
-    onMood='warning'
+    onMood='success'
     onToggle=(action 'onToggle')
 }}</code></pre>
     <hr width='250px' style='float:left'>
@@ -140,7 +141,7 @@
       on='Tears of a Clown'
       off='Mirror in the Bathroom'
       valuesAre='dash-case'
-      onMood='warning'
+      onMood='success'
       onToggle=(route-action 'onToggle')
     }}
   </div>
@@ -149,13 +150,13 @@
     on='Tears of a Clown'
     off='Mirror in the Bathroom'
     valuesAre='dash-case'
-    onMood='warning'
+    onMood='success'
     onToggle=(action 'onToggle')
 }}</code></pre>
       {{#markdown-convert style='github'}}
         Up to now all examples have toggled a boolean true/false value but you can toggle between any two values. Here we see two configurations which produce exactly the same results.
 
-        > **Note:** the valid values for `valuesAre` are: snake\_case, dash-case, camelCase, PascalCase, and "equal". Also, for those of you who hate the capitalization and underscore/dash syntax you'll be happy to know you _can_ ignore it and it will still work (but no one will like you or laugh at your jokes).
+        > **Note:** the valid values for `valuesAre` are: snake\_case, dash-case, camelCase, PascalCase, lowercase, and equal. Also, for those of you who hate the capitalization and underscore/dash syntax you'll be happy to know you _can_ ignore it and it will still work (but no one will like you or laugh at your jokes).
       {{/markdown-convert}}
   </div>
 </div>
@@ -191,7 +192,7 @@
   </div>
   <div class="col-xs-9">
     <span>
-      <b>Explit Design Pattern</b>
+      <b>Explicit Design Pattern</b>
       <br>
       <pre><code class='handlebars'>\{{ui-toggle-button
   off='Monkey'
@@ -207,8 +208,44 @@
         Container value: {{text-input value=ddauExplicit width='200px'}}
       </p>
       <span class="text-muted">
-        Let's keep a title static but toggle the icon based on state.
+        Try changing the value with the text input above or by toggling the button which will tell the container's action to toggle the value.
       </span>
+    </span>
+  </div>
+</div>
+
+{{#markdown-convert style='github'}}
+  ### Proxy to Button
+
+  A number of the properties of a button can also be set on the toggle button and will be proxied through to the button. Such as:
+
+  - **size**
+  - **tooltips** - `tooltip`, `tooltipPlace`, etc.
+  - **style** - `width`, `height`, `fontSize`, etc.
+{{/markdown-convert}}
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-toggle-button
+      title='Proxy Me'
+      tooltip='stop hovering and press!'
+      tooltipPlace='bottom'
+      size='large'
+      width='100%'
+      onToggle=(route-action 'onToggle')
+    }}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      <b>Proxy to Button</b>
+      <br>
+      <pre><code>\{{ui-toggle-button
+  title='Proxy Me'
+  tooltip='stop hovering and press!'
+  tooltipPlace='bottom'
+  size='large'
+  width='100%'
+}}</code></pre>
     </span>
   </div>
 </div>
