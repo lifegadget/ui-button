@@ -3,6 +3,7 @@
   type=type
   size=_size
   outline=_outline
+  active=active
   tooltipPlace=tooltipPlace
   tooltipSpacing=tooltipSpacing
   tooltipAuto=tooltipAuto
@@ -12,13 +13,17 @@
   disabled=disabled
   onClick=(action "onClick")
 }}
+  {{#if tooltip}}
+    {{#tooltip-on-parent}}{{tooltip}}{{/tooltip-on-parent}}
+  {{/if}}
+
   {{#if hasBlock}}
-    {{yield}}
+    {{yield (hash
+      icon=(component 'ui-icon' icon=icon size=size iconSpin=iconSpin iconPulse=iconPulse)
+      title=title
+    )}}
   {{else}}
     <span class="content">
-      {{#if tooltip}}
-        {{#tooltip-on-parent}}{{tooltip}}{{/tooltip-on-parent}}
-      {{/if}}
       {{#if icon}}
       <span class="icon">
         {{ui-icon icon=icon spin=iconSpin pulse=iconPulse}}

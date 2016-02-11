@@ -5,7 +5,7 @@ export default Ember.Component.extend({
   layout,
   tagName: 'button',
   attributeBindings: ['type', 'disabled', 'style'],
-  classNameBindings: ['_class'],
+  classNameBindings: ['_class', 'active'],
 
   _class: Ember.computed('mood', 'outline', 'size', function() {
     const {mood, outline, size} = this.getProperties('mood', 'outline', 'size');

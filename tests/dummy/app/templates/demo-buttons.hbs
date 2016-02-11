@@ -1,1 +1,109 @@
-{{outlet}}
+<p>
+  <br>
+</p>
+{{#markdown-convert style='github'}}
+  ## Overview: `ui-buttons`
+
+  The diagram below attempts to illustrate the various properties that make up the state of a `ui-buttons` component. In short, this component brings either buttons or toggle-buttons into a working group that are both visually bound and also work in concert to create an array of "values".
+{{/markdown-convert}}
+<div style='text-align: center; margin: 15px 0'>
+  <img src='/images/ui-buttons.png' style='height: 432px'>
+</div>
+{{#markdown-convert style='github'}}
+  ## Demo: _inline use_
+{{/markdown-convert}}
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-buttons
+      buttons='Foo,Bar,Baz 2'
+      name='very-basic'
+      onChange=(route-action 'onChange')
+    }}
+  </div>
+  <div class="col-xs-4">
+    <b>Very Basic</b>
+    <br>
+  <pre><code>\{{ui-buttons
+  buttons='Foo,Bar,Baz 2'
+  onChange=(route-action 'onChange')
+}}</code></pre>
+    <hr width='100%'>
+    Container value is: {{veryBasic}}
+
+    {{#markdown-convert style='github'}}
+    > **Note:** because the container doesn't send in the `values` attribute it has no ability to directly _set_ the values itself, only to "vote" to accept changes when the `onChange` event is fired
+    {{/markdown-convert}}
+  </div>
+  <div class="col-xs-5">
+    {{#markdown-convert style='github'}}
+    The simplist of scenarios but it is useful to see how quickly one can setup a group of buttons.
+
+    One thing to note is that when creating buttons this way it will parse the `buttons` string and "dasherize" each item to create a value. If you click on the `Baz 2` titled button you'll see that the value is `baz-2`. For the others the first letter is not capitalized.
+
+    Also note that the "cardinality" of a default button group is `0:1` which means it doesn't need any buttons selected but can have only 1 maximum. This will be discussed more later.
+    {{/markdown-convert}}
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-buttons
+      buttons='Foo,Bar,Baz 2'
+      values=basicSetter
+      name='basic-setter'
+      onChange=(route-action 'onChange')
+    }}
+  </div>
+  <div class="col-xs-4">
+    <b>Explicit Values Setting</b>
+    <br>
+  <pre><code>\{{ui-buttons
+    buttons='Foo,Bar,Baz 2'
+    values=basicSetter
+    name='basic-setter'
+    onChange=(route-action 'onChange')
+  }}</code></pre>
+    <hr width='100%'>
+    Container value is: {{basicSetter}}
+
+    {{#markdown-convert style='github'}}
+    > **Note:** on route initialization, the value property -- `basicSetter` -- is set to: ['bar'].
+    {{/markdown-convert}}
+  </div>
+  <div class="col-xs-5">
+    {{#markdown-convert style='github'}}
+    We've changed this example in just one way, we've had the container pass in a "values" array. The implication is that the responsibility of state lies firmly with the container responding appropriately to the `onChange` event. It can, of course, change state itself when it feels like it.
+
+    At no time will the internal state mechanism of this component change `values`.
+    {{/markdown-convert}}
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-buttons
+      buttons='1,2,3,4,5'
+      cardinality='0:3'
+      name='cardinality-test'
+      onChange=(route-action 'onChange')
+      onError=(route-action 'onError')
+    }}
+  </div>
+  <div class="col-xs-4">
+    <b>Cardinality</b>
+    <br>
+  <pre><code>\{{ui-buttons
+  buttons='1,2,3,4,5'
+  cardinality='0:3'
+  name='cardinality-test'
+  onChange=(route-action 'onChange')
+  onError=(route-action 'onError')
+}}</code></pre>
+  </div>
+  <div class="col-xs-5">
+    {{#markdown-convert style='github'}}
+    Here we've opened up the cardinality a bit. You'll see you can choose any three buttons at a time but never more.
+    {{/markdown-convert}}
+  </div>
+</div>

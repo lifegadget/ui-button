@@ -61,6 +61,7 @@
   <div class="col-xs-3">
     {{ui-toggle-button
       title='Check In'
+      activation=true
       offIcon='square-o'
       onIcon='check-square-o'
       onToggle=(route-action 'onToggle')
@@ -68,13 +69,22 @@
   </div>
   <div class="col-xs-9">
     <span>
-      Icon Switching
-      <br>
-      <code>\{{ui-toggle-button title='Check In' offIcon='square-o' onIcon='check-square-o' onToggle=(action 'onToggle')}}</code>
+      <b>Icon Switching &amp; Activation</b>
       <br>
       <span class="text-muted">
-        Let's keep a static title but toggle the icon based on state.
+        We're doing two new things:
+        <ul>
+          <li>Let the icon change dynamically based on on/off states</li>
+          <li>Turn on 'activation' which means that the button will visually look <i>pressed</i> when in the <b>on</b> state</li>
+        </ul>
       </span>
+<pre><code>\{{ui-toggle-button
+  title='Check In'
+  activation=true
+  offIcon='square-o'
+  onIcon='check-square-o'
+  onToggle=(action 'onToggle')
+}}</code></pre>
     </span>
   </div>
 </div>
@@ -215,7 +225,7 @@
 </div>
 
 {{#markdown-convert style='github'}}
-  ### Proxy to Button
+  ### Proxy properties to `ui-button`
 
   A number of the properties of a button can also be set on the toggle button and will be proxied through to the button. Such as:
 
@@ -246,6 +256,49 @@
   size='large'
   width='100%'
 }}</code></pre>
+    </span>
+  </div>
+</div>
+
+{{#markdown-convert style='github'}}
+  ## Demo: _Block_ format
+
+  To have finer grained control it is often desirable to be able to use a component in _block_ format (aka, `\{{#my-component}}your stuff\{{/my-component}}`). Now in Ember 2.3.0+ this approach is even more powerful due to "contextual components". We'll offer that capability up here between the _containing_ `ui-toggle-button` and the _contained_ `ui-button`.
+
+  This use of contextual components is helpful but for a more powerful use-case take a look at `ui-buttons` where the 1:M nature of the relationship really opens up the power of contextual components.
+{{/markdown-convert}}
+
+<div class="row">
+  <div class="col-xs-3">
+    {{#ui-toggle-button
+      title='Check In'
+      tooltip='contextual components are great (and so are you)'
+      activation=true
+      offIcon='square-o'
+      onIcon='check-square-o'
+      onToggle=(route-action 'onToggle')
+      as |toggle|
+    }}
+      {{toggle.button}}
+    {{/ui-toggle-button}}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      <b>Overdone Simplicity</b>
+      <p class="text-muted">
+        In this first example we're showing the simpliest of simple. We've split into block format but because we're yielding a contextual component we have the luxery of not needing to wire-up any variables to the underlying. It just works.
+      </p>
+<pre><code>\{{#ui-toggle-button
+  title='Check In'
+  tooltip='contextual components are great (and so are you)'
+  activation=true
+  offIcon='square-o'
+  onIcon='check-square-o'
+  onToggle=(action 'onToggle')
+  as |toggle|
+}}
+  \{{toggle.button}}
+\{{/ui-toggle-button}}</code></pre>
     </span>
   </div>
 </div>

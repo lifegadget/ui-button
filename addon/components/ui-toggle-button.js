@@ -51,7 +51,6 @@ export default Ember.Component.extend({
   },
   setValuesOnTitle(conversion, titles) {
     conversion = simplifiedKey(conversion);
-    console.log('setValuesOnTitle: ', conversion);
     this.set('onValue', conversions[conversion](titles.on));
     this.set('offValue', conversions[conversion](titles.off));
   },
@@ -76,7 +75,6 @@ export default Ember.Component.extend({
       return offValue;
     }
 
-    console.log('validating value: ', value);
     if(isValid) {
       const newValue = value === onValue ? true : false;
       if(_disabledForInvalidValue) {
@@ -104,6 +102,7 @@ export default Ember.Component.extend({
     const possibilities = a([this.get('onValue'), this.get('offValue')]);
     this.attrs.onError({
       code: 'invalid-value',
+      name: this.get('name'),
       message: `The value passed in -- ${value} -- is not a valid state for this toggle-button. Valid states are: ${JSON.stringify(possibilities)}. Button has been disabled.`,
       details: {
         info: additional
@@ -165,6 +164,25 @@ export default Ember.Component.extend({
       return this.get('icon');
     }
   }),
+  /**
+   * Proxies this property to underlying button to create a "pressed"
+   * look and feel
+   */
+  active: computed('activation', 'toggled', {
+    set(_, value) {
+      return value;
+    },
+    get() {
+      const {activation, toggled} = this.getProperties('activation', 'toggled');
+      return activation ? toggled : false;
+    }
+  }),
+  /**
+   * Allows container to state whether an "on" state should activate
+   * the button (from a visual UI standpoint)
+   * @type {Boolean}
+   */
+  activiation: false,
 
   actions: {
     onClick(hash) {
@@ -184,11 +202,9 @@ export default Ember.Component.extend({
           // container has approved
           if(typeOf(value) === 'undefined') {
             // value was never sent in so just toggle the property
-            console.log('no value');
             this.toggleProperty('toggled');
           } else {
             // container is controlling the value
-            console.log('contrainer controlled');
             if (a([onValue, offValue]).contains(value)) {
               this.set('toggled', value === onValue ? true : false);
             } else {

@@ -271,6 +271,58 @@
 </div>
 
 {{#markdown-convert style='github'}}
+  ## Block Format &amp; Contextual Components
+
+  > **Note:** You'll need Ember 2.3.0+ to use contextual components
+
+  The `ui-button` component is a relatively simple component so the _inline_ format might suffice for many situations but as we've all come to know ... dynamic behaviour and demand are unpredictable beasts and that's why we have the "block format" to let us get _inside_ the component. Further, with contextual components we can start to re-use the underlying building blocks of a component.
+
+  In the case of `ui-button` the contextual components that are yielded to the block format are:
+
+  - `icon` - hands you an underlying `ui-icon` component which has the appropriate properties from the button wired up.
+  - `title` - the title property
+
+  > **Note:** strictly speaking _title_ is just a yielded _property_ not a "contextual component"
+
+  Let's use this in a simple example ...
+{{/markdown-convert}}
+
+<div class="row">
+  <div class="col-xs-3">
+    {{#ui-button
+      title='Press Me'
+      icon='hand-o-right'
+      size='large'
+      tooltip='I am a button'
+      as |button|
+    }}
+      {{button.title}}
+      {{button.icon}}
+    {{/ui-button}}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      <b>Block Format</b>
+      <br>
+      <span class="text-muted">
+        This simple example is actually a good real-life example in the sense that the _inline_ form always assumes that the icon is on the left, the title on the right. With this simple operation we've reversed that.
+      </span>
+<pre><code>\{{#ui-button
+  title='Press Me'
+  icon='hand-pointer-o'
+  size='large'
+  tooltip='I am a button'
+  as |button|
+}}
+  \{{button.title}}
+  \{{button.icon}}
+\{{/ui-button}}</code></pre>
+    </span>
+  </div>
+</div>
+
+
+{{#markdown-convert style='github'}}
   ## Actions
 
   > **Note:** This is a 2.x styled addon so it assumes closure actions.

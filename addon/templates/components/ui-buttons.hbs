@@ -1,0 +1,16 @@
+<div class="ui-buttons btn-group {{if (not-eq 'undefined' name) name}}" role="group" aria-label="{{name}}">
+  {{#if hasBlock}}
+    {{yield}}
+  {{else}}
+    {{#each _buttons as |button|}}
+      {{ui-button
+        size=size
+        mood=mood
+        value=button.value
+        title=button.title
+        active=(if (array-contains values button.value) true false)
+        onClick=(action 'onClick')
+      }}
+    {{/each}}
+  {{/if}}
+</div>

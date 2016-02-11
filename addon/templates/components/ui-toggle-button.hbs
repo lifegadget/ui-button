@@ -1,5 +1,28 @@
 {{#if hasBlock}}
-  {{yield}}
+{{yield (hash
+  button=(component 'ui-button'
+    icon=(if toggled onIcon offIcon)
+    mood=(if toggled onMood offMood)
+    value=(if toggled onValue offValue)
+    title=(if toggled onTitle offTitle)
+    active=active
+    onClick=(action 'onClick')
+    disabled=disabled
+    tooltip=tooltip
+    tooltipPlace=tooltipPlace
+    size=size
+    height=height
+    width=width
+  )
+  icon=(component 'ui-icon'
+    icon=(if toggled onIcon offIcon)
+    mood=(if toggled onMood offMood)
+    disabled=disabled
+  )
+  value=(if toggled onValue offValue)
+  title=(if toggled onTitle offTitle)
+  tooltip=tooltip
+)}}
 {{else}}
 
 {{ui-button
@@ -7,6 +30,7 @@
   mood=(if toggled onMood offMood)
   value=(if toggled onValue offValue)
   title=(if toggled onTitle offTitle)
+  active=active
   onClick=(action 'onClick')
   disabled=disabled
   tooltip=tooltip

@@ -24,6 +24,7 @@ export default Ember.Component.extend(Stylist, {
   size: null,
   iconPulse: false,
   iconSpin: false,
+  active: false,
   tooltipPlace: 'top',
   tooltipEffectClass: 'grow',
   tooltipTypeClass: 'light',
