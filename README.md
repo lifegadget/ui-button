@@ -1,6 +1,12 @@
 # [ui-button](https://github.com/lifegadget/ui-button) ![ ](https://travis-ci.org/lifegadget/ui-button.svg) [![npm version](https://badge.fury.io/js/ui-button.svg)](http://badge.fury.io/js/ui-button) [![Code Climate](https://codeclimate.com/github/lifegadget/ui-button/badges/gpa.svg)](https://codeclimate.com/github/lifegadget/ui-button)
 > Dancing, shiny buttons with Bootstrap styling.
 
+## Major Versions
+
+The 1.0.0 release is the first and last expected release in the 1.0 path. I am working on a v2 release and expect that to be available soon which will be a much leaner, more Ember 2.0 based implementation.
+
+Think of this `1.0.0` release as just a dependency update from `0.6.6`. If you're really committed to continuing use of 1.x and want to submit a PR I'm happy to accept those.
+
 ## Install ##
 
 ````bash
@@ -17,7 +23,7 @@ ember install ui-button
 
 For more details on the syntax check out the interactive demo:
 
-> [ui-button demo](http://current.development.ui-button.divshot.io)
+> [ui-button demo](http://ui-button-1.firebase.io)
 
 ## Dependencies ##
 
@@ -30,12 +36,12 @@ In addition though you should include the following:
     Install the Ember CLI Autoprefixer ... this will ensure that the CSS animations are transformed to the appropriate browser syntax. It's also just a really good idea to have this installed anyway. Install it by:
 
     ````bash
-    ember install:addon ember-cli-autoprefixer
+    ember install ember-cli-autoprefixer
     ````
 
 - Twitter Bootstrap
 
-    You'll want Twitter Bootstrap (SASS or otherwise) around to make everything look nice. You could style things yourself but this addon assumes a styling naming convention borrowed from Twitter. 
+    You'll want Twitter Bootstrap (SASS or otherwise) around to make everything look nice. You could style things yourself but this addon assumes a styling naming convention borrowed from Bootstrap.
 
 
 ## Version Compatibility
@@ -47,7 +53,7 @@ This may very well work with older version of Ember and Ember-CLI but it was int
 
 ## Repo Contribution
 
-We're open to your creative suggestions but please move past the "idea" stage 
+We're open to your creative suggestions but please move past the "idea" stage
 and send us a PR so we can incorporate your ideas without killing ourselves. :)
 
 ## Licensing
@@ -73,4 +79,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-

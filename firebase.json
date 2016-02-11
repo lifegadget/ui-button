@@ -1,5 +1,5 @@
 {
-  "firebase": "ui-button",
+  "firebase": "ui-button-1",
   "public": "dist",
   "ignore": [
     "firebase.json",

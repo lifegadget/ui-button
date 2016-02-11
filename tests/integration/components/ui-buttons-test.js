@@ -42,10 +42,11 @@ test('inline buttons created', function(assert) {
   this.render(hbs`
     {{ui-buttons buttons='One,Two,Three'}}
   `);
-
-  assert.equal(this.$('.btn').length, 3, 'there are three buttons');
-  assert.equal(this.$('.btn:first').text().trim(), 'One', 'title is "One"');
-  assert.equal(this.$('.btn:last').text().trim(), 'Three', 'title is "Three"');
+  run.next(() => {
+    assert.equal(this.$('.btn').length, 3, 'there are three buttons');
+    assert.equal(this.$('.btn:first').text().trim(), 'One', 'title is "One"');
+    assert.equal(this.$('.btn:last').text().trim(), 'Three', 'title is "Three"');    
+  });
 });
 
 test('empty inline buttons array handled', function(assert) {
