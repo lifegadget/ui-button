@@ -91,7 +91,7 @@
     }}
   </div>
   <div class="col-xs-4">
-    <b>Cardinality</b>
+    <b>Cardinality Enforcement</b>
     <br>
   <pre><code>\{{ui-buttons
   buttons='1,2,3,4,5'
@@ -103,7 +103,57 @@
   </div>
   <div class="col-xs-5">
     {{#markdown-convert style='github'}}
-    Here we've opened up the cardinality a bit. You'll see you can choose any three buttons at a time but never more.
+    Here we've opened up the cardinality a bit. You'll see you can choose any three buttons at a time but never more. Also note, that unlike the `0:1` and `1:1` cardinalities, the button group will not deselect a value to open up room for another selection. This is by design and best addresses most of the use-cases.
+
+    > Note: the _exact_ rule is that whenever min and max cardinality are the same _or_ max cardinality is 1 it will rotate values otherwise not. The special case is 0:1 which rotates as well.
+
+    If you want to override the queuing strategy you can change the `rotate` property to either null, "fifo" or "lifo" (indicating which queuing strategy to use).
+    {{/markdown-convert}}
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-xs-3">
+    {{#if initCardinality}}
+    {{ui-buttons
+      buttons='1,2,3,4,5'
+      values=cardinalityMin
+      cardinality='2:2'
+      name='cardinality-min'
+      onChange=(route-action 'onChange')
+      onError=(route-action 'onError')
+    }}
+    {{else}}
+      <i>press button to initialise</i>
+    {{/if}}
+
+  </div>
+  <div class="col-xs-4">
+    <b>Cardinality Out-of-bounds</b>
+    <br>
+  <pre><code>\{{ui-buttons
+  buttons='1,2,3,4,5'
+  cardinality='2:2'
+  name='cardinality-min'
+  onChange=(route-action 'onChange')
+  onError=(route-action 'onError')
+}}</code></pre>
+
+  {{ui-toggle-button
+    value=initCardinality
+    name='init-cardinality'
+    defaultValue=false
+    isDDAU=false
+    off='initialize component'
+    on='destroy component'
+  }}
+  </div>
+  <div class="col-xs-5">
+    {{#markdown-convert style='github'}}
+    In cases where a minimum or maximum cardinality is not met by the `values` array during initialization -- or otherwise -- the **onError** event will be fired with a `code` of 'xxx-cardinality-not-met' to let the container distinguish it from a user attempt to move outside these bounds (aka, 'xxx-cardinality-limit' codes). It will also pass a `suggestedValues` array which achieves cardinality in a simple but effective manner.
+
+    In this example, our **values** starts an empty array on the controller and the **onError** action will accept the suggested values. If the container wants to take a more contextual response to this event they can do whatever they like.
     {{/markdown-convert}}
   </div>
 </div>

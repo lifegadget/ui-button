@@ -61,6 +61,17 @@ import layout from '../templates/components/ui-buttons';
 export default Ember.Component.extend({
   layout,
   tagName: '',
+  init(...args) {
+    const {_cardinality, values} = this.getProperties('_cardinality', 'values');
+    this._super(args);
+    if(_cardinality.min > values.length) {
+      this.requestMinimumCardinality();
+    }
+    if(_cardinality.max < values.length) {
+      this.requireMaximumCardinality();
+    }
+  },
+
   buttons: null,
   _buttons: computed('buttons', function() {
     const {buttons} = this.getProperties('buttons');
@@ -76,6 +87,21 @@ export default Ember.Component.extend({
   name: 'undefined',
   mood: 'secondary',
   size: 'default',
+  tooltipPlace: 'top',
+  isDDAU: true, // allows for manual override to make a non-DDAU component
+  rotate: computed({
+    set(_, value) {
+      return value;
+    },
+    get() {
+      const {_cardinality} = this.getProperties('_cardinality');
+      if (_cardinality.min === _cardinality.max || _cardinality.max === 1) {
+        return 'fifo';
+      } else {
+        return 'null';
+      }
+    }
+  }),
 
   addValue(value) {
     const {values, name} = this.getProperties('values', 'name');
@@ -101,15 +127,22 @@ export default Ember.Component.extend({
       this.notBoundOnChange();
     }
   },
+  
   /**
-   * Replace the values array with a new single element array
+   * Rotate a new value in for old based on `rotate` property (fifo, lifo)
    */
-  setValue(value) {
-    const {values, name} = this.getProperties('values', 'name');
-    const newValues = [value];
+  rotateValue(value) {
+    const {values, name, rotate} = this.getProperties('values', 'name', 'rotate');
+    const newValues = values.slice(0);
+    if (rotate === 'fifo') {
+      newValues.shift();
+    } else {
+      newValues.pop();
+    }
+    newValues.push(value);
     if (this.attrs.onChange) {
       let response = this.attrs.onChange({
-        code: 'set-value',
+        code: 'rotate-value',
         values: newValues,
         oldValues: values,
         context: this,
@@ -126,6 +159,7 @@ export default Ember.Component.extend({
       this.notBoundOnChange();
     }
   },
+
   removeValue(value) {
     const {values, name} = this.getProperties('values', 'name');
     const newValues = values.slice(0).filter(v => v !== value);
@@ -150,6 +184,7 @@ export default Ember.Component.extend({
       this.notBoundOnChange();
     }
   },
+
   rejectValue(action, value, code) {
     const messageLookup = {
       'max-cardinality-limit': `Attempt to add "${value}" failed because the maximum cardinality was breached [${get(this, '_cardinality.max')}]`,
@@ -159,14 +194,50 @@ export default Ember.Component.extend({
     if (this.attrs.onError) {
       this.attrs.onError({
         code: code,
+        subCode: 'rejected',
+        valueAttempted: value,
         message: messageLookup[code],
-        context: this,
-        details: {
-          valueAttempted: value
-        }
+        context: this
       });
     }
   },
+
+  requestMinimumCardinality() {
+    if(this.attrs.onError) {
+      const {name,elementId,values,_cardinality,_buttons} = this.getProperties('name', 'elementId', 'values', '_cardinality','_buttons');
+      let delta = _cardinality.min - values.length;
+      const possibleValues = _buttons.map(b=>b.value);
+      const suggestedValues = a(values.slice(0));
+      possibleValues.forEach(p => {
+        if(!suggestedValues.contains(p) && delta > 0) {
+          suggestedValues.pushObject(p);
+          delta--;
+        }
+      });
+
+      this.attrs.onError({
+        code: 'min-cardinality-not-met',
+        message: `The ${elementId}/${name} component -- with ${values.length} buttons -- does not meet minimum cardinality requirements of ${get(this, '_cardinality.min')}`,
+        suggestedValues: suggestedValues,
+        context: this
+      });
+    }
+  },
+
+  requireMaximumCardinality() {
+    if(this.attrs.onError) {
+      const {name,elementId,values,_cardinality} = this.getProperties('name', 'elementId', 'values', '_cardinality');
+
+      this.attrs.onError({
+        code: 'max-cardinality-not-met',
+        message: `The ${elementId}/${name} component -- with ${values.length} buttons -- does not meet minimum cardinality requirements of ${get(this, '_cardinality.min')}`,
+        context: this,
+        max: _cardinality.max,
+        current: values.length
+      });
+    }
+  },
+
   notBoundOnChange() {
     console.warn(`The container of ${this.elementId}/${name} did not bind to onChange()`);
     this.set('disabled', true);
@@ -183,17 +254,14 @@ export default Ember.Component.extend({
 
   actions: {
     onClick(hash) {
-      const {_cardinality, values} = this.getProperties('_cardinality', 'values');
-      console.log(`click: ${hash.value}`);
-      console.log(hash);
+      const {_cardinality, values, rotate} = this.getProperties('_cardinality', 'values', 'rotate');
       const action = a(values).contains(hash.value) ? 'remove' : 'add';
       if(action === 'add') {
         // ADD
-        console.log('cardinality:', _cardinality);
         if(_cardinality.max > values.length) {
           this.addValue(hash.value);
-        } else if (_cardinality.max === 1) {
-          this.setValue(hash.value);
+        } else if (rotate) {
+          this.rotateValue(hash.value);
         } else {
           this.rejectValue(action, hash.value, 'max-cardinality-limit');
         }

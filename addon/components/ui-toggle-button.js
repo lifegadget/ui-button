@@ -22,14 +22,18 @@ export default Ember.Component.extend({
   layout,
   tagName: '',
   _initialized: false,
+  isDDAU: true, // allows switching to a non-DDAU mode (not recommended in most cases)
+
   init(...args) {
     const {value, defaultValue, onValue, offValue, onTitle, offTitle, valuesAre} = this.getProperties('value', 'defaultValue', 'onValue', 'offValue', 'onTitle', 'offTitle', 'valuesAre');
     this._super(args);
     if (valuesAre) {
       this.setValuesOnTitle(valuesAre, {on: onTitle, off: offTitle});
     }
-    if (defaultValue && !value) {
+    if (typeOf(defaultValue) !== 'undefined' && typeOf(value) === 'undefined') {
       this.setDefaultValue(defaultValue);
+    } else if(!this.DDAU && typeOf(value) === 'undefined') {
+      this.setDefaultValue(offValue);
     }
     if (typeOf(value) !== 'undefined' && !a([onValue, offValue]).contains(value) && this.attrs.onError) {
       this.throwInvalidValue(value, 'at inialization');
@@ -37,14 +41,21 @@ export default Ember.Component.extend({
     this._initialized = true;
   },
   setDefaultValue(defaultValue) {
-    let approved = this.attrs.onToggle({
-      code: 'default-value',
-      message: `setting default value to "${defaultValue}"`,
-      name: this.get('name'),
-      value: defaultValue,
-      oldValue: undefined,
-      title: this.getCurrentTitle()
-    });
+    let approved = false;
+    if(!this.isDDAU) {
+      this.set('value', defaultValue);
+      approved = true;
+    }
+    if(this.attrs.onToggle) {
+      approved = this.attrs.onToggle({
+        code: 'default-value',
+        message: `setting default value to "${defaultValue}"`,
+        name: this.get('name'),
+        value: defaultValue,
+        oldValue: undefined,
+        title: this.getCurrentTitle()
+      });
+    }
     if (approved !== false) {
       this.set('toggled', defaultValue === this.get('onValue') ? true : false);
     }
@@ -188,6 +199,9 @@ export default Ember.Component.extend({
     onClick(hash) {
       const toggled = this.get('toggled');
       const {value, onValue, offValue} = this.getProperties('value', 'onValue', 'offValue');
+      if(!this.isDDAU) {
+        this.set('value', !toggled ? onValue : offValue);
+      }
       if(this.attrs.onToggle) {
         if(this.attrs.onToggle({
           code: 'toggle-value',
@@ -201,21 +215,24 @@ export default Ember.Component.extend({
         }) !== false) {
           // container has approved
           if(typeOf(value) === 'undefined') {
-            // value was never sent in so just toggle the property
+            // value was never sent in so toggle the property based on containers acceptance
             this.toggleProperty('toggled');
           } else {
             // container is controlling the value
             if (a([onValue, offValue]).contains(value)) {
               this.set('toggled', value === onValue ? true : false);
             } else {
-              // error condition, disable button
-
+              console.warn('Button was set to an invalid value based on user click, this should never happen.');
             }
           }
         }
       } else {
-        console.warn(`no one is listening to toggle button ${this.elementId}'s onToggle event`);
-        this.toggleProperty('toggled');
+        if(this.isDDAU) {
+          console.warn(`no one is listening to toggle button ${this.elementId}'s onToggle event`);
+        } else {
+          // the bad old way (which sometimes is irristably easy)
+          this.set('value', !toggled ? onValue : offValue);
+        }
       }
     }
   }
