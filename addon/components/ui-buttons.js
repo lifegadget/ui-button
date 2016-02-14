@@ -29,7 +29,7 @@ const parse = {
     }
     return {title: name, value: value};
   },
-  nameValue: (name, value) => {
+  nameValue: ([name, value]) => {
     return {title: name, value: value};
   },
   dasherizedNameValue: (name) => {
