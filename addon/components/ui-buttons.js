@@ -85,8 +85,10 @@ export default Ember.Component.extend({
   values: [],
   disabled: false,
   name: 'undefined',
-  mood: 'secondary',
-  size: 'default',
+  activeMood: 'secondary',
+  inactiveMood: 'secondary',
+  activeSize: 'default',
+  inactiveSize: 'default',
   tooltipPlace: 'top',
   isDDAU: true, // allows for manual override to make a non-DDAU component
   rotate: computed({
@@ -127,7 +129,7 @@ export default Ember.Component.extend({
       this.notBoundOnChange();
     }
   },
-  
+
   /**
    * Rotate a new value in for old based on `rotate` property (fifo, lifo)
    */

@@ -1,5 +1,7 @@
 @import 'bootstrap-flex';
-
+@import 'mixins/_nav-divider';
+@import 'mixins/_buttons';
+@import 'mixins/_grid';
 .ui-markdown {
   margin: 15px 0;
 }

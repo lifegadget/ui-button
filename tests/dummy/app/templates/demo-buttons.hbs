@@ -157,3 +157,123 @@
     {{/markdown-convert}}
   </div>
 </div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-buttons
+      buttons='1,2,3'
+      name='active-styling'
+      activeMood='success'
+      activeIcon='check-circle'
+      inactiveIcon='circle'
+      onChange=(route-action 'onChange')
+      onError=(route-action 'onError')
+    }}
+  </div>
+  <div class="col-xs-4">
+    <b>Active / Inactive Styling</b>
+    <br>
+  <pre><code>\{{ui-buttons
+    buttons='1,2,3'
+    name='active-styling'
+    activeMood='success'
+    activeIcon='check-circle'
+    inactiveIcon='circle-o'
+    onChange=(route-action 'onChange')
+    onError=(route-action 'onError')
+  }}</code></pre>
+  </div>
+  <div class="col-xs-5">
+    {{#markdown-convert style='github'}}
+    Buttons in the group can either be "active" or "inactive" and it is possible to state variations in `mood`, `icon`, or `size` based on this.
+    {{/markdown-convert}}
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-buttons
+      buttons='1,2,3'
+      name='global-styling'
+      mood='warning'
+      size='large'
+      icon='circle-o'
+      onChange=(route-action 'onChange')
+      onError=(route-action 'onError')
+    }}
+  </div>
+  <div class="col-xs-4">
+    <b>Global Styling</b>
+    <br>
+  <pre><code>\{{ui-buttons
+    buttons='1,2,3'
+    name='global-styling'
+    mood='warning'
+    size='large'
+    icon='circle'
+    onChange=(route-action 'onChange')
+    onError=(route-action 'onError')
+  }}</code></pre>
+  </div>
+  <div class="col-xs-5">
+    {{#markdown-convert style='github'}}
+    Buttons in the group can either be "active" or "inactive" and it is possible to state variations in `mood`, `icon`, or `size` based on this.
+    {{/markdown-convert}}
+  </div>
+</div>
+
+{{#markdown-convert style='github'}}
+## Demo: _block_ style invocation
+
+And you thought inline was cool, just wait until you see block components featuring their new best friend "contextual components". Here are the components that ui-buttons exposes:
+
+- `button` - a fully wired version of a `ui-button` component
+- `toggle` - a fully wired version of a `ui-toggle-button` component
+- `~~dropdown~~` - (coming soon) a fully wired version of a `ui-dropdown-button` component
+- `cardinality` - an object with _min_ and _max_ properties
+- `values` - an array of the values that are "active"
+- `buttons` - an array of buttons config
+
+Let's get this party started ...
+{{/markdown-convert}}
+<div class="row">
+  <div class="col-xs-3">
+    {{#ui-buttons
+      name='block-party'
+      activeIcon='check-circle'
+      inactiveIcon='circle-o'
+      activeMood='info'
+      onChange=(route-action 'onChange')
+      onError=(route-action 'onError')
+      as |group|
+    }}
+      {{group.button title='Foo'}}
+      {{group.button title='Bar'}}
+      {{group.button title='Baz'}}
+    {{/ui-buttons}}
+  </div>
+  <div class="col-xs-4">
+    <b>Global Styling</b>
+    <br>
+  <pre><code>\{{#ui-buttons
+    name='block-party'
+    activeIcon='check-circle'
+    inactiveIcon='circle-o'
+    activeMood='info'
+    onChange=(route-action 'onChange')
+    onError=(route-action 'onError')
+    as |group|
+  }}
+    \{{group.button title='Foo' value='foo'}}
+    \{{group.button title='Bar' value='bar'}}
+    \{{group.button title='Baz' value='foo'}}
+  \{{/ui-buttons}}
+
+</code></pre>
+  </div>
+  <div class="col-xs-5">
+    {{#markdown-convert style='github'}}
+    Buttons in the group can either be "active" or "inactive" and it is possible to state variations in `mood`, `icon`, or `size` based on this.
+    {{/markdown-convert}}
+  </div>
+</div>

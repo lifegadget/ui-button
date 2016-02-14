@@ -1,11 +1,33 @@
 <div class="ui-buttons btn-group {{if (not-eq 'undefined' name) name}}" role="group" aria-label="{{name}}">
   {{#if hasBlock}}
-    {{yield}}
+    {{yield (hash
+      button=(component 'ui-button'
+        size=(if size size (
+          if (array-contains values button.value) activeSize inactiveSize)
+        )
+        mood=(if mood mood (
+          if (array-contains values button.value) activeMood inactiveMood)
+        )
+        icon=(if icon icon (
+          if (array-contains values button.value) activeIcon inactiveIcon)
+        )
+        tooltipPlace=tooltipPlace
+        active=(if (array-contains values button.value) true false)
+        onClick=(action 'onClick')
+      )
+    )}}
   {{else}}
     {{#each _buttons as |button|}}
       {{ui-button
-        size=size
-        mood=mood
+        size=(if size size (
+          if (array-contains values button.value) activeSize inactiveSize)
+        )
+        mood=(if mood mood (
+          if (array-contains values button.value) activeMood inactiveMood)
+        )
+        icon=(if icon icon (
+          if (array-contains values button.value) activeIcon inactiveIcon)
+        )
         value=button.value
         title=button.title
         tooltip=button.tooltip
