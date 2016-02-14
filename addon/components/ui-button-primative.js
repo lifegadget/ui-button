@@ -4,7 +4,7 @@ import layout from '../templates/components/ui-button-primative';
 export default Ember.Component.extend({
   layout,
   tagName: 'button',
-  attributeBindings: ['type', 'disabled', 'style'],
+  attributeBindings: ['type', 'disabled', 'style', 'value'],
   classNameBindings: ['_class', 'active'],
 
   _class: Ember.computed('mood', 'outline', 'size', function() {

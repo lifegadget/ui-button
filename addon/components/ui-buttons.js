@@ -100,7 +100,7 @@ export default Ember.Component.extend({
       if (_cardinality.min === _cardinality.max || _cardinality.max === 1) {
         return 'fifo';
       } else {
-        return 'null';
+        return null;
       }
     }
   }),
@@ -263,6 +263,7 @@ export default Ember.Component.extend({
         if(_cardinality.max > values.length) {
           this.addValue(hash.value);
         } else if (rotate) {
+          console.log('rotate is: ', rotate);
           this.rotateValue(hash.value);
         } else {
           this.rejectValue(action, hash.value, 'max-cardinality-limit');

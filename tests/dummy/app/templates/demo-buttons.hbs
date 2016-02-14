@@ -49,9 +49,9 @@
 <div class="row">
   <div class="col-xs-3">
     {{ui-buttons
-      buttons='Foo,Bar,Baz 2'
-      values=basicSetter
-      name='basic-setter'
+      buttons='Foo::monkey,Bar::tiger,Baz 2::lion'
+      values=explicitSetter
+      name='explicit-setter'
       onChange=(route-action 'onChange')
     }}
   </div>
@@ -60,12 +60,12 @@
     <br>
   <pre><code>\{{ui-buttons
     buttons='Foo::monkey,Bar::tiger,Baz 2::lion'
-    values=basicSetter
+    values=explicitSetter
     name='explicit-setter'
     onChange=(route-action 'onChange')
   }}</code></pre>
     <hr width='100%'>
-    Container value is: {{basicSetter}}
+    Container value is: {{explicitSetter}}
 
     {{#markdown-convert style='github'}}
     > **Note:** on route initialization, the value property -- `basicSetter` -- is set to: ['bar'].
@@ -73,7 +73,7 @@
   </div>
   <div class="col-xs-5">
     {{#markdown-convert style='github'}}
-    We've changed this example in just one way, we've had the container pass in a "values" array. The implication is that the responsibility of state lies firmly with the container responding appropriately to the `onChange` event. It can, of course, change state itself when it feels like it.
+    In this example we've not just stated _titles_ for the buttons but explicitly stated the _values_. The double colon (::) indicates a string value but you may also use a triple colon to indicate .
 
     At no time will the internal state mechanism of this component change `values`.
     {{/markdown-convert}}
@@ -245,29 +245,29 @@ Let's get this party started ...
       activeMood='info'
       onChange=(route-action 'onChange')
       onError=(route-action 'onError')
-      as |group|
+      as |g|
     }}
-      {{group.button title='Foo'}}
-      {{group.button title='Bar'}}
-      {{group.button title='Baz'}}
+      {{g.button title='Foo'}}
+      {{g.button title='Bar'}}
+      {{g.button title='Baz'}}
     {{/ui-buttons}}
   </div>
   <div class="col-xs-4">
     <b>Global Styling</b>
     <br>
   <pre><code>\{{#ui-buttons
-    name='block-party'
-    activeIcon='check-circle'
-    inactiveIcon='circle-o'
-    activeMood='info'
-    onChange=(route-action 'onChange')
-    onError=(route-action 'onError')
-    as |group|
-  }}
-    \{{group.button title='Foo' value='foo'}}
-    \{{group.button title='Bar' value='bar'}}
-    \{{group.button title='Baz' value='foo'}}
-  \{{/ui-buttons}}
+  name='block-party'
+  activeIcon='check-circle'
+  inactiveIcon='circle-o'
+  activeMood='info'
+  onChange=(route-action 'onChange')
+  onError=(route-action 'onError')
+  as |g|
+}}
+  \{{g.button title='Foo' value='foo'}}
+  \{{g.button title='Bar' value='bar'}}
+  \{{g.button title='Baz' value='foo'}}
+\{{/ui-buttons}}
 
 </code></pre>
   </div>

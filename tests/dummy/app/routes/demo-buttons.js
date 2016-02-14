@@ -8,6 +8,7 @@ export default Ember.Route.extend({
   setupController(controller, post) {
     this._super(controller, post);
     controller.set('basicSetter', ['bar']);
+    controller.set('explicitSetter', ['monkey']);
     controller.set('cardinalityMin', []);
   },
   actions: {
