@@ -92,6 +92,35 @@
 <div class="row">
   <div class="col-xs-3">
     {{ui-toggle-button
+      value=mutable
+      off='Simple is what'
+      on='Simple does'
+      onIcon='smile-o'
+      onToggle=(mut mutable)
+    }}
+  </div>
+  <div class="col-xs-9">
+    <span>
+      <p>
+        <b>Leveraging the {{ui-label 'mut'}} helper</b>
+      </p>
+      <p class="text-muted">
+        Let's face it, we're in a hurry. Sometimes setting up our own action that handles all the beautiful properties that  <b>onToggle</b> provides us is a great experience but sometimes -- particularly when it comes to a toggle switch -- we just want the damn thing to toggle.
+      </p>
+      <pre><code>\{{ui-toggle-button
+  value=mutable
+  off='Simple is what'
+  on='Simple does'
+  onIcon='smile-o'
+  onToggle=(mut mutable)
+}}</code></pre>
+    </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3">
+    {{ui-toggle-button
       on='Angry'
       off='Happy'
       onMood='danger'

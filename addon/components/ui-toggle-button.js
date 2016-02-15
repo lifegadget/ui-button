@@ -46,7 +46,10 @@ export default Ember.Component.extend({
       this.set('value', defaultValue);
       approved = true;
     }
-    if(this.attrs.onToggle) {
+    if(this.attrs.onToggle.update) {
+      this.attrs.onToggle.update(defaultValue);
+      approved = true;
+    } else if(this.attrs.onToggle) {
       approved = this.attrs.onToggle({
         code: 'default-value',
         message: `setting default value to "${defaultValue}"`,
@@ -56,6 +59,7 @@ export default Ember.Component.extend({
         title: this.getCurrentTitle()
       });
     }
+
     if (approved !== false) {
       this.set('toggled', defaultValue === this.get('onValue') ? true : false);
     }
@@ -203,7 +207,9 @@ export default Ember.Component.extend({
         this.set('value', !toggled ? onValue : offValue);
       }
       if(this.attrs.onToggle) {
-        if(this.attrs.onToggle({
+        if(this.attrs.onToggle.update) {
+          this.attrs.onToggle.update(!toggled);
+        } else if(this.attrs.onToggle({
           code: 'toggle-value',
           message: `setting value from "${hash.value}" to "${!toggled ? onValue : offValue}"`,
           name: this.get('name'),
