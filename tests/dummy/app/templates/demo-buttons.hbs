@@ -115,45 +115,57 @@
 
 <div class="row">
   <div class="col-xs-3">
-    {{#if initCardinality}}
+    {{#if showComponent}}
     {{ui-buttons
       buttons='1,2,3,4,5'
-      values=cardinalityMin
+      values=initCardinality
       cardinality='2:2'
-      name='cardinality-min'
+      name='init-cardinality'
       onChange=(route-action 'onChange')
       onError=(route-action 'onError')
     }}
     {{else}}
       <i>press button to initialise</i>
     {{/if}}
+    <p>
+      {{#markdown-convert style='github'}}
+      > **onError** will trigger codes:
+      > `min-cardinality-not-met`, `max-cardinality-not-met`
 
+      > **onChange** will trigger codes:
+      > `cardinality-suggestion`
+      {{/markdown-convert}}
+    </p>
   </div>
   <div class="col-xs-4">
-    <b>Cardinality Out-of-bounds</b>
-    <br>
+    <p>
+      <b>Cardinality Out-of-bounds</b>
+    </p>
   <pre><code>\{{ui-buttons
-  buttons='1,2,3,4,5'
-  cardinality='2:2'
-  name='cardinality-min'
-  onChange=(route-action 'onChange')
-  onError=(route-action 'onError')
-}}</code></pre>
-
-  {{ui-toggle-button
-    value=initCardinality
+    buttons='1,2,3,4,5'
+    values=initCardinality
+    cardinality='2:2'
     name='init-cardinality'
-    defaultValue=false
-    isDDAU=false
+    onChange=(route-action 'onChange')
+    onError=(route-action 'onError')
+  }}</code></pre>
+  {{ui-toggle-button
+    value=showComponent
     off='initialize component'
     on='destroy component'
+    onToggle=(mut showComponent)
   }}
   </div>
   <div class="col-xs-5">
     {{#markdown-convert style='github'}}
-    In cases where a minimum or maximum cardinality is not met by the `values` array during initialization -- or otherwise -- the **onError** event will be fired with a `code` of 'xxx-cardinality-not-met' to let the container distinguish it from a user attempt to move outside these bounds (aka, 'xxx-cardinality-limit' codes). It will also pass a `suggestedValues` array which achieves cardinality in a simple but effective manner.
+    This example illustrates when the container's `values` array is set to a value which exceeds the cardinality constraints.  This may be most likely during _initialization_ but could be at any time of the components lifecycle.
 
-    In this example, our **values** starts an empty array on the controller and the **onError** action will accept the suggested values. If the container wants to take a more contextual response to this event they can do whatever they like.
+    When this occurs the first response is a firing of an **onError** action. This is for notification of what has happened as well as providing a "suggested" set of values which _does_ fit into the constraints. So long as the container does not pass back a `false` value then a **onChange** action will be fired next. If _false_ is received back the button group will disable itself as it can no longer operate within the constrains that its been asked to.
+
+    > Note: if the container is not listening on **onError** then the **onChange** will always fire
+
+    The **onChange** is then fired to update the group to an acceptable cardinality value. This allows `mut`-based actions to just get themselves into the right state (or at least an acceptable state) and less trusting containers can write an action handler that call out by the `code` of the event and then decide the best course of action.
+
     {{/markdown-convert}}
   </div>
 </div>
@@ -174,14 +186,14 @@
     <b>Active / Inactive Styling</b>
     <br>
   <pre><code>\{{ui-buttons
-    buttons='1,2,3'
-    name='active-styling'
-    activeMood='success'
-    activeIcon='check-circle'
-    inactiveIcon='circle-o'
-    onChange=(route-action 'onChange')
-    onError=(route-action 'onError')
-  }}</code></pre>
+  buttons='1,2,3'
+  name='active-styling'
+  activeMood='success'
+  activeIcon='check-circle'
+  inactiveIcon='circle-o'
+  onChange=(route-action 'onChange')
+  onError=(route-action 'onError')
+}}</code></pre>
   </div>
   <div class="col-xs-5">
     {{#markdown-convert style='github'}}
@@ -203,17 +215,18 @@
     }}
   </div>
   <div class="col-xs-4">
-    <b>Global Styling</b>
-    <br>
+    <p>
+      <b>Global Styling</b>
+    </p>
   <pre><code>\{{ui-buttons
-    buttons='1,2,3'
-    name='global-styling'
-    mood='warning'
-    size='large'
-    icon='circle'
-    onChange=(route-action 'onChange')
-    onError=(route-action 'onError')
-  }}</code></pre>
+  buttons='1,2,3'
+  name='global-styling'
+  mood='warning'
+  size='large'
+  icon='circle'
+  onChange=(route-action 'onChange')
+  onError=(route-action 'onError')
+}}</code></pre>
   </div>
   <div class="col-xs-5">
     {{#markdown-convert style='github'}}

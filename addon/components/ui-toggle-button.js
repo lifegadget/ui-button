@@ -46,7 +46,7 @@ export default Ember.Component.extend({
       this.set('value', defaultValue);
       approved = true;
     }
-    if(this.attrs.onToggle.update) {
+    if(this.attrs.onToggle && this.attrs.onToggle.update) {
       this.attrs.onToggle.update(defaultValue);
       approved = true;
     } else if(this.attrs.onToggle) {
@@ -136,7 +136,7 @@ export default Ember.Component.extend({
       return value;
     },
     get() {
-      return this.get('title');
+      return this.get('title') || 'on';
     }
   }),
   offTitle: computed('title', {
@@ -144,7 +144,7 @@ export default Ember.Component.extend({
       return value;
     },
     get() {
-      return this.get('title');
+      return this.get('title') || 'off';
     }
   }),
   onMood: computed('mood', {
@@ -207,7 +207,7 @@ export default Ember.Component.extend({
         this.set('value', !toggled ? onValue : offValue);
       }
       if(this.attrs.onToggle) {
-        if(this.attrs.onToggle.update) {
+        if(this.attrs.onToggle && this.attrs.onToggle.update) {
           this.attrs.onToggle.update(!toggled);
         } else if(this.attrs.onToggle({
           code: 'toggle-value',

@@ -64,12 +64,15 @@ export default Ember.Component.extend({
   init(...args) {
     const {_cardinality, values} = this.getProperties('_cardinality', 'values');
     this._super(args);
-    if(_cardinality.min > values.length) {
-      this.requestMinimumCardinality();
-    }
-    if(_cardinality.max < values.length) {
-      this.requireMaximumCardinality();
-    }
+    run.schedule('afterRender', () => {
+
+      if(_cardinality.min > values.length) {
+        this.requestMinimumCardinality();
+      }
+      if(_cardinality.max < values.length) {
+        this.requireMaximumCardinality();
+      }
+    });
   },
 
   buttons: null,
@@ -109,8 +112,8 @@ export default Ember.Component.extend({
     const {values, name} = this.getProperties('values', 'name');
     const newValues = values.slice(0); // clone
     newValues.push(value);
-    if (this.attrs.onChange) {
-      let response = this.attrs.onChange({
+
+    return this.handleMutationOrAction({
         code: 'add-value',
         values: newValues,
         oldValues: values,
@@ -118,16 +121,7 @@ export default Ember.Component.extend({
         context: this,
         name: name,
         value: newValues.join(', ')
-      });
-      if(!this.attrs.values && response !== false ) {
-        // if container isn't bound to values then take their
-        // approval as right to go ahead with the change
-        this.set('values', newValues);
-        // Note: if they are bound to values then container is responsible for updating
-      }
-    } else {
-      this.notBoundOnChange();
-    }
+    });
   },
 
   /**
@@ -142,49 +136,50 @@ export default Ember.Component.extend({
       newValues.pop();
     }
     newValues.push(value);
-    if (this.attrs.onChange) {
-      let response = this.attrs.onChange({
-        code: 'rotate-value',
-        values: newValues,
-        oldValues: values,
-        context: this,
-        name: name,
-        value: newValues.join(', ')
-      });
-      if(!this.attrs.values && response !== false ) {
-        // if container isn't bound to values then take their
-        // approval as right to go ahead with the change
-        this.set('values', newValues);
-        // Note: if they are bound to values then container is responsible for updating
-      }
-    } else {
-      this.notBoundOnChange();
-    }
+
+    return this.handleMutationOrAction({
+      code: 'rotate-value',
+      values: newValues,
+      oldValues: values,
+      context: this,
+      name: name,
+      value: newValues.join(', ')
+    });
   },
 
   removeValue(value) {
     const {values, name} = this.getProperties('values', 'name');
     const newValues = values.slice(0).filter(v => v !== value);
 
-    if (this.attrs.onChange) {
-      let response = this.attrs.onChange({
-        code: 'remove-value',
-        values: newValues,
-        oldValues: values,
-        removedValue: value,
-        context: this,
-        name: name,
-        value: newValues.join(', ')
-      });
-      if(!this.attrs.values && response !== false ) {
-        // if container isn't bound to values then take their
-        // approval as right to go ahead with the change
-        this.set('values', newValues);
-        // Note: if they are bound to values then container is responsible for updating
-      }
+    return this.handleMutationOrAction({
+      code: 'remove-value',
+      values: newValues,
+      oldValues: values,
+      removedValue: value,
+      context: this,
+      name: name,
+      value: newValues.join(', ')
+    });
+  },
+
+  handleMutationOrAction(hash) {
+    let response;
+    if (this.attrs.onChange && this.attrs.onChange.update) {
+      this.attrs.onChange.update(hash.values);
+      response = true;
+    } else if (this.attrs.onChange){
+      response = this.attrs.onChange(hash);
     } else {
       this.notBoundOnChange();
+      response = false;
     }
+    // if not bound to values then container is responsible for updating
+    // "values" and there is no risk to that bleeding out to the container
+    if(!this.attrs.values && response !== false ) {
+      this.set('values', hash.values);
+    }
+
+    return response;
   },
 
   rejectValue(action, value, code) {
@@ -217,26 +212,61 @@ export default Ember.Component.extend({
         }
       });
 
-      this.attrs.onError({
-        code: 'min-cardinality-not-met',
-        message: `The ${elementId}/${name} component -- with ${values.length} buttons -- does not meet minimum cardinality requirements of ${get(this, '_cardinality.min')}`,
-        suggestedValues: suggestedValues,
-        context: this
-      });
+      let response;
+      if(this.attrs.onError) {
+        response = this.attrs.onError({
+          code: 'min-cardinality-not-met',
+          message: `The ${elementId}/${name} component -- with ${values.length} buttons -- does not meet minimum cardinality requirements of ${get(this, '_cardinality.min')}`,
+          suggestedValues: suggestedValues,
+          context: this
+        });
+      }
+      // run.next(() => {
+        if (response !== false) {
+          return this.handleMutationOrAction({
+            code: 'cardinality-suggestion',
+            values: suggestedValues,
+            oldValues: values,
+            name: this.get('name'),
+            context: this,
+            message: `Minimum cardinality for this group ${_cardinality.min} was not met, suggested values will move the group back in line with constraints.`
+          });
+        } else {
+          this.set('disabled', true);
+        }
+      // });
+
     }
   },
 
   requireMaximumCardinality() {
     if(this.attrs.onError) {
-      const {name,elementId,values,_cardinality} = this.getProperties('name', 'elementId', 'values', '_cardinality');
+      const {name,elementId,values,_cardinality,_buttons} = this.getProperties('name', 'elementId', 'values', '_cardinality','_buttons');
+      const suggestedValues = _buttons.map(b=>b.value).slice(0,_cardinality.max);
 
-      this.attrs.onError({
+      const response = this.attrs.onError({
         code: 'max-cardinality-not-met',
         message: `The ${elementId}/${name} component -- with ${values.length} buttons -- does not meet minimum cardinality requirements of ${get(this, '_cardinality.min')}`,
         context: this,
+        name: this.get('name'),
+        suggestedValues: suggestedValues,
         max: _cardinality.max,
         current: values.length
       });
+      // run.next(() => {
+        if (response !== false) {
+          return this.handleMutationOrAction({
+            code: 'cardinality-suggestion',
+            values: suggestedValues,
+            oldValues: values,
+            context: this,
+            name: this.get('name'),
+            message: `Maximum cardinality for this group ${_cardinality.max} was exceeded, suggested values will move the group back in line with constraints.`
+          });
+        } else {
+          this.set('disabled', true);
+        }
+      // });
     }
   },
 
@@ -263,7 +293,6 @@ export default Ember.Component.extend({
         if(_cardinality.max > values.length) {
           this.addValue(hash.value);
         } else if (rotate) {
-          console.log('rotate is: ', rotate);
           this.rotateValue(hash.value);
         } else {
           this.rejectValue(action, hash.value, 'max-cardinality-limit');
