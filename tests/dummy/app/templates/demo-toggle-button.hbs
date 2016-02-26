@@ -241,10 +241,11 @@
   onError=(action 'onError')
 }}</code></pre>
       <p>
-        Container value: {{text-input value=ddauExplicit width='200px'}}
+        Container value:
+        <input type='text' value={{ddauExplicit}} onblur={{action (mut ddauExplicit) value="target.value"}}>
       </p>
       <span class="text-muted">
-        Try changing the value with the text input above or by toggling the button which will tell the container's action to toggle the value.
+        Try changing the value with the text input above or by toggling the button which will tell the container's action to toggle the value. Value is only updated on 'blur' of the text input.
       </span>
     </span>
   </div>

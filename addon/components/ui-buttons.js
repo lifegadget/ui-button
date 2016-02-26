@@ -2,7 +2,7 @@ import Ember from 'ember';
 const { keys, create } = Object; // jshint ignore:line
 const { RSVP: {Promise, all, race, resolve, defer} } = Ember; // jshint ignore:line
 const { inject: {service} } = Ember; // jshint ignore:line
-const { computed, observer, $, run, on, typeOf, isPresent } = Ember;  // jshint ignore:line
+const { computed, observer, $, run, on, typeOf, debug } = Ember;  // jshint ignore:line
 const { defineProperty, get, set, inject, isEmpty, merge } = Ember; // jshint ignore:line
 const a = Ember.A; // jshint ignore:line
 const MAX_CARDINALITY = 9999;
@@ -65,7 +65,6 @@ export default Ember.Component.extend({
     const {_cardinality, values} = this.getProperties('_cardinality', 'values');
     this._super(args);
     run.schedule('afterRender', () => {
-
       if(_cardinality.min > values.length) {
         this.requestMinimumCardinality();
       }
@@ -85,7 +84,23 @@ export default Ember.Component.extend({
     const {cardinality} = this.getProperties('cardinality');
     return typeOf(cardinality) === 'object' ? cardinality : parseCardinality(cardinality);
   }),
-  values: [],
+  values: computed('value', {
+    set(_,values) {
+      if(typeOf(values) !== 'array') {
+        debug(`values property of ui-buttons should be always be an array, was set as "${typeOf(values)}". Will default to an empty array as a fallback.`);
+        return [];
+      } else {
+        return values;
+      }
+    },
+    get() {
+      const value = this.get('value');
+      if(typeOf(value) !== 'undefined') {
+        return value ? [value] : [];
+      }
+      return [];
+    }
+  }),
   disabled: false,
   name: 'undefined',
   activeMood: 'secondary',
@@ -165,7 +180,13 @@ export default Ember.Component.extend({
   handleMutationOrAction(hash) {
     let response;
     if (this.attrs.onChange && this.attrs.onChange.update) {
-      this.attrs.onChange.update(hash.values);
+      if(this.attrs.value) {
+        this.attrs.onChange.update(hash.value);
+      } else if (this.attrs.values) {
+        this.attrs.onChange.update(hash.values);
+      } else {
+        debug('The "mut" helper was used but container is not listening to "value" or "values" properties!');
+      }
       response = true;
     } else if (this.attrs.onChange){
       response = this.attrs.onChange(hash);

@@ -8,8 +8,9 @@ export default Ember.Component.extend({
   classNameBindings: ['_class', 'active'],
 
   _class: Ember.computed('mood', 'outline', 'size', function() {
-    const {mood, outline, size} = this.getProperties('mood', 'outline', 'size');
-    return `ui-button btn btn-${mood}${outline} ${size}`;
+    let {mood, outline, size} = this.getProperties('mood', 'outline', 'size');
+    mood = mood ? `btn-${mood}` : 'btn-secondary';
+    return `ui-button btn ${mood}${outline} ${size}`;
   }),
   type: 'button',
 

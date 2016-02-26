@@ -31,9 +31,13 @@ export default Ember.Component.extend({
       this.setValuesOnTitle(valuesAre, {on: onTitle, off: offTitle});
     }
     if (typeOf(defaultValue) !== 'undefined' && typeOf(value) === 'undefined') {
-      this.setDefaultValue(defaultValue);
+      run.schedule('afterRender', () => {
+        this.setDefaultValue(defaultValue);
+      });
     } else if(!this.DDAU && typeOf(value) === 'undefined') {
-      this.setDefaultValue(offValue);
+      run.schedule('afterRender', () => {
+        this.setDefaultValue(offValue);
+      });
     }
     if (typeOf(value) !== 'undefined' && !a([onValue, offValue]).contains(value) && this.attrs.onError) {
       this.throwInvalidValue(value, 'at inialization');

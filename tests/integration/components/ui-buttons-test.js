@@ -1,7 +1,7 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('ui-buttons', 'Integration | Component | ui buttons', {
+moduleForComponent('ui-buttons', 'Integration | Component | ui-buttons', {
   integration: true
 });
 
@@ -46,22 +46,27 @@ test('on initialization, active button highlighted', function(assert) {
 test('on initialization, set three buttons active with cardinality limit of 2', function(assert) {
   const onError = (hash) => {
     if (hash.suggestedValues && hash.code === 'max-cardinality-not-met') {
-      console.log('setting values: ', hash.suggestedValues);
-      this.set('values', hash.suggestedValues);
+      assert.ok(true, 'Error event was fired');
     }
+  };
+  const onChange = hash => {
+    assert.equal('cardinality-suggestion', hash.code, 'Suggestion sent to onChange');
+    this.set('values', hash.values);
   };
   this.set('values', ['foo', 'bar', 'baz']);
   this.set('actions.onError', onError);
+  this.set('actions.onChange', onChange);
 
   this.render(hbs`{{ui-buttons
     buttons='Foo,Bar,Baz'
     cardinality='0:2'
     values=values
+    onChange=(action 'onChange')
     onError=(action 'onError')
   }}`);
 
   assert.equal(this.$('.ui-button').length, 3, 'three buttons');
-  assert.equal(this.$('.ui-button.active').length, 2, 'two active buttons');
-  assert.equal(this.$('.ui-button.active')[0], 'foo', 'correct button selected');
-  assert.equal(this.$('.ui-button.active')[1], 'bar', 'correct button selected');
+  assert.equal(this.$('.ui-button.active').length, 2, 'two active buttons, after onChange adjustment');
+  assert.equal(this.$('.ui-button.active')[0].value, 'foo', 'correct button selected');
+  assert.equal(this.$('.ui-button.active')[1].value, 'bar', 'correct button selected');
 });

@@ -59,9 +59,9 @@
     "ember-route-action-helper": "^0.3.0",
     "ember-try": "0.1.2",
     "loader.js": "^4.0.0",
-    "ui-bootstrap": "0.0.3",
-    "ui-input": "0.5.1",
-    "ui-markdown": "0.1.5"
+    "ui-bootstrap": "0.0.5",
+    "ui-markdown": "0.1.5",
+    "ui-responsive": "0.2.5"
   },
   "keywords": [
     "ember-addon",
