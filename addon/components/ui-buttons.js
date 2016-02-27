@@ -18,6 +18,7 @@ const dasherize = thingy => {
 };
 const parse = {
   literalNameValue: (name, value) => {
+    console.log(name, value);
     if(!isNaN(value)) {
       value = Number(value);
     } else if (value === 'false') {
@@ -26,7 +27,10 @@ const parse = {
       value = true;
     } else if (value === 'null') {
       value = null;
+    } else if (value === 'undefined') {
+      value = undefined;
     }
+    console.log('translates to: ', {title: name, value: value});
     return {title: name, value: value};
   },
   nameValue: ([name, value]) => {
@@ -46,7 +50,8 @@ const parseButtons = buttonsString => {
   const buttons = buttonsString.split(',');
   return buttons.map(b => {
     if(b.indexOf(':::') !== -1) {
-      return parse.literalNameValue(b.split(':::'));
+      console.log('literal');
+      return parse.literalNameValue(...b.split(':::'));
     } else if (b.indexOf('::') !== -1) {
       return parse.nameValue(b.split('::'));
     } else {
