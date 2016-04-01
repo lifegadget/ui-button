@@ -212,7 +212,7 @@ export default Ember.Component.extend({
       }
       if(this.attrs.onToggle) {
         if(this.attrs.onToggle && this.attrs.onToggle.update) {
-          this.attrs.onToggle.update(!toggled);
+          this.attrs.onToggle.update(!toggled ? onValue : offValue);
         } else if(this.attrs.onToggle({
           code: 'toggle-value',
           message: `setting value from "${hash.value}" to "${!toggled ? onValue : offValue}"`,
