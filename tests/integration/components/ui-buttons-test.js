@@ -29,9 +29,22 @@ test('inline buttons are parsed into proper config', function(assert) {
   assert.equal(this.$('.ui-button').length, 3, 'three buttons');
   assert.equal(this.$('.ui-button')[0].value, 'foo', 'stardard dasharized conversion worked');
   assert.equal(this.$('.ui-button')[1].value, 'bar-fly', 'name-value parsed');
-  assert.equal(this.$('.ui-button')[2].value, false, 'boolean literal value parsed');
-  // NOTE: numeric literal can't be tested for by picking off DOM value as its always a string
-  // assert.equal(this.$('.ui-button')[3].value, 5, 'numeric literal value parsed');
+});
+
+test('inline buttons are parsed into literal numeric or boolean', function(assert) {
+  this.set('value', true);
+  this.render(hbs`{{ui-buttons
+    buttons='Foo:::true,Bar:::5,Baz:::false'
+    value=value
+    onChange=(mut value)
+  }}`);
+  assert.equal(this.get('value'), true, 'value intialized correctly');
+  this.$('.ui-button')[1].click();
+  assert.equal(this.get('value'), 5, 'numeric literal works');
+  // this.$('.ui-button')[2].click();
+  // assert.equal(this.get('value'), false, 'boolean false literal works');
+  // this.$('.ui-button')[0].click();
+  // assert.equal(this.get('value'), true, 'boolean true literal works');
 });
 
 test('on initialization, active button highlighted', function(assert) {

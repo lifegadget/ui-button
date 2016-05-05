@@ -59,7 +59,7 @@
     "ember-route-action-helper": "^0.3.0",
     "ember-try": "^0.2.2",
     "loader.js": "^4.0.1",
-    "ui-bootstrap": "^0.0.24",
+    "ui-bootstrap": "^0.0.26",
     "ui-markdown": "0.1.6",
     "ui-responsive": "0.3.4"
   },
@@ -75,7 +75,7 @@
     "ember-cli-stylist": "^0.4.4",
     "ember-tooltips": "^0.5.8",
     "ember-truth-helpers": "1.2.0",
-    "ui-icon": "0.7.4"
+    "ui-icon": "0.10.2"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config",
