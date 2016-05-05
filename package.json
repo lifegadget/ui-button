@@ -34,7 +34,6 @@
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.2",
     "ember-ajax": "0.7.1",
-    "ember-array-contains-helper": "1.0.2",
     "ember-cli": "2.4.3",
     "ember-cli-app-version": "^1.0.0",
     "ember-cli-autoprefixer": "0.6.0",
