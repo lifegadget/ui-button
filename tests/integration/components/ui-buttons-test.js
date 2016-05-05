@@ -41,6 +41,10 @@ test('inline buttons are parsed into literal numeric or boolean', function(asser
   assert.equal(this.get('value'), true, 'value intialized correctly');
   this.$('.ui-button')[1].click();
   assert.equal(this.get('value'), 5, 'numeric literal works');
+
+
+  // TODO: below tests should pass!
+
   // this.$('.ui-button')[2].click();
   // assert.equal(this.get('value'), false, 'boolean false literal works');
   // this.$('.ui-button')[0].click();
