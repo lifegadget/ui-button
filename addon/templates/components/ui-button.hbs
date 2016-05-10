@@ -14,17 +14,18 @@
   disabled=disabled
   onClick=(action "onClick")
 }}
-  {{#if tooltip}}
+<span class="content {{stack}}">
+  {{!-- {{#if tooltip}}
     {{#tooltip-on-parent}}{{tooltip}}{{/tooltip-on-parent}}
-  {{/if}}
+  {{/if}} --}}
 
   {{#if hasBlock}}
     {{yield (hash
-      icon=(component 'ui-icon' icon=icon size=size iconSpin=iconSpin iconPulse=iconPulse)
-      title=title
+      icon=(component 'ui-button-icon' icon=icon size=size iconSpin=iconSpin iconPulse=iconPulse)
+      title=(component 'ui-button-title' title=title)
     )}}
   {{else}}
-    <span class="content">
+
       {{#if icon}}
       <span class="icon">
         {{ui-icon icon=icon spin=iconSpin pulse=iconPulse}}
@@ -35,6 +36,7 @@
         {{title}}
       </span>
       {{/if}}
-    </span>
+
   {{/if}}
+  </span>
 {{/ui-button-primative}}

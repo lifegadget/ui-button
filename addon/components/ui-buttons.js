@@ -60,7 +60,7 @@ const parseButtons = buttonsString => {
 import layout from '../templates/components/ui-buttons';
 
 
-export default Ember.Component.extend({
+const buttons = Ember.Component.extend({
   layout,
   tagName: '',
   init(...args) {
@@ -336,3 +336,9 @@ export default Ember.Component.extend({
     }
   }
 });
+
+buttons.reopenClass({
+  positionalParams: ['buttons']
+});
+buttons[Ember.NAME_KEY] = 'ui-buttons';
+export default buttons;

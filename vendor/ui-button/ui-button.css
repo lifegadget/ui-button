@@ -27,3 +27,18 @@ button.delayed-hover {
 .tooltip .tooltip-light {
   background-color: #fafafa;
 }
+
+.content {
+  display: flex;
+  flex-direction: row;
+}
+.content.vertical {
+  flex-direction: column;
+}
+
+.content span {
+  padding: 0.25rem;
+}
+.content.vertical span {
+  padding: 0.10rem;
+}

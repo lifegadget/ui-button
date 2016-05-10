@@ -9,11 +9,12 @@ const a = Ember.A; // jshint ignore:line
 
 import layout from '../templates/components/ui-button';
 
-export default Ember.Component.extend(Stylist, {
+const button = Ember.Component.extend(Stylist, {
   layout: layout,
   tagName: '',
 
   mood: 'primary',
+  stack: 'horizontal',
   outline: false,
   _outline: computed('outline', function() {
     const outline = this.get('outline');
@@ -38,6 +39,7 @@ export default Ember.Component.extend(Stylist, {
     }
   }),
   tooltipAuto: true,
+  disabled: false,
 
   _size: computed('size', function() {
     const size = this.get('size');
@@ -77,8 +79,11 @@ export default Ember.Component.extend(Stylist, {
           value: this.get('value')
         });
       }
+    }
   }
-  }
-
-
 });
+button.reopenClass({
+  positionalParams: ['title']
+});
+button[Ember.NAME_KEY] = 'ui-button';
+export default button;
