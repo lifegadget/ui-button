@@ -7,10 +7,10 @@ export default Ember.Component.extend({
   attributeBindings: ['type', 'disabled', 'style', 'value'],
   classNameBindings: ['_class', 'active'],
 
-  _class: Ember.computed('mood', 'outline', 'size', function() {
+  _class: Ember.computed('mood', 'outline', 'size', 'class', function() {
     let {mood, outline, size} = this.getProperties('mood', 'outline', 'size');
     mood = mood ? `btn-${mood}` : 'btn-secondary';
-    return `ui-button btn ${mood}${outline} ${size}`;
+    return `ui-button btn ${class} ${mood}${outline} ${size}`;
   }),
   type: 'button',
 
