@@ -1,4 +1,4 @@
-<div id={{elementId}} class="{{class}} ui-buttons btn-group {{if (not-eq 'undefined' name) name}}" role="group" aria-label="{{name}}">
+<div id={{elementId}} class="{{class}} ui-buttons btn-group {{if (not-eq 'undefined' name) name}}" role="group" aria-label={{name}}>
   {{#if hasBlock}}
     {{yield (hash
       button=(component 'ui-button'

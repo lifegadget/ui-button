@@ -104,7 +104,7 @@ const buttons = Ember.Component.extend({
     }
   }),
   disabled: false,
-  name: 'undefined',
+  name: '',
   activeMood: 'secondary',
   inactiveMood: 'secondary',
   activeSize: 'default',

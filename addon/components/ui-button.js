@@ -21,6 +21,15 @@ const button = Ember.Component.extend(Stylist, {
     return outline ? '-outline' : '';
   }),
   type: 'button',
+  activeValues: computed(() => a()),
+  active: computed('activeValues', {
+    set(_, value) {
+      return value;
+    },
+    get() {
+      return this.get('activeValues').contains(this.get('value'));
+    }
+  }),
   keepFocus: false,
   size: null,
   iconPulse: false,
@@ -38,11 +47,12 @@ const button = Ember.Component.extend(Stylist, {
       return 10;
     }
   }),
-  _class: Ember.computed('mood', '_outline', 'size', 'class', function() {
-    let {mood, _outline, size} = this.getProperties('mood', '_outline', 'size');
-    const classy = this.get('class') + ' ' || '';
-    mood = mood ? `btn-${mood}` : 'btn-secondary';
-    return `ui-button btn ${classy}${mood}${_outline} ${size}`;
+  _class: Ember.computed('mood', '_outline', 'size', 'class', 'active', function() {
+    let {mood, _outline, size, active} = this.getProperties('mood', '_outline', 'size', 'active');
+    const classy = this.get('class') || '';
+    mood = mood ? ` btn-${mood}` : ' btn-secondary';
+    const activeClass = active ? ' active' : ' ';
+    return `ui-button btn ${classy}${activeClass}${mood}${_outline} ${size}`;
   }),
   tooltipAuto: true,
   disabled: false,
