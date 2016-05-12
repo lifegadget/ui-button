@@ -36,6 +36,14 @@ button.delayed-hover {
   flex-direction: column;
 }
 
+.ui-button .fill {
+  flex: 1 0;
+}
+
+.ui-button .fit {
+  flex: 0 0;
+}
+
 .content span {
   padding: 0.25rem;
 }

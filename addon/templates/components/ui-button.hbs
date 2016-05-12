@@ -1,23 +1,20 @@
-{{#ui-button-primative
-  mood=mood
-  type=type
-  size=_size
-  value=value
-  outline=_outline
-  active=active
-  tooltipPlace=tooltipPlace
-  tooltipSpacing=tooltipSpacing
-  tooltipAuto=tooltipAuto
-  tooltipTypeClass=tooltipTypeClass
-  tooltipEffectClass=tooltipEffectClass
-  style=stylist
-  disabled=disabled
-  onClick=(action "onClick")
-}}
-<span class="content {{stack}}">
-  {{!-- {{#if tooltip}}
-    {{#tooltip-on-parent}}{{tooltip}}{{/tooltip-on-parent}}
-  {{/if}} --}}
+<button
+  id={{elementId}}
+  class={{_class}}
+  type={{type}}
+  value={{value}}
+  outline={{_outline}}
+  active={{active}}
+  tooltipPlace={{tooltipPlace}}
+  tooltipSpacing={{tooltipSpacing}}
+  tooltipAuto={{tooltipAuto}}
+  tooltipTypeClass={{tooltipTypeClass}}
+  tooltipEffectClass={{tooltipEffectClass}}
+  style={{stylist}}
+  disabled={{disabled}}
+  onclick={{action "onClick" this}}
+>
+<span class="content {{stack}} fill">
 
   {{#if hasBlock}}
     {{yield (hash
@@ -39,4 +36,4 @@
 
   {{/if}}
   </span>
-{{/ui-button-primative}}
+</button>

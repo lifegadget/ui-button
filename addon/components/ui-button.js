@@ -38,6 +38,12 @@ const button = Ember.Component.extend(Stylist, {
       return 10;
     }
   }),
+  _class: Ember.computed('mood', '_outline', 'size', 'class', function() {
+    let {mood, _outline, size} = this.getProperties('mood', '_outline', 'size');
+    const classy = this.get('class') + ' ' || '';
+    mood = mood ? `btn-${mood}` : 'btn-secondary';
+    return `ui-button btn ${classy}${mood}${_outline} ${size}`;
+  }),
   tooltipAuto: true,
   disabled: false,
 
@@ -67,9 +73,9 @@ const button = Ember.Component.extend(Stylist, {
   actions: {
     onClick(context, evt) {
       if (this.keepFocus) {
-        context.$().focus();
+        $(`#${context.elementId}`).focus();
       } else {
-        context.$().blur();
+        $(`#${context.elementId}`).blur();
       }
       if(this.attrs.onClick) {
         this.attrs.onClick({
