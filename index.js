@@ -7,6 +7,7 @@ module.exports = {
 	included: function(app) {
 		this._super.included(app);
     app.import('vendor/ui-button/ui-button.css');
+    app.import('vendor/ui-button/ui-buttons.css');
 	}
 
 };

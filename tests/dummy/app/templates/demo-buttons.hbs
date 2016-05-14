@@ -53,8 +53,50 @@
       buttons='Foo::monkey,Bar::tiger,Baz 2::lion'
       values=explicitSetter
       name='explicit-setter'
+      orient=orientation
+      fill=fitFull
+      align=align
       onChange=(route-action 'onChange')
     }}
+    <p>
+      <br>
+    </p>
+    {{ui-toggle-button
+      on='fill'
+      off='fit'
+      size='small'
+      inline=true
+      outline=true
+      value=fitFull
+      onToggle=(mut fitFull)
+    }}
+
+    {{ui-toggle-button
+      on='horizontal'
+      off='vertical'
+      size='small'
+      inline=true
+      valuesAre='equal'
+      defaultValue='vertical'
+      outline=true
+      mood='success'
+      value=orientation
+      onToggle=(mut orientation)
+    }}
+
+    {{ui-toggle-button
+      on='left'
+      off='center'
+      size='small'
+      inline=true
+      valuesAre='equal'
+      defaultValue='center'
+      outline=true
+      mood='secondary'
+      value=align
+      onToggle=(mut align)
+    }}
+
   </div>
   <div class="col-xs-6 col-md-4">
     <b>Explicit Values Setting</b>
@@ -63,6 +105,9 @@
     buttons='Foo::monkey,Bar::tiger,Baz 2::lion'
     values=explicitSetter
     name='explicit-setter'
+    orient='{{orientation}}'
+    fill={{fitFull}}
+    align='{{align}}'
     onChange=(route-action 'onChange')
   }}</code></pre>
     <hr width='100%'>
@@ -77,6 +122,8 @@
     In this example we've not just stated _titles_ for the buttons but explicitly stated the _values_. The double colon (::) indicates a string value but you may also use a triple colon to indicate .
 
     At no time will the internal state mechanism of this component change `values`.
+
+    Here we're also seeing the `orient`, and `fill` properties which do hopefully you'd expect of them and are represented by CSS at the **buttons** level. We can also set the `align` property on the buttons component and it will proxy through to all buttons where it is represented in CSS at the **button** level.
     {{/markdown-convert}}
   </div>
 </div>

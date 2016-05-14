@@ -1,3 +1,30 @@
+button.btn {
+  display:flex;
+  flex: 0 0;
+}
+button.btn.inline {
+  display: inline-flex;
+}
+
+buttons.fill button.btn {
+  flex: 1 0;
+}
+
+button.btn.align-center .content {
+  justify-content: center;
+  align-items: center;
+}
+
+button.btn.align-left .content {
+  justify-content: flex-start;;
+  align-items: flex-start;
+}
+
+button.btn.align-right .content {
+  justify-content: flex-end;;
+  align-items: flex-end;
+}
+
 button.ui-button.btn-huge, .btn-group-huge > .btn {
     padding: 1rem 1.5rem;
     font-size: 1.5rem;

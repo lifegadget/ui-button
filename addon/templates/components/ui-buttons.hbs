@@ -1,4 +1,9 @@
-<div id={{elementId}} class="{{class}} ui-buttons btn-group {{if (not-eq 'undefined' name) name}}" role="group" aria-label={{name}}>
+<buttons
+  id={{elementId}}
+  class="{{_class}} ui-buttons btn-group{{if (eq orient 'vertical') '-vertical'}} {{if (not-eq 'undefined' name) name}}{{if fill ' fill' ' fit'}}"
+  role="group"
+  aria-label={{name}}
+>
   {{#if hasBlock}}
     {{yield (hash
       button=(component 'ui-button'
@@ -12,7 +17,8 @@
           if (array-contains values button.value) activeIcon inactiveIcon)
         )
         tooltipPlace=tooltipPlace
-        active=(if (array-contains values button.value) true false)
+        activeValues=values
+        align=align
         onClick=(action 'onClick')
       )
     )}}
@@ -32,9 +38,10 @@
         title=button.title
         tooltip=button.tooltip
         tooltipPlace=tooltipPlace
-        active=(if (array-contains values button.value) true false)
+        activeValues=values
+        align=align
         onClick=(action 'onClick')
       }}
     {{/each}}
   {{/if}}
-</div>
+</buttons>

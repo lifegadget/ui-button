@@ -110,6 +110,10 @@ const buttons = Ember.Component.extend({
   activeSize: 'default',
   inactiveSize: 'default',
   tooltipPlace: 'top',
+  orientation: computed.alias('orient'),
+  orient: 'horizontal',
+  fill: false,
+  stretch: computed.alias('fill'),
   isDDAU: true, // allows for manual override to make a non-DDAU component
   rotate: computed({
     set(_, value) {

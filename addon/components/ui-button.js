@@ -21,20 +21,19 @@ const button = Ember.Component.extend(Stylist, {
     return outline ? '-outline' : '';
   }),
   type: 'button',
-  activeValues: computed(() => a()),
+  activeValues: computed(() => ([]) ),
   active: computed('activeValues', {
     set(_, value) {
       return value;
     },
     get() {
-      return this.get('activeValues').contains(this.get('value'));
+      return a(this.get('activeValues')).contains(this.get('value'));
     }
   }),
   keepFocus: false,
   size: null,
   iconPulse: false,
   iconSpin: false,
-  active: false,
   tooltipPlace: 'top',
   tooltipEffectClass: 'grow',
   tooltipTypeClass: 'light',
@@ -47,12 +46,14 @@ const button = Ember.Component.extend(Stylist, {
       return 10;
     }
   }),
-  _class: Ember.computed('mood', '_outline', 'size', 'class', 'active', function() {
-    let {mood, _outline, size, active} = this.getProperties('mood', '_outline', 'size', 'active');
+  _class: Ember.computed('mood', '_outline', 'size', 'class', 'active', 'align', function() {
+    let {mood, _outline, _size, active, inline, align} = this.getProperties('mood', '_outline', '_size', 'active', 'inline', 'align');
     const classy = this.get('class') || '';
     mood = mood ? ` btn-${mood}` : ' btn-secondary';
     const activeClass = active ? ' active' : ' ';
-    return `ui-button btn ${classy}${activeClass}${mood}${_outline} ${size}`;
+    const display = inline ? ' inline' : ' block';
+    align = align ? ` align-${align}` : '';
+    return `ui-button btn ${classy}${activeClass}${mood}${_outline}${_size}${display}${align}`;
   }),
   tooltipAuto: true,
   disabled: false,
@@ -62,20 +63,20 @@ const button = Ember.Component.extend(Stylist, {
     switch(size) {
     case 'huge':
     case 'hg':
-      return 'btn-huge';
+      return ' btn-huge';
     case 'large':
     case 'lg':
-      return 'btn-lg';
+      return ' btn-lg';
     case 'default':
     case 'medium':
     case 'md':
       return '';
     case 'small':
     case 'sm':
-      return 'btn-sm';
+      return ' btn-sm';
     case 'tiny':
     case 'tn':
-      return 'btn-tiny';
+      return ' btn-tiny';
     default:
       return '';
     }
