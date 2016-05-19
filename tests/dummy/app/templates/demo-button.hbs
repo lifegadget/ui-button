@@ -21,7 +21,7 @@
   </div>
   <div class="col-xs-9">
     <span>
-      inline button
+      button
       <span class="text-muted">(default mood is 'primary')</span>
       <br>
       <code>\{{ui-button title='Press Me'}}</code>
@@ -35,7 +35,7 @@
   </div>
   <div class="col-xs-9">
     <span>
-      inline button, mood selected<br/>
+      button, mood is secondary<br/>
       <code>\{{ui-button title='Press Me' mood='secondary'}}</code>
     </span>
   </div>
@@ -47,7 +47,7 @@
   </div>
   <div class="col-xs-9">
     <span>
-      block button, mood selected<br/>
+      button, mood is info<br/>
       <code>\{{#ui-button mood='info'}}Press Me\{{/ui-button}}</code>
     </span>
   </div>
@@ -59,7 +59,7 @@
   </div>
   <div class="col-xs-9">
     <span>
-      block button, mood selected, outline button<br/>
+      button, mood info, outline style<br/>
       <code>\{{#ui-button mood='info' outline=true}}Press Me\{{/ui-button}}</code>
     </span>
   </div>
@@ -71,7 +71,7 @@
   </div>
   <div class="col-xs-9">
     <span>
-      inline button, mood is warning, button is enabled<br/>
+      button, mood is warning, button is enabled<br/>
       <code>\{{ui-button title='Press Me' mood='warning' disabled=false}}</code>
     </span>
   </div>
@@ -83,7 +83,7 @@
   </div>
   <div class="col-xs-9">
     <span>
-      inline button, mood is warning, button is disabled<br/>
+      button, mood is warning, button is disabled<br/>
       <code>\{{ui-button title='Press Me' mood='warning' disabled=true}}</code>
     </span>
   </div>
@@ -95,7 +95,7 @@
   </div>
   <div class="col-xs-9">
     <span>
-      inline button, mood is warning, button is disabled, outline-button<br/>
+      button, mood is warning, button is disabled, outline-button<br/>
       <span class="text-muted">Note: this is not styled correctly, assume BS will correct in next beta</span><br>
       <code>\{{ui-button title='Press Me' mood='warning' disabled=true outline=true}}</code>
     </span>
@@ -193,13 +193,23 @@
 
 <div class="row">
   <div class="col-xs-3">
-    {{ui-button icon='hand-pointer-o' title='Press Me' tooltip='I am a button'}}
+    {{ui-button
+      icon='hand-pointer-o'
+      title='Press Me'
+      tooltip='I am a button'
+      stack='vertical'
+    }}
   </div>
   <div class="col-xs-9">
     <span>
-      inline button with icon and tooltip
+      button with icon and tooltip, stacked vertically
       <br>
-      <code>\{{ui-button icon='hand-pointer-o' title='Press Me' tooltip='I am a button'}}</code>
+      <pre><code class='handlebars'>\{{ui-button
+  icon='hand-pointer-o'
+  title='Press Me'
+  tooltip='I am a button'
+  stack='vertical'
+}}</code></pre>
     </span>
   </div>
 </div>
@@ -236,18 +246,18 @@
 
 <div class="row">
   <div class="col-xs-3">
-    {{ui-button icon='cog' mood='secondary'}}
-    {{ui-button icon='smile-o' iconSpin=true mood='success'}}
-    {{ui-button icon='spinner' iconPulse=true mood='secondary'}}
+    {{ui-button icon='cog' mood='secondary' inline=true}}
+    {{ui-button icon='smile-o' iconSpin=true mood='success' inline=true}}
+    {{ui-button icon='spinner' iconPulse=true mood='secondary' inline=true}}
   </div>
   <div class="col-xs-9">
     <span>
       inline button with just icon, and effects
       <br>
       <code>
-        \{{ui-button icon='cog' mood='secondary'}}<br>
-        \{{ui-button icon='smile-o' iconSpin=true mood='success'}}<br>
-        \{{ui-button icon='spinner' iconPulse=true mood='secondary'}}
+        \{{ui-button icon='cog' mood='secondary' inline=true}}<br>
+        \{{ui-button icon='smile-o' iconSpin=true mood='success' inline=true}}<br>
+        \{{ui-button icon='spinner' iconPulse=true mood='secondary' inline=true}}
       </code>
     </span>
   </div>
@@ -255,16 +265,16 @@
 
 <div class="row">
   <div class="col-xs-3">
-    {{ui-button icon='eye' type='checkbox' size='large' keepFocus=true}}
-    {{ui-button icon='eye-slash' type='checkbox' size='large' }}
+    {{ui-button icon='eye' type='checkbox' size='large' keepFocus=true inline=true}}
+    {{ui-button icon='eye-slash' type='checkbox' size='large' inline=true}}
   </div>
   <div class="col-xs-9">
     <span>
       Focus: left maintains, right loses (default)
       <br>
       <code>
-        \{{ui-button icon='eye' size='large'  keepFocus=true}}<br>
-        \{{ui-button icon='eye-slash' size='large' }}<br>
+        \{{ui-button icon='eye' size='large'  keepFocus=true inline=true}}<br>
+        \{{ui-button icon='eye-slash' size='large' inline=true}}<br>
       </code>
     </span>
   </div>

@@ -14,6 +14,8 @@ const button = Ember.Component.extend(Stylist, {
   tagName: '',
 
   mood: 'primary',
+  orient: computed.alias('stack'),
+  orientation: computed.alias('stack'),
   stack: 'horizontal',
   outline: false,
   _outline: computed('outline', function() {

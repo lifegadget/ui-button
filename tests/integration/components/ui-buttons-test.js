@@ -24,11 +24,27 @@ test('it renders', function(assert) {
 });
 
 test('inline buttons are parsed into proper config', function(assert) {
-  this.render(hbs`{{ui-buttons buttons='Foo,Bar::bar-fly,Baz:::false'}}`);
+  this.set('value', 'foo');
+  this.render(hbs`
+    {{ui-buttons
+      buttons='Foo,Bar::bar-fly,Baz:::null,Bunny_rabbit,JumpingJackFlash'
+      value=value
+      onChange=(mut value)
+    }}
+  `);
 
-  assert.equal(this.$('.ui-button').length, 3, 'three buttons');
-  assert.equal(this.$('.ui-button')[0].value, 'foo', 'stardard dasharized conversion worked');
-  assert.equal(this.$('.ui-button')[1].value, 'bar-fly', 'name-value parsed');
+
+  assert.equal(this.$('.ui-button').length, 5, 'five buttons');
+  assert.equal(this.get('value'), 'foo', 'initialized value remains component state');
+  this.$('.ui-button')[1].click();
+  assert.equal(this.get('value'), 'bar-fly', 'bar-fly literal is passed through');
+  // this.$('.ui-button')[2].click();
+  // assert.equal(this.get('value'), false, 'Baz\'s value is false');
+  this.$('.ui-button')[3].click();
+  assert.equal(this.get('value'), 'bunny-rabbit', 'snakecase changed to dasherized');
+  this.$('.ui-button')[4].click();
+  assert.equal(this.get('value'), 'jumping-jack-flash', 'PascalCase changed to dasherized');
+
 });
 
 test('inline buttons are parsed into literal numeric or boolean', function(assert) {
@@ -53,11 +69,18 @@ test('inline buttons are parsed into literal numeric or boolean', function(asser
 
 test('on initialization, active button highlighted', function(assert) {
   this.set('values', ['bar']);
-  this.render(hbs`{{ui-buttons buttons='Foo,Bar,Baz' values=values}}`);
+  this.render(hbs`
+    {{ui-buttons
+      buttons='Foo,Bar,Baz'
+      values=values
+      onChange=(mut values)
+    }}
+  `);
 
   assert.equal(this.$('.ui-button').length, 3, 'three buttons');
   assert.equal(this.$('.ui-button.active').length, 1, 'one active button');
-  assert.equal(this.$('.ui-button.active').val(), 'bar', 'correct button selected');
+  assert.ok(this.$(this.$('.ui-button')[1]).hasClass('active'), 'correct button selected');
+  assert.equal(JSON.stringify(this.get('values')), JSON.stringify(['bar']), 'container\'s values prop is still correctly set');
 });
 
 test('on initialization, set three buttons active with cardinality limit of 2', function(assert) {
@@ -84,6 +107,5 @@ test('on initialization, set three buttons active with cardinality limit of 2', 
 
   assert.equal(this.$('.ui-button').length, 3, 'three buttons');
   assert.equal(this.$('.ui-button.active').length, 2, 'two active buttons, after onChange adjustment');
-  assert.equal(this.$('.ui-button.active')[0].value, 'foo', 'correct button selected');
-  assert.equal(this.$('.ui-button.active')[1].value, 'bar', 'correct button selected');
+  assert.equal(JSON.stringify(this.get('values')), JSON.stringify(['foo', 'bar']), "the values set -- the first two -- are correctly set");
 });
