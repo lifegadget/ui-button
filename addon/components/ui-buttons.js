@@ -187,7 +187,6 @@ const buttons = Ember.Component.extend({
     let response;
     if (this.attrs.onChange && this.attrs.onChange.update) {
       if(this.attrs.value) {
-        console.log(hash);
         this.attrs.onChange.update(hash.value);
       } else if (this.attrs.values) {
         this.attrs.onChange.update(hash.values);
@@ -335,7 +334,6 @@ const buttons = Ember.Component.extend({
       }
     },
     onToggle(hash) {
-      console.log('toggle');
       console.log(hash);
     }
   }
