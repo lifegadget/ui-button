@@ -63,9 +63,9 @@ import layout from '../templates/components/ui-buttons';
 const buttons = Ember.Component.extend({
   layout,
   tagName: '',
-  init(...args) {
+  init() {
+    this._super(...arguments);
     const {_cardinality, values} = this.getProperties('_cardinality', 'values');
-    this._super(args);
     run.schedule('afterRender', () => {
       if(_cardinality.min > values.length) {
         this.requestMinimumCardinality();

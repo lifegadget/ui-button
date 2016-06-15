@@ -24,9 +24,9 @@ export default Ember.Component.extend({
   _initialized: false,
   isDDAU: true, // allows switching to a non-DDAU mode (not recommended in most cases)
 
-  init(...args) {
+  init() {
+    this._super(...arguments);
     const {value, defaultValue, onValue, offValue, onTitle, offTitle, valuesAre} = this.getProperties('value', 'defaultValue', 'onValue', 'offValue', 'onTitle', 'offTitle', 'valuesAre');
-    this._super(args);
     if (valuesAre) {
       this.setValuesOnTitle(valuesAre, {on: onTitle, off: offTitle});
     }

@@ -1,17 +1,15 @@
 import Ember from 'ember';
 import Stylist from 'ember-cli-stylist/mixins/shared-stylist';
-const { keys, create } = Object; // jshint ignore:line
-const { RSVP: {Promise, all, race, resolve, defer} } = Ember; // jshint ignore:line
-const { inject: {service} } = Ember; // jshint ignore:line
-const { computed, observer, $, run, on, typeOf, isPresent } = Ember;  // jshint ignore:line
-const { defineProperty, get, set, inject, isEmpty, merge } = Ember; // jshint ignore:line
-const a = Ember.A; // jshint ignore:line
+import ddau from '../mixins/ddau';
+const { computed, $ } = Ember;
+const a = Ember.A;
 
 import layout from '../templates/components/ui-button';
 
-const button = Ember.Component.extend(Stylist, {
+const button = Ember.Component.extend(Stylist, ddau, {
   layout: layout,
   tagName: '',
+  version: '2.0.0',
 
   mood: 'primary',
   orient: computed.alias('stack'),
@@ -36,18 +34,6 @@ const button = Ember.Component.extend(Stylist, {
   size: null,
   iconPulse: false,
   iconSpin: false,
-  tooltipPlace: 'top',
-  tooltipEffectClass: 'grow',
-  tooltipTypeClass: 'light',
-  tooltipSpacing: computed('_size', function() {
-    const size = this.get('_size');
-    switch(size) {
-    case 'btn-huge':
-      return 30;
-    default:
-      return 10;
-    }
-  }),
   _class: Ember.computed('mood', '_outline', 'size', 'class', 'active', 'align', function() {
     let {mood, _outline, _size, active, inline, align} = this.getProperties('mood', '_outline', '_size', 'active', 'inline', 'align');
     const classy = this.get('class') || '';
@@ -57,7 +43,6 @@ const button = Ember.Component.extend(Stylist, {
     align = align ? ` align-${align}` : '';
     return `ui-button btn ${classy}${activeClass}${mood}${_outline}${_size}${display}${align}`;
   }),
-  tooltipAuto: true,
   disabled: false,
 
   _size: computed('size', function() {
@@ -85,19 +70,18 @@ const button = Ember.Component.extend(Stylist, {
   }),
   actions: {
     onClick(context, evt) {
+      const value = this.get('value');
       if (this.keepFocus) {
         $(`#${context.elementId}`).focus();
       } else {
         $(`#${context.elementId}`).blur();
       }
-      if(this.attrs.onClick) {
-        this.attrs.onClick({
-          button: this,
-          context: context,
-          evt: evt,
-          value: this.get('value')
-        });
-      }
+      this.ddau('onClick', {
+        value: value,
+        context: context,
+        dom: document.getElementById(this.elementId),
+        event: evt
+      }, value);
     }
   }
 });

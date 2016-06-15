@@ -31,12 +31,12 @@
 
 <div class="row">
   <div class="col-xs-3">
-    {{ui-button title='Press Me' mood='secondary'}}
+    {{ui-button 'Press Me' mood='secondary'}}
   </div>
   <div class="col-xs-9">
     <span>
-      button, mood is secondary<br/>
-      <code>\{{ui-button title='Press Me' mood='secondary'}}</code>
+      button title uses positional param, mood is secondary<br/>
+      <code>\{{ui-button 'Press Me' mood='secondary'}}</code>
     </span>
   </div>
 </div>
@@ -340,7 +340,12 @@
 
 <div class="row">
   <div class="col-xs-3">
-    {{ui-button icon='dot-circle-o' size='huge' onClick=(action 'onClick') value='foobar'}}
+    {{ui-button
+      icon='dot-circle-o'
+      size='huge'
+      onClick=(action 'handleClick') 
+      value='foobar'
+    }}
   </div>
   <div class="col-xs-9">
     <span>

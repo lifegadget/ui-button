@@ -16,7 +16,6 @@
         icon=(if icon icon (
           if (array-contains values button.value) activeIcon inactiveIcon)
         )
-        tooltipPlace=tooltipPlace
         activeValues=values
         align=align
         onClick=(action 'onClick')
@@ -36,8 +35,6 @@
         )
         value=button.value
         title=button.title
-        tooltip=button.tooltip
-        tooltipPlace=tooltipPlace
         activeValues=values
         align=align
         onClick=(action 'onClick')
