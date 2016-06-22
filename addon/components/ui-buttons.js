@@ -66,6 +66,9 @@ const buttons = Ember.Component.extend({
   init() {
     this._super(...arguments);
     const {_cardinality, values} = this.getProperties('_cardinality', 'values');
+    if(!this.elementId) {
+      this.elementId = 'buttons-' + Math.random().toString(36).substr(2, 9);
+    }
     run.schedule('afterRender', () => {
       if(_cardinality.min > values.length) {
         this.requestMinimumCardinality();

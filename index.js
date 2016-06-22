@@ -9,5 +9,4 @@ module.exports = {
     app.import('vendor/ui-button/ui-button.css');
     app.import('vendor/ui-button/ui-buttons.css');
 	}
-
 };

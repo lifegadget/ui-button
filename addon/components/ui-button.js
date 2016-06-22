@@ -9,7 +9,12 @@ import layout from '../templates/components/ui-button';
 const button = Ember.Component.extend(Stylist, ddau, {
   layout: layout,
   tagName: '',
-  version: '2.0.0',
+  init() {
+    this._super(...arguments);
+    if(!this.elementId) {
+      this.elementId = 'button-' + Math.random().toString(36).substr(2, 9);
+    }
+  },
 
   mood: 'primary',
   orient: computed.alias('stack'),

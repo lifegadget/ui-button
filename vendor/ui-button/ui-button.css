@@ -16,7 +16,7 @@ button.btn.align-center .content {
 }
 
 button.btn.align-left .content {
-  justify-content: flex-start;;
+  justify-content: flex-start;
   align-items: flex-start;
 }
 
