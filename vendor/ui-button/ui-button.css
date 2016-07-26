@@ -1,6 +1,6 @@
 button.btn {
   display:flex;
-  flex: 0 0;
+  flex-shrink: 0;
 }
 button.btn.inline {
   display: inline-flex;
