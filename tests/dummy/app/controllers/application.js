@@ -19,7 +19,7 @@ export default Ember.Controller.extend({
 
           this.transitionToRoute(routeTo);
         } else {
-          console.log('component needs to have transitionToRoute passed in');
+          Ember.debug('component needs to have transitionToRoute passed in');
         }
       }
     }

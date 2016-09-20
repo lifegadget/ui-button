@@ -233,7 +233,7 @@ const buttons = Ember.Component.extend({
       const possibleValues = _buttons.map(b=>b.value);
       const suggestedValues = a(values.slice(0));
       possibleValues.forEach(p => {
-        if(!suggestedValues.contains(p) && delta > 0) {
+        if(!suggestedValues.includes(p) && delta > 0) {
           suggestedValues.pushObject(p);
           delta--;
         }
@@ -314,7 +314,7 @@ const buttons = Ember.Component.extend({
   actions: {
     onClick(hash) {
       const {_cardinality, values, rotate} = this.getProperties('_cardinality', 'values', 'rotate');
-      const action = a(values).contains(hash.value) ? 'remove' : 'add';
+      const action = a(values).includes(hash.value) ? 'remove' : 'add';
       if(action === 'add') {
         // ADD
         if(_cardinality.max > values.length) {
@@ -333,8 +333,8 @@ const buttons = Ember.Component.extend({
         }
       }
     },
-    onToggle(hash) {
-      console.log(hash);
+    onToggle() {
+      // console.log(hash);
     }
   }
 });

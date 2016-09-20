@@ -33,7 +33,7 @@ const button = Ember.Component.extend(Stylist, ddau, {
       return value;
     },
     get() {
-      return a(this.get('activeValues')).contains(this.get('value'));
+      return a(this.get('activeValues')).includes(this.get('value'));
     }
   }),
   keepFocus: false,

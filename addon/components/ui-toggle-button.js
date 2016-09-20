@@ -39,7 +39,7 @@ export default Ember.Component.extend({
         this.setDefaultValue(offValue);
       });
     }
-    if (typeOf(value) !== 'undefined' && !a([onValue, offValue]).contains(value) && this.attrs.onError) {
+    if (typeOf(value) !== 'undefined' && !a([onValue, offValue]).includes(value) && this.attrs.onError) {
       this.throwInvalidValue(value, 'at inialization');
     }
     this._initialized = true;
@@ -88,7 +88,7 @@ export default Ember.Component.extend({
   }),
   validateValue(value, info) {
     const {onValue, offValue, _disabledForInvalidValue} = this.getProperties('onValue', 'offValue', 'value', '_disabledForInvalidValue');
-    const isValid = a([onValue, offValue]).contains(value);
+    const isValid = a([onValue, offValue]).includes(value);
 
     if(typeOf(value) === 'undefined' && !this._initialized) {
       return offValue;
@@ -229,7 +229,7 @@ export default Ember.Component.extend({
             this.toggleProperty('toggled');
           } else {
             // container is controlling the value
-            if (a([onValue, offValue]).contains(value)) {
+            if (a([onValue, offValue]).includes(value)) {
               this.set('toggled', value === onValue ? true : false);
             } else {
               console.warn('Button was set to an invalid value based on user click, this should never happen.');

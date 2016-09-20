@@ -1,0 +1,5 @@
+{
+  "globalDevDependencies": {
+    "phantomjs": "registry:dt/phantomjs#1.9.0+20160316155526"
+  }
+}
