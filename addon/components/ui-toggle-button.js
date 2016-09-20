@@ -238,7 +238,7 @@ export default Ember.Component.extend({
         }
       } else {
         if(this.isDDAU) {
-          console.warn(`no one is listening to toggle button ${this.elementId}'s onToggle event`);
+          console.warn(`no one is listening to toggle button ${this.id}'s onToggle event`);
         } else {
           // the bad old way (which sometimes is irristably easy)
           this.set('value', !toggled ? onValue : offValue);

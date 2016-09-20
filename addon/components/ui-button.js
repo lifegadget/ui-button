@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import Stylist from 'ember-cli-stylist/mixins/shared-stylist';
 import ddau from '../mixins/ddau';
+import { v4 } from "ember-uuid";
 const { computed, $ } = Ember;
 const a = Ember.A;
 
@@ -11,8 +12,8 @@ const button = Ember.Component.extend(Stylist, ddau, {
   tagName: '',
   init() {
     this._super(...arguments);
-    if(!this.elementId) {
-      this.elementId = 'button-' + Math.random().toString(36).substr(2, 9);
+    if(!this.get('id')) {
+      this.set('id', v4());
     }
   },
 
@@ -77,14 +78,14 @@ const button = Ember.Component.extend(Stylist, ddau, {
     onClick(context, evt) {
       const value = this.get('value');
       if (this.keepFocus) {
-        $(`#${context.elementId}`).focus();
+        $(`#${context.id}`).focus();
       } else {
-        $(`#${context.elementId}`).blur();
+        $(`#${context.id}`).blur();
       }
       this.ddau('onClick', {
         value: value,
         context: context,
-        dom: document.getElementById(this.elementId),
+        dom: document.getElementById(this.id),
         event: evt
       }, value);
     }

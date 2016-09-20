@@ -14,12 +14,12 @@ export default Ember.Controller.extend({
       this.toggleProperty('toggledEnablement');
     },
     buttonAction: function(action,btn) {
-      let {elementId,value} = Ember.getProperties(btn, 'elementId','value');
+      let {id,value} = Ember.getProperties(btn, 'id','value');
       let type = Ember.typeOf(value);
       if(type === 'object') {
         value = JSON.stringify(value);
       }
-      const message = `Button[${elementId}] pressed with a parameter of type "${type}": ${value}`;
+      const message = `Button[${id}] pressed with a parameter of type "${type}": ${value}`;
       console.log(message);
       window.alert(message);
     }

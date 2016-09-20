@@ -92,11 +92,11 @@ test('value defaults to camelized title if not set', function(assert) {
   assert.equal(component.get('value'), 'foo-bar', 'value is set to foo-bar');
 });
 
-test('value defaults to elementId if not set (and no title set)', function(assert) {
+test('value defaults to id if not set (and no title set)', function(assert) {
   assert.expect(1);
   let component = this.subject();
   this.render();
-  assert.equal(component.get('value'), component.get('elementId'), 'value is set to elementId: ' + component.get('elementId'));
+  assert.equal(component.get('value'), component.get('id'), 'value is set to id: ' + component.get('id'));
 });
 
 
@@ -168,7 +168,7 @@ test('selected flag impacted by selectedButtons', function(assert) {
   });
   this.render();
   Ember.run.next(() => {
-    const id = component.get('elementId');
+    const id = component.get('id');
     assert.equal(component.get('selected'), false, '"selected" should be false when nothing is in selectedButtons');
     component.set('selectedButtons', new Set().add(id));
     assert.equal(component.get('selected'), true, '"selected" should have switched to true');
@@ -182,7 +182,7 @@ test('selected flag ignores selectedButtons if isSelectable = false', function(a
   });
   this.render();
   Ember.run.next(() => {
-    const id = component.get('elementId');
+    const id = component.get('id');
     assert.equal(component.get('selected'), false, '"selected" should be false when nothing is in selectedButtons');
     component.set('selectedButtons', new Set().add(id));
     assert.equal(component.get('selected'), false, '"selected" should have maintained a false status');
@@ -194,7 +194,7 @@ test('disabled flag impacted by changes to disabledButtons', function(assert) {
   let component = this.subject();
   this.render();
   Ember.run.next(() => {
-    const id = component.get('elementId');
+    const id = component.get('id');
     assert.equal(component.get('disabled'), false, '"disabled" should be false when nothing is in disabledButtons');
     component.set('disabledButtons', new Set().add(id));
     component.notifyPropertyChange('disabledMutex');
@@ -203,7 +203,7 @@ test('disabled flag impacted by changes to disabledButtons', function(assert) {
     component.notifyPropertyChange('disabledMutex');
     assert.equal(component.get('disabled'), false, '"disabled" should switch to false when new empty Set replacement provided');
     component.set('disabledButtons', new Set().add(id+'zzz'));
-    assert.equal(component.get('disabled'), false, '"disabled" should remain false when new Set added but which only has other elementIds');
+    assert.equal(component.get('disabled'), false, '"disabled" should remain false when new Set added but which only has other ids');
   });
 });
 

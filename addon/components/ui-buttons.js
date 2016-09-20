@@ -66,9 +66,6 @@ const buttons = Ember.Component.extend({
   init() {
     this._super(...arguments);
     const {_cardinality, values} = this.getProperties('_cardinality', 'values');
-    if(!this.elementId) {
-      this.elementId = 'buttons-' + Math.random().toString(36).substr(2, 9);
-    }
     run.schedule('afterRender', () => {
       if(_cardinality.min > values.length) {
         this.requestMinimumCardinality();
@@ -231,7 +228,7 @@ const buttons = Ember.Component.extend({
 
   requestMinimumCardinality() {
     if(this.attrs.onError) {
-      const {name,elementId,values,_cardinality,_buttons} = this.getProperties('name', 'elementId', 'values', '_cardinality','_buttons');
+      const {name,id,values,_cardinality,_buttons} = this.getProperties('name', 'id', 'values', '_cardinality','_buttons');
       let delta = _cardinality.min - values.length;
       const possibleValues = _buttons.map(b=>b.value);
       const suggestedValues = a(values.slice(0));
@@ -246,7 +243,7 @@ const buttons = Ember.Component.extend({
       if(this.attrs.onError) {
         response = this.attrs.onError({
           code: 'min-cardinality-not-met',
-          message: `The ${elementId}/${name} component -- with ${values.length} buttons -- does not meet minimum cardinality requirements of ${get(this, '_cardinality.min')}`,
+          message: `The ${id}/${name} component -- with ${values.length} buttons -- does not meet minimum cardinality requirements of ${get(this, '_cardinality.min')}`,
           suggestedValues: suggestedValues,
           context: this
         });
@@ -271,12 +268,12 @@ const buttons = Ember.Component.extend({
 
   requireMaximumCardinality() {
     if(this.attrs.onError) {
-      const {name,elementId,values,_cardinality,_buttons} = this.getProperties('name', 'elementId', 'values', '_cardinality','_buttons');
+      const {name,id,values,_cardinality,_buttons} = this.getProperties('name', 'id', 'values', '_cardinality','_buttons');
       const suggestedValues = _buttons.map(b=>b.value).slice(0,_cardinality.max);
 
       const response = this.attrs.onError({
         code: 'max-cardinality-not-met',
-        message: `The ${elementId}/${name} component -- with ${values.length} buttons -- does not meet minimum cardinality requirements of ${get(this, '_cardinality.min')}`,
+        message: `The ${id}/${name} component -- with ${values.length} buttons -- does not meet minimum cardinality requirements of ${get(this, '_cardinality.min')}`,
         context: this,
         name: this.get('name'),
         suggestedValues: suggestedValues,
@@ -301,7 +298,7 @@ const buttons = Ember.Component.extend({
   },
 
   notBoundOnChange() {
-    console.warn(`The container of ${this.elementId}/${name} did not bind to onChange()`);
+    console.warn(`The container of ${this.id}/${name} did not bind to onChange()`);
     this.set('disabled', true);
     this.set('mood', 'danger');
     if(this.attrs.onError) {
