@@ -17,3 +17,4 @@
 npm-debug.log
 testem.log
 ui-button.sublime-workspace
+typings/*
