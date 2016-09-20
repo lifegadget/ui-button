@@ -1,7 +1,6 @@
 {
   "globalDevDependencies": {
-    "bootstrap": "registry:dt/bootstrap#3.3.5+20160619023404",
-    "phantomjs": "registry:dt/phantomjs#1.9.0+20160316155526"
+    "bootstrap": "registry:dt/bootstrap#3.3.5+20160619023404"
   },
   "globalDependencies": {
     "showdown": "registry:dt/showdown#1.4.1+20160608102004"
