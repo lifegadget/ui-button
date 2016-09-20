@@ -23,16 +23,16 @@ test('it renders', function(assert) {
   assert.equal(this.$().text().trim(), 'template block text');
 });
 
-test('inline button respond to "stack"', function(assert) {
-  this.set('stack', 'horizontal'); // default state
+test('inline button respond to "orient"', function(assert) {
+  this.set('orient', 'horizontal'); // default state
   this.render(hbs`{{ui-button
     'foobar'
     icon='envelope'
-    orient=stack
+    orient=orient
   }}`);
   assert.equal(this.$('button .content').css('flex-direction'), 'row', 'row is default');
-  this.set('stack', 'vertical');
-  assert.equal(this.$('button .content').css('flex-direction'), 'column', 'switched to column when vertical stack specified');
-  this.set('stack', null);
+  this.set('orient', 'vertical');
+  assert.equal(this.$('button .content').css('flex-direction'), 'column', 'switched to column when vertical orient specified');
+  this.set('orient', null);
   assert.equal(this.$('button .content').css('flex-direction'), 'row', 'switched back to "row" when stack is null');
 });
