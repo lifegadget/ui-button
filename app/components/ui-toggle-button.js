@@ -1,3 +1,1 @@
-import uiToggleButton from 'ui-button/components/ui-toggle-button';
-
-export default uiToggleButton;
+export { default } from 'ui-button/components/ui-toggle-button';

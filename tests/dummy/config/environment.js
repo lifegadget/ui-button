@@ -4,13 +4,16 @@ module.exports = function(environment) {
   var ENV = {
     modulePrefix: 'dummy',
     environment: environment,
-    baseURL: '/',
+    rootURL: '/',
     locationType: 'auto',
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
         // e.g. 'with-controller': true
       }
+    },
+    flashMessageDefaults: {
+      timeout: 8000,
     },
 
     APP: {
@@ -22,11 +25,11 @@ module.exports = function(environment) {
       'script-src': "'self'",
       'font-src': "'self' http://fonts.gstatic.com http://fonts.googleapis.com",
       'connect-src': "'self'",
-      'img-src': "'self'",
-      'style-src': "'self' 'unsafe-inline' http://fonts.googleapis.com",
+      'img-src': "'self' https://*.cloudfront.net https://badge.fury.io http://fonts.gstatic.com http://fonts.googleapis.com",
+      'style-src': "'self' 'unsafe-inline' http://fonts.googleapis.com http://fonts.gstatic.com",
       'media-src': "'self'"
     }
-    
+
   };
 
   if (environment === 'development') {
@@ -38,8 +41,6 @@ module.exports = function(environment) {
   }
 
   if (environment === 'test') {
-    // Testem prefers this...
-    ENV.baseURL = '/';
     ENV.locationType = 'none';
 
     // keep test console output quieter

@@ -1,8 +1,42 @@
+button.btn {
+  display:flex;
+  flex-shrink: 0;
+}
+button.btn.inline {
+  display: inline-flex;
+}
+
+buttons.fill button.btn {
+  flex: 1 0;
+}
+
+button.btn.align-center .content {
+  justify-content: center;
+  align-items: center;
+}
+
+button.btn.align-left .content {
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+button.btn.align-right .content {
+  justify-content: flex-end;;
+  align-items: flex-end;
+}
+
 button.ui-button.btn-huge, .btn-group-huge > .btn {
-    padding: 14px 20px;
-    font-size: 24px;
+    padding: 1rem 1.5rem;
+    font-size: 1.5rem;
     line-height: 1.6;
-    border-radius: 8px;
+    border-radius: 0.4rem;
+}
+
+button.ui-button.btn-tiny, .btn-group-tiny > .btn {
+    padding: 0.22rem 0.65rem;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    border-radius: 0.2rem;
 }
 
 .ui-button {
@@ -11,4 +45,35 @@ button.ui-button.btn-huge, .btn-group-huge > .btn {
 
 button.delayed-hover {
     transition: background-color 0.5s;
+}
+
+.tooltip .tooltip-dark {
+  background-color: #000000;
+}
+
+.tooltip .tooltip-light {
+  background-color: #fafafa;
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+}
+.content.vertical {
+  flex-direction: column;
+}
+
+.ui-button .fill {
+  flex: 1 0;
+}
+
+.ui-button .fit {
+  flex: 0 0;
+}
+
+.content span {
+  padding: 0.25rem;
+}
+.content.vertical span {
+  padding: 0.10rem;
 }

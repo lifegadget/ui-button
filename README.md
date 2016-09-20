@@ -17,7 +17,7 @@ ember install ui-button
 
 For more details on the syntax check out the interactive demo:
 
-> [ui-button demo](http://current.development.ui-button.divshot.io)
+> [ui-button demo](https://ui-button.firebaseapp.com/button-demo)
 
 ## Dependencies ##
 
@@ -35,7 +35,7 @@ In addition though you should include the following:
 
 - Twitter Bootstrap
 
-    You'll want Twitter Bootstrap (SASS or otherwise) around to make everything look nice. You could style things yourself but this addon assumes a styling naming convention borrowed from Twitter. 
+    You'll want Twitter Bootstrap (SASS or otherwise) around to make everything look nice. You could style things yourself but this addon assumes a styling naming convention borrowed from Twitter.
 
 
 ## Version Compatibility
@@ -47,7 +47,7 @@ This may very well work with older version of Ember and Ember-CLI but it was int
 
 ## Repo Contribution
 
-We're open to your creative suggestions but please move past the "idea" stage 
+We're open to your creative suggestions but please move past the "idea" stage
 and send us a PR so we can incorporate your ideas without killing ourselves. :)
 
 ## Licensing
@@ -73,4 +73,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-

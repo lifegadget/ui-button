@@ -3,7 +3,6 @@
 # compiled output
 /dist
 /tmp
-/.divshot-cache/*
 
 # dependencies
 /node_modules
@@ -16,4 +15,4 @@
 /libpeerconnection.log
 npm-debug.log
 testem.log
-ui-button.sublime-workspace
+.tags*
