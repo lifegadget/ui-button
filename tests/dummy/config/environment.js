@@ -4,7 +4,7 @@ module.exports = function(environment) {
   var ENV = {
     modulePrefix: 'dummy',
     environment: environment,
-    baseURL: '/',
+    rootURL: '/',
     locationType: 'auto',
     EmberENV: {
       FEATURES: {
@@ -12,18 +12,21 @@ module.exports = function(environment) {
         // e.g. 'with-controller': true
       }
     },
+    flashMessageDefaults: {
+      timeout: 8000,
+    },
 
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
     },
     contentSecurityPolicy: {
-      'default-src': " ",
+      'default-src': "'unsafe-eval' http://cloudfront.net",
       'script-src': "'self'",
-      'font-src': "'self' ",
+      'font-src': "'self' http://fonts.gstatic.com http://fonts.googleapis.com",
       'connect-src': "'self'",
-      'img-src': "'self' https://npmjs.org https://npmjs.com https://badge.fury.io https://travis-ci.org https://api.travis-ci.org https://codeclimate.com https://*.cloudfront.net",
-      'style-src': "'self'",
+      'img-src': "'self' https://*.cloudfront.net https://badge.fury.io http://fonts.gstatic.com http://fonts.googleapis.com",
+      'style-src': "'self' 'unsafe-inline' http://fonts.googleapis.com http://fonts.gstatic.com",
       'media-src': "'self'"
     }
 
@@ -38,8 +41,6 @@ module.exports = function(environment) {
   }
 
   if (environment === 'test') {
-    // Testem prefers this...
-    ENV.baseURL = '/';
     ENV.locationType = 'none';
 
     // keep test console output quieter

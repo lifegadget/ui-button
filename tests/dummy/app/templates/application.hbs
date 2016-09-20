@@ -1,6 +1,25 @@
-{{app-page
-  repo='ui-button'
-  repoOwner='lifegadget'
-  subHeading='a simple button component which leverages Bootstrap styling'
-  currentPath=currentPath
-}}
+<div class="flash-messages">
+  {{#each flashMessages.queue as |flash|}}
+  {{flash-message flash=flash messageStyle='bootstrap'}}
+{{/each}}
+</div><div class="container">
+  <h1 class="display-3">
+    {{ui-label title='ui-button' mood='success'}} Addon
+  </h1>
+  {{#ui-navbar selected=currentPath onChange=(action 'navChange') as |nav|}}
+    {{#nav.brand linkTo='https://github.com/lifegadget/ui-button'}}
+      {{ui-icon icon='github' size='2x'}}
+    {{/nav.brand}}
+    {{#nav.items}}
+      {{nav.item title='Intro' routeTo='index'}}
+      {{nav.item title='ui-button' routeTo='demo-button'}}
+      {{nav.item title='ui-toggle-button' routeTo='demo-toggle-button'}}
+      {{nav.item title='ui-buttons' routeTo='demo-buttons'}}
+      {{#nav.right}}
+        <img alt="fury" src="https://badge.fury.io/js/ui-button.svg">
+      {{/nav.right}}
+    {{/nav.items}}
+  {{/ui-navbar}}
+
+  {{outlet}}
+</div>

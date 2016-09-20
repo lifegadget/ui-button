@@ -1,10 +1,9 @@
 {
-  "globalDependencies": {
-    "bootstrap": "registry:dt/bootstrap#3.3.5+20160619023404"
-  },
   "globalDevDependencies": {
-    "fastclick": "registry:dt/fastclick#1.0.3+20160317120654",
-    "jquery": "registry:dt/jquery#1.10.0+20160908203239",
-    "qunit": "registry:dt/qunit#1.16.0+20160514172809"
+    "bootstrap": "registry:dt/bootstrap#3.3.5+20160619023404",
+    "phantomjs": "registry:dt/phantomjs#1.9.0+20160316155526"
+  },
+  "globalDependencies": {
+    "showdown": "registry:dt/showdown#1.4.1+20160608102004"
   }
 }

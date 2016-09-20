@@ -1,0 +1,394 @@
+<p>
+  <br>
+</p>
+{{#markdown-convert style='github'}}
+  ## Overview: `ui-buttons`
+
+  The diagram below attempts to illustrate the various properties that make up the state of a `ui-buttons` component. In short, this component brings either buttons or toggle-buttons into a working group that are both visually bound and also work in concert to create an array of "values".
+{{/markdown-convert}}
+<div style='text-align: center; margin: 15px 0'>
+  <img src='/images/ui-buttons.png' style='height: 432px'>
+</div>
+{{#markdown-convert style='github'}}
+  ## Demo: _inline use_
+{{/markdown-convert}}
+<div class="row">
+  <div class="col-xs-6 col-md-3">
+    {{ui-buttons
+      buttons='Foo,Bar,Baz 2'
+      size=(if responsive.isMobile 'small' 'default')
+      name='very-basic'
+      onChange=(route-action 'onChange')
+    }}
+  </div>
+  <div class="col-xs-6 col-md-4">
+    <b>Very Basic</b>
+    <br>
+  <pre><code>\{{ui-buttons
+  buttons='Foo,Bar,Baz 2'
+  onChange=(route-action 'onChange')
+}}</code></pre>
+    <hr width='100%'>
+    Container value is: {{veryBasic}}
+
+    {{#markdown-convert style='github'}}
+    > **Note:** because the container doesn't send in the `values` attribute it has no ability to directly _set_ the values itself, only to "vote" to accept changes when the `onChange` event is fired
+    {{/markdown-convert}}
+  </div>
+  <div class="col-xs-12 col-md-5">
+    {{#markdown-convert style='github'}}
+    The simplist of scenarios but it is useful to see how quickly one can setup a group of buttons.
+
+    One thing to note is that when creating buttons this way it will parse the `buttons` string and "dasherize" each item to create a value. If you click on the `Baz 2` titled button you'll see that the value is `baz-2`. For the others the first letter is not capitalized.
+
+    Also note that the "cardinality" of a default button group is `0:1` which means it doesn't need any buttons selected but can have only 1 maximum. This will be discussed more later.
+    {{/markdown-convert}}
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-xs-6 col-md-3">
+    {{ui-buttons
+      buttons='Foo::monkey,Bar::tiger,Baz 2::lion'
+      values=explicitSetter
+      name='explicit-setter'
+      orient=orientation
+      fill=fitFull
+      align=align
+      onChange=(route-action 'onChange')
+    }}
+    <p>
+      <br>
+    </p>
+    {{ui-toggle-button
+      on='fill'
+      off='fit'
+      size='small'
+      inline=true
+      outline=true
+      value=fitFull
+      onToggle=(mut fitFull)
+    }}
+
+    {{ui-toggle-button
+      on='horizontal'
+      off='vertical'
+      size='small'
+      inline=true
+      valuesAre='equal'
+      defaultValue='vertical'
+      outline=true
+      mood='success'
+      value=orientation
+      onToggle=(mut orientation)
+    }}
+
+    {{ui-toggle-button
+      on='left'
+      off='center'
+      size='small'
+      inline=true
+      valuesAre='equal'
+      defaultValue='center'
+      outline=true
+      mood='secondary'
+      value=align
+      onToggle=(mut align)
+    }}
+
+  </div>
+  <div class="col-xs-6 col-md-4">
+    <b>Explicit Values Setting</b>
+    <br>
+  <pre><code>\{{ui-buttons
+    buttons='Foo::monkey,Bar::tiger,Baz 2::lion'
+    values=explicitSetter
+    name='explicit-setter'
+    orient='{{orientation}}'
+    fill={{fitFull}}
+    align='{{align}}'
+    onChange=(route-action 'onChange')
+  }}</code></pre>
+    <hr width='100%'>
+    Container value is: {{explicitSetter}}
+
+    {{#markdown-convert style='github'}}
+    > **Note:** on route initialization, the value property -- `basicSetter` -- is set to: ['bar'].
+    {{/markdown-convert}}
+  </div>
+  <div class="col-xs-12 col-md-5">
+    {{#markdown-convert style='github'}}
+    In this example we've not just stated _titles_ for the buttons but explicitly stated the _values_. The double colon (::) indicates a string value but you may also use a triple colon to indicate .
+
+    At no time will the internal state mechanism of this component change `values`.
+
+    Here we're also seeing the `orient`, and `fill` properties which do hopefully you'd expect of them and are represented by CSS at the **buttons** level. We can also set the `align` property on the buttons component and it will proxy through to all buttons where it is represented in CSS at the **button** level.
+    {{/markdown-convert}}
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-6 col-md-3">
+    {{ui-buttons
+      buttons='1,2,3,4,5'
+      cardinality='0:3'
+      name='cardinality-test'
+      onChange=(route-action 'onChange')
+      onError=(route-action 'onError')
+    }}
+  </div>
+  <div class="col-xs-6 col-md-4">
+    <b>Cardinality Enforcement</b>
+    <br>
+  <pre><code>\{{ui-buttons
+  buttons='1,2,3,4,5'
+  cardinality='0:3'
+  name='cardinality-test'
+  onChange=(route-action 'onChange')
+  onError=(route-action 'onError')
+}}</code></pre>
+  </div>
+  <div class="col-xs-12 col-md-5">
+    {{#markdown-convert style='github'}}
+    Here we've opened up the cardinality a bit. You'll see you can choose any three buttons at a time but never more. Also note, that unlike the `0:1` and `1:1` cardinalities, the button group will not deselect a value to open up room for another selection. This is by design and best addresses most of the use-cases.
+
+    > Note: the _exact_ rule is that whenever min and max cardinality are the same _or_ max cardinality is 1 it will rotate values otherwise not. The special case is 0:1 which rotates as well.
+
+    If you want to override the queuing strategy you can change the `rotate` property to either null, "fifo" or "lifo" (indicating which queuing strategy to use).
+    {{/markdown-convert}}
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-xs-6 col-md-3">
+    {{#if showComponent}}
+    {{ui-buttons
+      buttons='1,2,3,4,5'
+      values=initCardinality
+      cardinality='2:2'
+      name='init-cardinality'
+      onChange=(route-action 'onChange')
+      onError=(route-action 'onError')
+    }}
+    {{else}}
+      <i>press button to initialise</i>
+    {{/if}}
+    <p>
+      {{#markdown-convert style='github'}}
+      > **onError** will trigger codes:
+      > `min-cardinality-not-met`, `max-cardinality-not-met`
+
+      > **onChange** will trigger codes:
+      > `cardinality-suggestion`
+      {{/markdown-convert}}
+    </p>
+  </div>
+  <div class="col-xs-6 col-md-4">
+    <p>
+      <b>Cardinality Out-of-bounds</b>
+    </p>
+  <pre><code>\{{ui-buttons
+    buttons='1,2,3,4,5'
+    values=initCardinality
+    cardinality='2:2'
+    name='init-cardinality'
+    onChange=(route-action 'onChange')
+    onError=(route-action 'onError')
+  }}</code></pre>
+  {{ui-toggle-button
+    value=showComponent
+    off='initialize component'
+    on='destroy component'
+    onToggle=(mut showComponent)
+  }}
+  </div>
+  <div class="col-xs-12 col-md-5">
+    {{#markdown-convert style='github'}}
+    This example illustrates when the container's `values` array is set to a value which exceeds the cardinality constraints.  This may be most likely during _initialization_ but could be at any time of the components lifecycle.
+
+    When this occurs the first response is a firing of an **onError** action. This is for notification of what has happened as well as providing a "suggested" set of values which _does_ fit into the constraints. So long as the container does not pass back a `false` value then a **onChange** action will be fired next. If _false_ is received back the button group will disable itself as it can no longer operate within the constrains that its been asked to.
+
+    > Note: if the container is not listening on **onError** then the **onChange** will always fire
+
+    The **onChange** is then fired to update the group to an acceptable cardinality value. This allows `mut`-based actions to just get themselves into the right state (or at least an acceptable state) and less trusting containers can write an action handler that call out by the `code` of the event and then decide the best course of action.
+
+    {{/markdown-convert}}
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-6 col-md-3">
+    {{ui-buttons
+      buttons='1,2,3,4,5'
+      value=mutDemo
+      cardinality='0:1'
+      name='mut-demo'
+      onChange=(mut mutDemo)
+      onError=(route-action 'onError')
+    }}
+    <p>
+      <br>
+    </p>
+    {{ui-buttons
+      buttons='1,2,3,4,5'
+      cardinality='0:3'
+      values=mutDemos
+      name='mut-demos'
+      onChange=(mut mutDemos)
+    }}
+
+  </div>
+  <div class="col-xs-6 col-md-4">
+    <p>
+      <b>{{ui-label 'values'}} versus {{ui-label 'value'}} and the {{ui-pill 'mut'}} helper</b>
+    </p>
+  <pre><code>\{{ui-buttons
+    buttons='1,2,3,4,5'
+    cardinality='0:1'
+    value=mutDemo
+    name='mut-demo'
+    onChange=(mut mutDemo)
+  }}
+  \{{ui-buttons
+    buttons='1,2,3,4,5'
+    cardinality='0:3'
+    values=mutDemos
+    name='mut-demos'
+    onChange=(mut mutDemo)
+  }}</code></pre>
+  </div>
+  <div class="col-xs-12 col-md-5">
+    {{#markdown-convert style='github'}}
+    The `values` property is always an array and when the cardinality of `ui-buttons` component is greater than 1 then having the container setting value as an array makes a lot of sense. In fact, to now, every example has assumed this relationship.
+
+    However, when the MOST buttons that will ever be selected is 1 using the `value` property instead is typically a more sensible choice. This allows you to put in a normal scalar value rather than a single item array.
+
+    Fortunately not only is this possible but the `mut` helper will detect if you are setting the value with `value` versus `values` and pass the appropriate value back.
+
+    {{/markdown-convert}}
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-xs-6 col-md-3">
+    {{ui-buttons
+      buttons='1,2,3'
+      name='active-styling'
+      activeMood='success'
+      activeIcon='check-circle'
+      inactiveIcon='circle'
+      onChange=(route-action 'onChange')
+      onError=(route-action 'onError')
+    }}
+  </div>
+  <div class="col-xs-6 col-md-4">
+    <b>Active / Inactive Styling</b>
+    <br>
+  <pre><code>\{{ui-buttons
+  buttons='1,2,3'
+  name='active-styling'
+  activeMood='success'
+  activeIcon='check-circle'
+  inactiveIcon='circle-o'
+  onChange=(route-action 'onChange')
+  onError=(route-action 'onError')
+}}</code></pre>
+  </div>
+  <div class="col-xs-12 col-md-5">
+    {{#markdown-convert style='github'}}
+    Buttons in the group can either be "active" or "inactive" and it is possible to state variations in `mood`, `icon`, or `size` based on this.
+    {{/markdown-convert}}
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-6 col-md-3">
+    {{ui-buttons
+      buttons='1,2,3'
+      name='global-styling'
+      mood='warning'
+      size='large'
+      icon='circle-o'
+      onChange=(route-action 'onChange')
+      onError=(route-action 'onError')
+    }}
+  </div>
+  <div class="col-xs-6 col-md-4">
+    <p>
+      <b>Global Styling</b>
+    </p>
+  <pre><code>\{{ui-buttons
+  buttons='1,2,3'
+  name='global-styling'
+  mood='warning'
+  size='large'
+  icon='circle'
+  onChange=(route-action 'onChange')
+  onError=(route-action 'onError')
+}}</code></pre>
+  </div>
+  <div class="col-xs-12 col-md-5">
+    {{#markdown-convert style='github'}}
+    Buttons in the group can either be "active" or "inactive" and it is possible to state variations in `mood`, `icon`, or `size` based on this.
+    {{/markdown-convert}}
+  </div>
+</div>
+
+{{#markdown-convert style='github'}}
+## Demo: _block_ style invocation
+
+And you thought inline was cool, just wait until you see block components featuring their new best friend "contextual components". Here are the components that ui-buttons exposes:
+
+- `button` - a fully wired version of a `ui-button` component
+- `toggle` - a fully wired version of a `ui-toggle-button` component
+- `~~dropdown~~` - (coming soon) a fully wired version of a `ui-dropdown-button` component
+- `cardinality` - an object with _min_ and _max_ properties
+- `values` - an array of the values that are "active"
+- `buttons` - an array of buttons config
+
+Let's get this party started ...
+{{/markdown-convert}}
+<div class="row">
+  <div class="col-xs-6 col-md-3">
+    {{#ui-buttons
+      name='block-party'
+      activeIcon='check-circle'
+      inactiveIcon='circle-o'
+      activeMood='info'
+      onChange=(route-action 'onChange')
+      onError=(route-action 'onError')
+      as |g|
+    }}
+      {{g.button title='Foo'}}
+      {{g.button title='Bar'}}
+      {{g.button title='Baz'}}
+    {{/ui-buttons}}
+  </div>
+  <div class="col-xs-6 col-md-4">
+    <b>Global Styling</b>
+    <br>
+  <pre><code>\{{#ui-buttons
+  name='block-party'
+  activeIcon='check-circle'
+  inactiveIcon='circle-o'
+  activeMood='info'
+  onChange=(route-action 'onChange')
+  onError=(route-action 'onError')
+  as |g|
+}}
+  \{{g.button title='Foo' value='foo'}}
+  \{{g.button title='Bar' value='bar'}}
+  \{{g.button title='Baz' value='foo'}}
+\{{/ui-buttons}}
+
+</code></pre>
+  </div>
+  <div class="col-xs-12 col-md-5">
+    {{#markdown-convert style='github'}}
+    Buttons in the group can either be "active" or "inactive" and it is possible to state variations in `mood`, `icon`, or `size` based on this.
+    {{/markdown-convert}}
+  </div>
+</div>

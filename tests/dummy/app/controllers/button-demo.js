@@ -1,7 +1,4 @@
 import Ember from 'ember';
-const { keys, create } = Object; // jshint ignore:line
-const {computed, observer, $, A, run, on, typeOf, debug, defineProperty, get, set, inject, isEmpty} = Ember;  // jshint ignore:line
-
 
 export default Ember.Controller.extend({
 
@@ -17,13 +14,14 @@ export default Ember.Controller.extend({
       this.toggleProperty('toggledEnablement');
     },
     buttonAction: function(action,btn) {
-      let {elementId,value} = Ember.getProperties(btn, 'elementId','value');
+      let {id,value} = Ember.getProperties(btn, 'id','value');
       let type = Ember.typeOf(value);
       if(type === 'object') {
         value = JSON.stringify(value);
       }
-      const flashMessages = Ember.get(this, 'flashMessages');
-      flashMessages.success(`${elementId} button pressed with value: ${value} [${type}]`);
+      const message = `Button[${id}] pressed with a parameter of type "${type}": ${value}`;
+      console.log(message);
+      window.alert(message);
     }
   }
 

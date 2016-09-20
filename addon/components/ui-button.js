@@ -1,381 +1,98 @@
 import Ember from 'ember';
-const { computed, observer, $, A, run, on, typeOf, debug, get, set, inject } = Ember;    // jshint ignore:line
-const capitalize = Ember.String.capitalize;
-const dasherize = thingy => {
-  return thingy ? Ember.String.dasherize(thingy) : thingy;
-};
+import Stylist from 'ember-cli-stylist/mixins/shared-stylist';
+import ddau from '../mixins/ddau';
+import { v4 } from "ember-uuid";
+const { computed, $ } = Ember;
+const a = Ember.A;
 
-const isInitialized = value => {
-  return typeOf(value) !== 'null' && typeOf(value) !== 'undefined';
-};
 import layout from '../templates/components/ui-button';
-import SharedStylist from 'ember-cli-stylist/mixins/shared-stylist';
-import ItemMessaging from 'ui-button/mixins/item-messaging';
-const MOOD_DEFAULT = 'default';
 
-const uiButton = Ember.Component.extend(SharedStylist,ItemMessaging,{
+const button = Ember.Component.extend(Stylist, ddau, {
   layout: layout,
-	tagName: 'button',
-  group: null,
-
-	attributeBindings: ['disabled:disabled', 'type'],
-	classNameBindings: ['selected:active','_mood','_size','delayedHover:delayed-hover'],
-	classNames: ['btn','ui-button'],
-
-  disabledButtons: computed({
-    set: function(_,value) {
-      return value;
-    },
-    get: function() {
-      return new Set();
-    }
-  }),
-  disabled: computed('group.disabledMutex','disabledMutex', {
-    set: function(_, value) {
-      this.setDisabled(value);
-      return value;
-    },
-    get: function() {
-      return this.getDisabled();
-    }
-  }),
-  setDisabled(value) {
-    const {disabledButtons,elementId} = this.getProperties('disabledButtons','elementId');
-    const id = this.get('value');
-    const doItNow = value => {
-      if(value) {
-        disabledButtons.add(id);
-        this.set('disabledButtons', disabledButtons);
-        this.applyEffect('disabledEffect');
-      } else {
-        disabledButtons.delete(id);
-        this.set('disabledButtons', disabledButtons);
-        this.applyEffect('enabledEffect');
-      }
-    }; // end doItNow
-    // defer setting if elementId isn't ready
-    if(elementId) {
-      doItNow(value);
-    } else {
-      run.next(() => {
-        doItNow(value);
-      });
+  tagName: '',
+  init() {
+    this._super(...arguments);
+    if(!this.get('id')) {
+      this.set('id', v4());
     }
   },
-  getDisabled() {
-    let {disabledButtons,value} = this.getProperties('disabledButtons','value');
-    return disabledButtons ? disabledButtons.has(value) : false;
-  },
 
-  enabled: computed('disabled', {
-    set: function(param,value) {
-      this.set('disabled', !value);
-      return value;
-    },
-    get: function() {
-      return !this.get('disabled');
-    }
+  mood: 'primary',
+  orient: computed.alias('stack'),
+  orientation: computed.alias('stack'),
+  stack: 'horizontal',
+  outline: false,
+  _outline: computed('outline', function() {
+    const outline = this.get('outline');
+    return outline ? '-outline' : '';
   }),
-
-  isEmpty: computed('template','icon','title', function() {
-    return !this.get('template') && !this.get('icon') && !this.get('title');
-  }),
-	name: 'Submit',
-  onTitle: null,
-  offTitle: null,
-  on: computed.alias('onTitle'),
-  off: computed.alias('offTitle'),
-  title: computed('title','toggled',{
-    set: function(_,value) {
-      this.setTitle(value);
-      return value;
-    },
-    get: function() {
-      return this.getTitle();
-    }
-  }),
-  setTitle(value) {
-    this.set('onTitle', value);
-    this.set('offTitle', value);
-  },
-  getTitle() {
-    const {onTitle,offTitle,toggled} = this.getProperties('onTitle', 'offTitle', 'toggled');
-    if(toggled) {
-      return onTitle ? onTitle : '';
-    } else {
-      return offTitle ? offTitle : '';
-    }
-  },
-  // VALUE
-  value: computed('toggled',{
-    set(_,value) {
-      this.setValue(value);
+  type: 'button',
+  activeValues: computed(() => ([]) ),
+  active: computed('activeValues', {
+    set(_, value) {
       return value;
     },
     get() {
-      return this.getValue();
+      return a(this.get('activeValues')).includes(this.get('value'));
     }
   }),
-  setValue(value) {
-    const {toggled, isToggleable} = this.getProperties('toggled','isToggleable');
-    const toggleProp = toggled ? 'onValue' : 'offValue';
-    const toggleValue = this.get(toggleProp);
-    const otherToggleValue = this.get(toggled ? 'offValue' : 'onValue');
-    if(isToggleable && value === otherToggleValue && otherToggleValue !== toggleValue) {
-      this.toggle();
-    } else {
-      if(isToggleable) {
-        this.set(toggleProp, value);
-      } else {
-        this.set('_value', value);
-      }
-    }
-  },
-  getValue() {
-    const {_value,onValue,offValue,toggled, title} = this.getProperties('_value', 'onValue', 'offValue', 'toggled', 'title');
-    if(_value) {
-      return _value;
-    }
-    if(!isInitialized(onValue) && !isInitialized(offValue)) {
-      return title ? dasherize(title) : this.get('elementId');
-    }
-    return toggled ? onValue : offValue; // NOTE: if not toggleable; toggled prop will always be false
-  },
-  // ICON
-  icon: null,
-  _iconObserver: on('didInitAttrs',observer('icon','onIcon','offIcon','toggled','selected','activeIcon','inactiveIcon',function() {
-    run.debounce( () => {
-      this.set('_icon', this.getIcon());
-    },5,true);
-  })),
-  getIcon() {
-    const {icon,toggled,isToggleable,selected} = this.getProperties('icon','toggled','isToggleable','selected');
-    const toggleProperty = toggled ? 'onIcon' : 'offIcon';
-    const selectProperty = selected ? 'activeIcon' : 'inactiveIcon';
+  keepFocus: false,
+  size: null,
+  iconPulse: false,
+  iconSpin: false,
+  _class: Ember.computed('mood', '_outline', 'size', 'class', 'active', 'align', function() {
+    let {mood, _outline, _size, active, inline, align} = this.getProperties('mood', '_outline', '_size', 'active', 'inline', 'align');
+    const classy = this.get('class') || '';
+    mood = mood ? ` btn-${mood}` : ' btn-secondary';
+    const activeClass = active ? ' active' : ' ';
+    const display = inline ? ' inline' : ' block';
+    align = align ? ` align-${align}` : '';
+    return `ui-button btn ${classy}${activeClass}${mood}${_outline}${_size}${display}${align}`;
+  }),
+  disabled: false,
 
-    if (icon) {
-      return icon;
-    } else {
-      if(selected || !isToggleable) {
-        return this.get(selectProperty) ? this.get(selectProperty) : null;
-      } else {
-        return this.get(toggleProperty) ? this.get(toggleProperty) : null;
-      }
-    }
-  },
-  // MOOD
-  mood: null,
-  _moodObserver: on('didInitAttrs',observer('mood','onMood','offMood','toggled','selected','activeMood','inactiveMood', function() {
-    run.debounce(()=>{
-      this.set('_mood', this.getMood());
-    },5,true);
-  })),
-  getMood() {
-    const {mood,toggled,isToggleable,selected} = this.getProperties('mood', 'toggled','isToggleable', 'selected');
-    const toggleProperty = toggled ? 'onMood' : 'offMood';
-    const selectProperty = selected ? 'activeMood' : 'inactiveMood';
-    let officialMood;
-    if(mood) {
-      officialMood = mood;
-    } else {
-      if(selected || !isToggleable) {
-        officialMood = this.get(selectProperty) ? this.get(selectProperty) : MOOD_DEFAULT;
-      } else {
-        officialMood = this.get(toggleProperty) ? this.get(toggleProperty) : MOOD_DEFAULT;
-      }
-    }
-
-    return `btn-${officialMood}`;
-  },
-  delayedHover: true,
-  size: 'normal',
-  width: null,
-  keepFocus: false, // keep focus on button after clicking?
-	_sizeObserver: on('willRender', observer('size','group.size', function() {
-    let groupSize = this.get('group.size');
-    let size = groupSize ? groupSize : this.get('size');
-    if(!size) {
-      size = 'normal';
-    }
-    let mapper = {
-      normal: '',
-      tiny: 'btn-xs',
-      sm: 'btn-sm',
-      small: 'btn-sm',
-      lg: 'btn-lg',
-      large: 'btn-lg',
-      huge: 'btn-huge'
-    };
-    this.set('_size',mapper[this.get('size')]);
-	})),
-  tooltip: false,
-  tooltipPlacement: 'auto top',
-  tooltipDelay: 500,
-  tooltipHtml: true,
-  tooltipTrigger: 'hover',
-  tooltipTemplate: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
-  // SELECTION
-  // allows for control to move into the selected state, by default buttons are just pressed not selected
-  isToggleable: false,
-  // Contains a list of elementIds which are selected (if not grouped then the only ID would be itself)
-  selectedButtons: computed({
-    set: function(param,value) {
-      return value;
-    },
-    get: function() {
-      return new Set();
+  _size: computed('size', function() {
+    const size = this.get('size');
+    switch(size) {
+    case 'huge':
+    case 'hg':
+      return ' btn-huge';
+    case 'large':
+    case 'lg':
+      return ' btn-lg';
+    case 'default':
+    case 'medium':
+    case 'md':
+      return '';
+    case 'small':
+    case 'sm':
+      return ' btn-sm';
+    case 'tiny':
+    case 'tn':
+      return ' btn-tiny';
+    default:
+      return '';
     }
   }),
-  // SELECTED
-  isSelectable: false,
-  selected: computed('selectedButtons','isSelectable','group.selectedMutex','value',{
-    set:function(_,value) {
-      this.setSelected(value);
-      return value;
-    },
-    get:function() {
-      return this.getSelected();
-    }
-  }),
-  setSelected(selected) {
-    const {selectedButtons,value, isSelectable} = this.getProperties('selectedButtons','value','isSelectable');
-    debug('calling the setter of selected is considered bad practice, try to use "selectedButtons" instead');
-    if(selected && isSelectable) {
-      selectedButtons.add(value === null ? null : value);
-    } else {
-      selectedButtons.delete(value === null ? null : value);
-    }
-    // this.set('selectedButtons', selectedButtons);
-    this.notifyPropertyChange('group.selectedMutex');
-  },
-  getSelected() {
-    const {isSelectable, selectedButtons, value} = this.getProperties('isSelectable', 'selectedButtons', 'value');
-    if(!isSelectable) {
-      return false;
-    }
-
-    const isSelected = selectedButtons ? selectedButtons.has(value) : false;
-    if(isSelected !== this.get('_selected')) {
-      if(isSelected) {
-        this.applyEffect('activeEffect');
+  actions: {
+    onClick(context, evt) {
+      const value = this.get('value');
+      if (this.keepFocus) {
+        $(`#${context.id}`).focus();
       } else {
-        this.applyEffect('inactiveEffect');
+        $(`#${context.id}`).blur();
       }
-    }
-    this.set('_selected', isSelected);
-    return isSelected;
-  },
-  toggled: false,
-
-  // CLICK
-	click() {
-    this.sendAction('action', 'pressed', this); // send generic action event (for non-grouped buttons)
-    if(this.isToggleable) {
-      this.toggle();
-      this.sendAction('action', 'toggled', this);
-    }
-    if(this.group) {
-      this._tellGroup('pressed', this); // group will toggle selection if it deems fit
-    }
-
-    if(!this.get('keepFocus')) {
-      this.$().blur();
-    }
-    this.applyEffect('clickEffect');
-  },
-  toggle() {
-    const toggleValue = this.get('toggled');
-    const effect = toggleValue ? 'onEffect' : 'offEffect';
-    this.set('toggled', !toggleValue);
-    this.applyEffect(effect);
-  },
-  // EFFECTS
-  clickEffect: null,
-  enabledEffect: null,
-  disabledEffect: null,
-  activeEffect: null,
-  inactiveEffect: null,
-  onEffect: null,
-  offEffect: null,
-  applyEffect(effectType) {
-    const effect = this.get(effectType);
-    const _rendered = this.get('_rendered');
-    if(!effect || !_rendered) {
-      return false;
-    }
-    try {
-      run.next(() => {
-        this.$().addClass('animated ' + effect);
-        this.$().one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', () => {
-          this.$().removeClass('animated ' + effect);
-          this.sendAction('action', 'effectEnded', this, 'effectType');
-        });
-      });
-    } catch (e) {
-      // do nothing
-    }
-  },
-  setDefaultValues() {
-    const properties = ['value'];
-    for(let property of properties) {
-      const defaultProp = 'default' + capitalize(property);
-      const defaultValue = this.get(defaultProp);
-      if(typeOf(defaultValue) !== 'undefined' && typeOf(this.get(property)) === 'undefined' ) {
-        this.set(property, defaultValue);
-      }
-    }
-  },
-  setupTooltip() {
-    const tooltip = this.get('tooltip');
-    if(tooltip) {
-      let {
-        tooltipPlacement: placement,
-        tooltipDelay: delay,
-        tooltipHtml: html,
-        tooltipTrigger: trigger,
-        tooltipTemplate: template} = this.getProperties('tooltipPlacement', 'tooltipDelay','tooltipHtml','tooltipTrigger','tooltipTemplate');
-      run.next( () => {
-        try {
-          this.$().tooltip({
-            title: tooltip,
-            delay: {show: delay, hide: 200},
-            html: html,
-            trigger: trigger,
-            placement: placement,
-            template: template
-          });
-        } catch (e) {
-          debug('There was a problem setting up the tooltip on [' + this.get('elementId') + '], ensure Bootstrap\'s JS is included in the vendor JS.\n%o',e);
-        }
-      });
-    }
-  },
-  // RUN LOOP
-  // -------------------------
-  _ia: on('didInitAttrs', function() { return this.initAttrs(); }),
-  _d: on('willDestroyElement', function() { return this.willDestroy(); }),
-  _initialized: false,
-  _rendered: false,
-  init() {
-    this._super(...arguments);
-    this._tellGroup('registration', this);
-    this.setupTooltip();
-    run.schedule('afterRender', () => {
-      if(!this.group) {
-        this._rendered = true;
-      }
-    });
-  },
-  initAttrs() {
-    this.setDefaultValues();
-    this._initialized = true;
-  },
-  willDestroy() {
-    if(this.get('tooltip')){
-      this.$().tooltip('destroy');
+      this.ddau('onClick', {
+        value: value,
+        context: context,
+        dom: document.getElementById(this.id),
+        event: evt
+      }, value);
     }
   }
 });
-
-export default uiButton;
-uiButton[Ember.NAME_KEY] = 'UI Button';
+button.reopenClass({
+  positionalParams: ['title']
+});
+button[Ember.NAME_KEY] = 'ui-button';
+export default button;

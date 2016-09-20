@@ -1,4 +1,33 @@
-{{#if _icon}}<i class="fa fa-fw fa-{{_icon}}"></i>{{#if _title}}&nbsp;{{/if}}{{/if}}
-{{#if title}}{{title}}{{/if}}
-{{#if hasNoContent}}&nbsp;{{/if}}
-{{yield}}
+<button
+  id={{id}}
+  class={{_class}}
+  type={{type}}
+  outline={{_outline}}
+  active={{active}}
+  style={{stylist}}
+  disabled={{disabled}}
+  onclick={{action "onClick" this}}
+>
+<span class="content {{stack}} fill">
+
+  {{#if hasBlock}}
+    {{yield (hash
+      icon=(component 'ui-button-icon' icon=icon size=size iconSpin=iconSpin iconPulse=iconPulse)
+      title=(component 'ui-button-title' title=title)
+    )}}
+  {{else}}
+
+      {{#if icon}}
+      <span class="icon">
+        {{ui-icon icon=icon spin=iconSpin pulse=iconPulse}}
+      </span>
+      {{/if}}
+      {{#if title}}
+      <span class="title">
+        {{title}}
+      </span>
+      {{/if}}
+
+  {{/if}}
+  </span>
+</button>

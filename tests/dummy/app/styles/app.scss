@@ -1,0 +1,25 @@
+@import 'bootstrap-flex';
+@import 'mixins/_nav-divider';
+@import 'mixins/_buttons';
+@import 'mixins/_grid';
+.ui-markdown {
+  margin: 15px 0;
+}
+
+.row {
+  padding: 5px 0;
+  flex-wrap: nowrap;
+}
+
+.flash-messages {
+  position: fixed;
+  top: 50px;
+  left: 25%;
+  width: 50%;
+  text-align: center;
+  z-index: 100;
+}
+
+.tooltip.tooltip-danger {
+  background-color: $brand-danger;
+}

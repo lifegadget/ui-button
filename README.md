@@ -1,11 +1,5 @@
-# [ui-button](https://github.com/lifegadget/ui-button) ![ ](https://travis-ci.org/lifegadget/ui-button.svg) [![npm version](https://badge.fury.io/js/ui-button.svg)](http://badge.fury.io/js/ui-button) [![Code Climate](https://codeclimate.com/github/lifegadget/ui-button/badges/gpa.svg)](https://codeclimate.com/github/lifegadget/ui-button)
+# ui-button ![ ](https://travis-ci.org/lifegadget/ui-button.svg) [![npm version](https://badge.fury.io/js/ui-button.svg)](http://badge.fury.io/js/ui-button)
 > Dancing, shiny buttons with Bootstrap styling.
-
-## Major Versions
-
-The 1.0.0 release is the first and last expected release in the 1.0 path. I am working on a v2 release and expect that to be available soon which will be a much leaner, more Ember 2.0 based implementation.
-
-Think of this `1.0.0` release as just a dependency update from `0.6.6`. If you're really committed to continuing use of 1.x and want to submit a PR I'm happy to accept those.
 
 ## Install ##
 
@@ -23,7 +17,7 @@ ember install ui-button
 
 For more details on the syntax check out the interactive demo:
 
-> [ui-button demo](http://ui-button-1.firebase.io)
+> [ui-button demo](https://ui-button.firebaseapp.com/button-demo)
 
 ## Dependencies ##
 
@@ -36,12 +30,12 @@ In addition though you should include the following:
     Install the Ember CLI Autoprefixer ... this will ensure that the CSS animations are transformed to the appropriate browser syntax. It's also just a really good idea to have this installed anyway. Install it by:
 
     ````bash
-    ember install ember-cli-autoprefixer
+    ember install:addon ember-cli-autoprefixer
     ````
 
 - Twitter Bootstrap
 
-    You'll want Twitter Bootstrap (SASS or otherwise) around to make everything look nice. You could style things yourself but this addon assumes a styling naming convention borrowed from Bootstrap.
+    You'll want Twitter Bootstrap (SASS or otherwise) around to make everything look nice. You could style things yourself but this addon assumes a styling naming convention borrowed from Twitter.
 
 
 ## Version Compatibility

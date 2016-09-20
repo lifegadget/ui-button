@@ -1,15 +1,44 @@
-{{#each _items as |item|}}
-  {{component _type
-    value=item.value
-    title=item.title
-    disabled=item.disabled
-    activeMood=item.activeMood
-    inactiveMood=item.inactiveMood
-    icon=item.icon
-    activeIcon=item.activeIcon
-    inactiveIcon=item.inactiveIcon
-    size=item.size
-    group=this
-  }}
-{{/each}}
-{{yield this}}
+<buttons
+  id={{id}}
+  class="{{_class}} ui-buttons btn-group{{if (eq orient 'vertical') '-vertical'}} {{if (not-eq 'undefined' name) name}}{{if fill ' fill' ' fit'}}"
+  role="group"
+  aria-label={{name}}
+>
+  {{#if hasBlock}}
+    {{yield (hash
+      button=(component 'ui-button'
+        size=(if size size (
+          if (array-contains values button.value) activeSize inactiveSize)
+        )
+        mood=(if mood mood (
+          if (array-contains values button.value) activeMood inactiveMood)
+        )
+        icon=(if icon icon (
+          if (array-contains values button.value) activeIcon inactiveIcon)
+        )
+        activeValues=values
+        align=align
+        onClick=(action 'onClick')
+      )
+    )}}
+  {{else}}
+    {{#each _buttons as |button|}}
+      {{ui-button
+        size=(if size size (
+          if (array-contains values button.value) activeSize inactiveSize)
+        )
+        mood=(if mood mood (
+          if (array-contains values button.value) activeMood inactiveMood)
+        )
+        icon=(if icon icon (
+          if (array-contains values button.value) activeIcon inactiveIcon)
+        )
+        value=button.value
+        title=button.title
+        activeValues=values
+        align=align
+        onClick=(action 'onClick')
+      }}
+    {{/each}}
+  {{/if}}
+</buttons>

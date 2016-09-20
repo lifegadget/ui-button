@@ -1,26 +1,53 @@
-<h3>Components</h3>
-<div class="row">
-  <p class="descriptive col-xs-12">
-    The primary component is the self-named <code>ui-button</code> but there are
-    variations and grouping components also knowing about. Choose one of the following
-    for more details:
-  </p>
-</div>
 
-<desc>
-  <div class="row">
-    <div class="col-xs-6">
-      <heading>Containers</heading>
-      <ul class="components">
-        {{#link-to 'buttons-demo'}}<li><code>ui-buttons</code></li>{{/link-to}}
-      </ul>
-    </div>
-    <div class="col-xs-6">
-      <heading>Elements</heading>
-      <ul class="components">
-        {{#link-to 'button-demo'}}<li><code>ui-button</code></li>{{/link-to}}
-        <li>{{#link-to 'toggle-button-demo'}}<code>ui-toggle-button</code>{{/link-to}}</li>
-      </ul>
-    </div>
-  </div>
-</desc>
+<p>
+  <br>
+</p>
+<p> 
+  {{#markdown-convert style='github'}}
+  ## Overview
+
+  The **ui-button** addon is designed to make working with buttons easier. It relies on _styling_ help from the `ui-bootstrap` component and with that baseline provides implementation of three components of it's own:
+
+  1. `ui-button` - displays a single button
+  1. `ui-toggle-button` - display a button which can be toggled between two different states
+  1. `ui-buttons` - display a group of buttons
+
+  > **Note:** the `ui-buttons` component also has two varients of itself which provide minor functional variation called `radio-buttons` and `checkbox-buttons` respectively.
+
+  ## Details
+
+  For a working demo and more design details, use the links in the header to navigate to the three main component areas.
+
+  > **Note:** up to version `0.6.6` this addon was intended for a 1.x user base but with `1.0.0` onward it is meant only for Ember 2.x, it might work on 1.x but no testing will be done on that.
+
+  ## Contribution
+
+  If you like this addon and would like to contribute, your contributions would be very welcome in the form of a **PR**. This addon is used quite regularly and you'll get a response quickly from us quickly regardless.
+
+  If all you have time for is raising an issue, that is valueable too and we appreciate you taking the time to write down what's not working for you. As with all OSS, the time-to-fix will vary widely but it will be in the queue. We'd love to encourage you to take the plunge and go all-in with the PR but we're all short on time.
+
+  ## License
+
+  This addon is free to use and covered by the MIT license:
+
+  Copyright (c) 2016
+
+  > Permission is hereby granted, free of charge, to any person obtaining a copy of
+  this software and associated documentation files (the "Software"), to deal in
+  the Software without restriction, including without limitation the rights to
+  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+  of the Software, and to permit persons to whom the Software is furnished to do
+  so, subject to the following conditions:
+
+  > The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  > THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+ {{/markdown-convert}}
+</p>
