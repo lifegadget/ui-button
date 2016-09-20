@@ -28,7 +28,7 @@ test('inline button respond to "stack"', function(assert) {
   this.render(hbs`{{ui-button
     'foobar'
     icon='envelope'
-    stack=stack
+    orient=stack
   }}`);
   assert.equal(this.$('button .content').css('flex-direction'), 'row', 'row is default');
   this.set('stack', 'vertical');
