@@ -4,7 +4,7 @@ const path = require('path');
 const chalk = require('chalk');
 const Funnel = require('broccoli-funnel');
 const mergeTrees = require('broccoli-merge-trees');
-const log = require('broccoli-stew').log;
+// const log = require('broccoli-stew').log;
 
 module.exports = {
 	name: 'ui-button',
@@ -28,8 +28,8 @@ module.exports = {
       srcDir: '/',
       destDir: '/ui-button/bootstrap-source'
     });
-    trees.push(log(bootstrap, { output: 'tree' } ));
-    // trees.push(bootstrap);
+    // trees.push(log(bootstrap, { output: 'tree' } ));
+    trees.push(bootstrap);
     if (existingStyle) {
       trees.push(existingStyle);
     }
