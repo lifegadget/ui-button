@@ -22,7 +22,6 @@ $caret-width:            .3em !default;
 $caret-width-lg:         $caret-width !default;
 
 // BUTTONS
-
 $btn-link-disabled-color:        $gray-light !default;
 
 $btn-padding-x-tiny:             .25rem !default;
@@ -41,7 +40,8 @@ $btn-padding-y-huge:             1.0rem !default;
 $btn-block-spacing-y:            .5rem !default;
 $btn-toolbar-margin:             .5rem !default;
 
-// Allows for customizing button radius independently from global border radius
+// Allows for customizing button radius
+// independently from global border radius
 $btn-border-radius:              $border-radius !default;
 $btn-border-radius-huge:         $border-radius-huge !default;
 $btn-border-radius-lg:           $border-radius-lg !default;

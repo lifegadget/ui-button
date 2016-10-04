@@ -13,7 +13,7 @@ module.exports = {
 		this._super.included(app);
     if (!app.registry.availablePlugins['ember-cli-sass']) {
       this.ui.writeLine(chalk.bold('ui-button: ') + ' did not detect ' + chalk.bold.green('ember-cli-sass') + ' so using CSS configuration (instead of SASS).');
-      // app.import('vendor/ui-button/all.css');
+      app.import('vendor/ui-button/ui-button.css');
     }
 	},
 
@@ -26,7 +26,7 @@ module.exports = {
     const bootstrapPath = path.join('node_modules', 'bootstrap/scss');
     const bootstrap = new Funnel(bootstrapPath, {
       srcDir: '/',
-      destDir: '/ui-button/bootstrap'
+      destDir: '/ui-button/bootstrap-source'
     });
     trees.push(log(bootstrap, { output: 'tree' } ));
     // trees.push(bootstrap);
