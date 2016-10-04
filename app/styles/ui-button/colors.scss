@@ -1,0 +1,83 @@
+$gray-dark:                 #373a3c !default;
+$gray:                      #55595c !default;
+$gray-light:                #818a91 !default;
+$gray-lighter:              #eceeef !default;
+$gray-lightest:             #f7f7f9 !default;
+
+$mood-primary:             #0275d8 !default;
+$mood-secondary:           #8f70d5 !default;
+$mood-success:             #5cb85c !default;
+$mood-info:                #5bc0de !default;
+$mood-warning:             #f0ad4e !default;
+$mood-danger:              #d9534f !default;
+$mood-dark:                #1B1C20 !default;
+$mood-aged:                #c4c4c4 !default;
+$mood-faint:               #eaeaea !default;
+
+$btn-padding-x:                  1rem !default;
+$btn-padding-y:                  .5rem !default;
+$btn-line-height:                1.25 !default;
+$btn-font-weight:                normal !default;
+$btn-box-shadow:                 inset 0 1px 0 rgba(255,255,255,.15), 0 1px 1px rgba(0,0,0,.075) !default;
+$btn-active-box-shadow:          inset 0 3px 5px rgba(0,0,0,.125) !default;
+
+$btn-primary-color:              #fff !default;
+$btn-primary-bg:                 $mood-primary !default;
+$btn-primary-border:             $btn-primary-bg !default;
+
+$btn-secondary-color:            $gray-dark !default;
+$btn-secondary-bg:               #fff !default;
+$btn-secondary-border:           #ccc !default;
+
+$btn-info-color:                 #fff !default;
+$btn-info-bg:                    $mood-info !default;
+$btn-info-border:                $btn-info-bg !default;
+
+$btn-success-color:              #fff !default;
+$btn-success-bg:                 $mood-success !default;
+$btn-success-border:             $btn-success-bg !default;
+
+$btn-warning-color:              #fff !default;
+$btn-warning-bg:                 $mood-warning !default;
+$btn-warning-border:             $btn-warning-bg !default;
+
+$btn-danger-color:               #fff !default;
+$btn-danger-bg:                  $mood-danger !default;
+$btn-danger-border:              $btn-danger-bg !default;
+
+
+$btn-dark-color:                #fff !default;
+$btn-dark-bg:                     $mood-dark !default;
+$btn-dark-border:                 $btn-dark-bg !default;
+
+$btn-aged-color:                #fff !default;
+$btn-aged-bg:                     $mood-aged !default;
+$btn-aged-border:                 $btn-aged-bg !default;
+
+$btn-faint-color:               #fff !default;
+$btn-faint-bg:                    $mood-faint !default;
+$btn-faint-border:                $btn-faint-bg !default;
+
+$btn-color:                 #fff !default;
+$btn-link-hover-color:      #fff !default;
+$btn-font-size:             75% !default;
+$btn-font-weight:           bold !default;
+$btn-padding-x:             .4em !default;
+$btn-padding-y:             .25em !default;
+
+$brand-primary:             $mood-primary;
+$brand-success:             $mood-success;
+$brand-info:                $mood-info;
+$brand-warning:             $mood-warning;
+$brand-danger:              $mood-danger;
+
+
+.btn-dark {
+  @include button-variant($btn-dark-color, $btn-dark-bg, $btn-dark-border);
+}
+.btn-aged {
+  @include button-variant($btn-aged-color, $btn-aged-bg, $btn-aged-border);
+}
+.btn-faint {
+  @include button-variant($btn-faint-color, $btn-faint-bg, $btn-faint-border);
+}

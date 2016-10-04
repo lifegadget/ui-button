@@ -4,9 +4,9 @@
 {{/each}}
 </div><div class="container">
   <h1 class="display-3">
-    {{ui-label title='ui-button' mood='success'}} Addon
+    {{ui-tag title='ui-button' mood='success'}} Addon
   </h1>
-  {{#ui-navbar selected=currentPath onChange=(action 'navChange') as |nav|}}
+  {{!--{{#ui-navbar selected=currentPath onChange=(action 'navChange') as |nav|}}
     {{#nav.brand linkTo='https://github.com/lifegadget/ui-button'}}
       {{ui-icon icon='github' size='2x'}}
     {{/nav.brand}}
@@ -19,7 +19,7 @@
         <img alt="fury" src="https://badge.fury.io/js/ui-button.svg">
       {{/nav.right}}
     {{/nav.items}}
-  {{/ui-navbar}}
+  {{/ui-navbar}}--}}
 
   {{outlet}}
 </div>

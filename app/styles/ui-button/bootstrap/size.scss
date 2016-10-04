@@ -1,0 +1,9 @@
+.btn.btn-tiny {
+    // line-height: ensure even-numbered height of button next to large input
+  @include button-size($btn-padding-y-tiny, $btn-padding-x-tiny, $font-size-tiny, $btn-border-radius-tiny);
+}
+
+.btn.btn-huge {
+  // line-height: ensure even-numbered height of button next to large input
+  @include button-size($btn-padding-y-huge, $btn-padding-x-huge, $font-size-huge, $btn-border-radius-huge);
+}

@@ -8,42 +8,19 @@ ember install ui-button
 ````
 
 ## Usage ##
-![ ](vendor/ui-button/screen-shot.png)
-
 
 ````hbs
-  {{ui-button title='press me'}}
+  {{ui-button 'press me' onClick=(action 'doSomething')}}
 ````
 
-For more details on the syntax check out the interactive demo:
+For documentation and an interactive demo:
 
 > [ui-button demo](https://ui-button.firebaseapp.com/button-demo)
 
-## Dependencies ##
-
-The only forced dependency that this introduces is a very small amount of CSS from the great Animate.CSS repo. We only include the *attention grabbers* transitions; the rest is available to be added manually if you choose (aka, adding manually in your Brocfile).
-
-In addition though you should include the following:
-
-- Autoprefixer
-
-    Install the Ember CLI Autoprefixer ... this will ensure that the CSS animations are transformed to the appropriate browser syntax. It's also just a really good idea to have this installed anyway. Install it by:
-
-    ````bash
-    ember install:addon ember-cli-autoprefixer
-    ````
-
-- Twitter Bootstrap
-
-    You'll want Twitter Bootstrap (SASS or otherwise) around to make everything look nice. You could style things yourself but this addon assumes a styling naming convention borrowed from Twitter.
-
-
 ## Version Compatibility
 
-This may very well work with older version of Ember and Ember-CLI but it was intended for:
-
-- Ember 1.11.0+
-- Ember-CLI 0.2.2+
+This addon is now targeted firmly at Ember 2.x; it might worker with 1.x versions but no attempt has 
+been made to ensure this.
 
 ## Repo Contribution
 

@@ -1,7 +1,8 @@
-@import 'bootstrap-flex';
-@import 'mixins/_nav-divider';
-@import 'mixins/_buttons';
-@import 'mixins/_grid';
+@import 'ui-button';
+// remove below to see that buttons are still styled without
+// the full bootstrap library
+@import 'ui-button/bootstrap-source/bootstrap-flex';
+
 .ui-markdown {
   margin: 15px 0;
 }

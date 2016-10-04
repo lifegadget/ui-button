@@ -1,5 +1,6 @@
 /* jshint node:true */
-// var RSVP = require('rsvp');
+var RSVP = require('rsvp');
+var simpleGit = require('simple-git')();
 
 // For details on each option run `ember help release`
 module.exports = {
@@ -13,9 +14,12 @@ module.exports = {
   // format: 'YYYY-MM-DD',
   timezone: 'Europe/London',
   //
-  // beforeCommit: function(project, versions) {
-  //   return new RSVP.Promise(function(resolve, reject) {
-  //     // Do custom things here...
-  //   });
-  // }
+  beforeCommit: function(project, versions) {
+    require('../compile-css.js');
+    return new RSVP.Promise(function(resolve) {
+      simpleGit.add(['vendor/ui-button/ui-button.css'], function() {
+        resolve();
+      });
+    });
+  }
 };
