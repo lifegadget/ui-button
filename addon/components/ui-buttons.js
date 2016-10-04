@@ -65,6 +65,18 @@ const buttons = Ember.Component.extend({
   tagName: '',
   init() {
     this._super(...arguments);
+    const defaultValue = this.get('defaultValue');
+    const type = typeOf(defaultValue);
+    if(!get(this, 'values') && defaultValue) {
+      this.ddau('onChange', {
+        code: 'default-value',
+        values: type === 'array' ? defaultValue : defaultValue.split(/,\s*/),
+        value: type === 'array' ? defaultValue.join(',') : defaultValue,
+        context: this,
+        name: get(this, 'name')
+      }, defaultValue);
+    }
+
     const {_cardinality, values} = this.getProperties('_cardinality', 'values');
     run.schedule('afterRender', () => {
       if(_cardinality.min > values.length) {

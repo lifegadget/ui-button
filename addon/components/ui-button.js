@@ -43,11 +43,12 @@ const button = Ember.Component.extend(Stylist, ddau, {
   _class: Ember.computed('mood', '_outline', 'size', 'class', 'active', 'align', function() {
     let {mood, _outline, _size, active, inline, align} = this.getProperties('mood', '_outline', '_size', 'active', 'inline', 'align');
     const classy = this.get('class') || '';
-    mood = mood ? ` btn-${mood}` : ' btn-secondary';
+    mood = mood || 'secondary';
+    const btnClass = `btn${_outline}-${mood}`;
     const activeClass = active ? ' active' : ' ';
     const display = inline ? ' inline' : ' block';
     align = align ? ` align-${align}` : '';
-    return `ui-button btn ${classy}${activeClass}${mood}${_outline}${_size}${display}${align}`;
+    return `ui-button btn ${classy}${activeClass}${btnClass}${_size}${display}${align}`;
   }),
   disabled: false,
 
