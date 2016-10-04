@@ -15,9 +15,9 @@ const physicalFilePath = path.join(__dirname, 'node_modules/bootstrap/scss');
 const result = sass.renderSync({
   file: inputFile,
   includePaths: ['app/styles', 'node_modules/bootstrap/scss'],
-  importer: function(url, prev) {
+  importer: function(url) {
     const basename = path.basename(url);
-    const directory = path.dirname(url);
+    let directory = path.dirname(url);
     if (directory.indexOf(broccoliAlias) !== -1) {
       directory = directory.replace(broccoliAlias, physicalFilePath);
     }
