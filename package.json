@@ -1,6 +1,6 @@
 {
   "name": "ui-button",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Dancing, shiny buttons (and groups of buttons) with Bootstrap styling.",
   "directories": {
     "doc": "doc",
@@ -62,8 +62,9 @@
     "loader.js": "^4.0.1",
     "simple-git": "^1.53.0",
     "ui-markdown": "^0.1.10",
+    "ui-navigation": "0.1.4",
     "ui-responsive": "0.3.7",
-    "ui-tag": "0.1.1"
+    "ui-tag": "0.1.2"
   },
   "keywords": [
     "ember-addon",

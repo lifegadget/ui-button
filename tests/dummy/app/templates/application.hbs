@@ -6,20 +6,26 @@
   <h1 class="display-3">
     {{ui-tag title='ui-button' mood='success'}} Addon
   </h1>
-  {{!--{{#ui-navbar selected=currentPath onChange=(action 'navChange') as |nav|}}
-    {{#nav.brand linkTo='https://github.com/lifegadget/ui-button'}}
-      {{ui-icon icon='github' size='2x'}}
-    {{/nav.brand}}
+  {{#ui-navigation
+    selected=currentPath
+    mood='faint'
+    light=true
+    onChange=(action 'navHandler')
+    as |nav|
+  }}
     {{#nav.items}}
-      {{nav.item title='Intro' routeTo='index'}}
-      {{nav.item title='ui-button' routeTo='demo-button'}}
-      {{nav.item title='ui-toggle-button' routeTo='demo-toggle-button'}}
-      {{nav.item title='ui-buttons' routeTo='demo-buttons'}}
+      {{#nav.brand linkTo='https://github.com/lifegadget/ui-button'}}
+        {{ui-icon icon='github' size='2x'}}
+      {{/nav.brand}}
+      {{nav.item 'Intro' routeTo='index'}}
+      {{nav.item 'ui-button' routeTo='demo-button'}}
+      {{nav.item 'ui-toggle-button' routeTo='demo-toggle-button'}}
+      {{nav.item 'ui-buttons' routeTo='demo-buttons'}}
       {{#nav.right}}
         <img alt="fury" src="https://badge.fury.io/js/ui-button.svg">
       {{/nav.right}}
     {{/nav.items}}
-  {{/ui-navbar}}--}}
+  {{/ui-navigation}}
 
   {{outlet}}
 </div>
