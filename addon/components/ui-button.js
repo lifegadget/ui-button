@@ -48,7 +48,7 @@ const button = Ember.Component.extend(Stylist, ddau, {
     const activeClass = active ? ' active' : ' ';
     const display = inline ? ' inline' : ' block';
     align = align ? ` align-${align}` : '';
-    return `ui-button btn ${classy}${activeClass}${btnClass}${_size}${display}${align}`;
+    return `ui-button btn ${classy}${activeClass} ${btnClass}${_size}${display}${align}`;
   }),
   disabled: false,
 

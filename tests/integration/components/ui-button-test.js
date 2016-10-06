@@ -23,16 +23,4 @@ test('it renders', function(assert) {
   assert.equal(this.$().text().trim(), 'template block text');
 });
 
-test('inline button respond to "orient"', function(assert) {
-  this.set('orient', 'horizontal'); // default state
-  this.render(hbs`{{ui-button
-    'foobar'
-    icon='envelope'
-    orient=orient
-  }}`);
-  assert.equal(this.$('button .content').css('flex-direction'), 'row', 'row is default');
-  this.set('orient', 'vertical');
-  assert.equal(this.$('button .content').css('flex-direction'), 'column', 'switched to column when vertical orient specified');
-  this.set('orient', null);
-  assert.equal(this.$('button .content').css('flex-direction'), 'row', 'switched back to "row" when stack is null');
-});
+
