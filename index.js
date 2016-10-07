@@ -9,11 +9,16 @@ const mergeTrees = require('broccoli-merge-trees');
 module.exports = {
 	name: 'ui-button',
 	description: 'buttons for ambitious Ember applications',
-	included: function(app) {
-		this._super.included(app);
+	included: function(appOrAddon) {
+    this._super.included(appOrAddon);
+    var app = appOrAddon.app || appOrAddon;
     if (!app.registry.availablePlugins['ember-cli-sass']) {
       this.ui.writeLine(chalk.bold('ui-button: ') + ' did not detect ' + chalk.bold.green('ember-cli-sass') + ' so using CSS configuration (instead of SASS).');
       app.import('vendor/ui-button/ui-button.css');
+    } else {
+      // SASS being used
+      const sassOptions = app.options.sassOptions || { includePaths: []};
+      sassOptions.includePaths.push(path.join(__dirname, 'ui-button', 'bootstrap-source'));
     }
 	},
 
@@ -23,10 +28,10 @@ module.exports = {
     if(tree) {
       trees.push(tree);
     }
-    const bootstrapPath = path.join('node_modules', 'bootstrap/scss');
+    const bootstrapPath = path.join(__dirname, 'node_modules', 'bootstrap/scss');
     const bootstrap = new Funnel(bootstrapPath, {
       srcDir: '/',
-      destDir: '/ui-button/bootstrap-source'
+      destDir: '/bootstrap-source'
     });
     // trees.push(log(bootstrap, { output: 'tree' } ));
     trees.push(bootstrap);

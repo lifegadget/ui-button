@@ -12,20 +12,20 @@ $enable-grid-classes:       true !default;
 $enable-print-styles:       true !default;
 
 
-@import 'ui-button/bootstrap-source/mixins/border-radius';
-@import 'ui-button/bootstrap-source/mixins/buttons';
-@import 'ui-button/bootstrap-source/mixins/tab-focus';
-@import 'ui-button/bootstrap-source/mixins/hover';
-@import 'ui-button/bootstrap-source/mixins/clearfix';
+@import 'bootstrap-source/mixins/border-radius';
+@import 'bootstrap-source/mixins/buttons';
+@import 'bootstrap-source/mixins/tab-focus';
+@import 'bootstrap-source/mixins/hover';
+@import 'bootstrap-source/mixins/clearfix';
 
 // note: this is local to addon
 @import 'ui-button/bootstrap/mixins/base-mixins';
 
 @import 'ui-button/variables';
-@import 'ui-button/bootstrap-source/variables';
+@import 'bootstrap-source/variables';
 
 @import 'ui-button/bootstrap/size';
 
-@import 'ui-button/bootstrap-source/buttons';
-@import 'ui-button/bootstrap-source/button-group';
+@import 'bootstrap-source/buttons';
+@import 'bootstrap-source/button-group';
 
