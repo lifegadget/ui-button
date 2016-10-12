@@ -1,8 +1,7 @@
 {
-  "globalDevDependencies": {
-    "bootstrap": "registry:dt/bootstrap#3.3.5+20160619023404"
-  },
+  "globalDevDependencies": {},
   "globalDependencies": {
+    "bootstrap": "registry:dt/bootstrap#3.3.5+20160619023404",
     "chalk": "registry:dt/chalk#0.4.0+20160317120654",
     "showdown": "registry:dt/showdown#1.4.1+20160608102004"
   }

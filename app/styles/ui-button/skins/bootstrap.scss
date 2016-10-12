@@ -1,16 +1,14 @@
 // Options
 //
 // Quickly modify global styling by enabling or disabling optional features.
-
 $enable-flex:               true !default;
 $enable-rounded:            true !default;
 $enable-shadows:            false !default;
 $enable-gradients:          false !default;
-$enable-transitions:        false !default;
+$enable-transitions:        true !default;
 $enable-hover-media-query:  false !default;
 $enable-grid-classes:       true !default;
 $enable-print-styles:       true !default;
-
 
 @import 'bootstrap-source/mixins/border-radius';
 @import 'bootstrap-source/mixins/buttons';
