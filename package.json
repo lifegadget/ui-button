@@ -1,6 +1,6 @@
 {
   "name": "ui-button",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "description": "Dancing, shiny buttons (and groups of buttons) with Bootstrap styling.",
   "directories": {
     "doc": "doc",
