@@ -556,7 +556,8 @@ input[type="button"].btn-block {
   .btn-group > .btn,
   .btn-group-vertical > .btn {
     position: relative;
-    float: left; }
+    float: left;
+    margin-bottom: 0; }
     .btn-group > .btn:focus, .btn-group > .btn:active, .btn-group > .btn.active,
     .btn-group-vertical > .btn:focus,
     .btn-group-vertical > .btn:active,
