@@ -15,6 +15,7 @@ $enable-print-styles:       true !default;
 @import 'bootstrap-source/mixins/tab-focus';
 @import 'bootstrap-source/mixins/hover';
 @import 'bootstrap-source/mixins/clearfix';
+@import 'bootstrap-source/normalize';
 
 // note: this is local to addon
 @import 'ui-button/bootstrap/mixins/base-mixins';

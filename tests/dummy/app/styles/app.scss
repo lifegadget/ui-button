@@ -1,8 +1,9 @@
 @import 'ui-button';
+@import 'ui-grid';
 @import 'ui-navigation';
 // remove below to see that buttons are still styled without
 // the full bootstrap library
-@import 'bootstrap-source/bootstrap-flex';
+/*@import 'bootstrap-source/bootstrap-flex';*/
 
 .ui-markdown {
   margin: 15px 0;
