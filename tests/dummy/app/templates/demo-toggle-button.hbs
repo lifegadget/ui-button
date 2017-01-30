@@ -19,10 +19,10 @@
 {{/markdown-convert}}
 
 <div class="row">
-  <div class="col-xs-3">
+  <div class="col-4 col-lg-3">
     {{ui-toggle-button title='Press Me' onToggle=(route-action 'onToggle')}}
   </div>
-  <div class="col-xs-9">
+  <div class="col">
     <span>
       Simple Toggle
       <br>
@@ -37,14 +37,14 @@
 
 
 <div class="row">
-  <div class="col-xs-3">
+  <div class="col-4 col-lg-3">
     {{ui-toggle-button
       off='Light me up'
       on='Cool me down'
       onToggle=(route-action 'onToggle')
     }}
   </div>
-  <div class="col-xs-9">
+  <div class="col">
     <span>
       Title Switching
       <br>
@@ -58,7 +58,7 @@
 </div>
 
 <div class="row">
-  <div class="col-xs-3">
+  <div class="col-4 col-lg-3">
     {{ui-toggle-button
       title='Check In'
       activation=true
@@ -67,7 +67,7 @@
       onToggle=(route-action 'onToggle')
     }}
   </div>
-  <div class="col-xs-9">
+  <div class="col">
     <span>
       <b>Icon Switching &amp; Activation</b>
       <br>
@@ -90,7 +90,7 @@
 </div>
 
 <div class="row">
-  <div class="col-xs-3">
+  <div class="col-4 col-lg-3">
     {{ui-toggle-button
       value=mutable
       off='Simple is what'
@@ -99,7 +99,7 @@
       onToggle=(mut mutable)
     }}
   </div>
-  <div class="col-xs-9">
+  <div class="col">
     <span>
       <p>
         <b>Leveraging the {{ui-tag 'mut'}} helper</b>
@@ -119,7 +119,7 @@
 </div>
 
 <div class="row">
-  <div class="col-xs-3">
+  <div class="col-4 col-lg-3">
     {{ui-toggle-button
       on='Angry'
       off='Happy'
@@ -128,7 +128,7 @@
       onToggle=(route-action 'onToggle')
     }}
   </div>
-  <div class="col-xs-9">
+  <div class="col">
       <p>
         <b>Moody Button</b>
       </p>
@@ -146,7 +146,7 @@
 </div>
 
 <div class="row">
-  <div class="col-xs-3">
+  <div class="col-4 col-lg-3">
     {{ui-toggle-button
       on='Tears of a Clown'
       onValue='tears-of-a-clown'
@@ -156,7 +156,7 @@
       onToggle=(route-action 'onToggle')
     }}
   </div>
-  <div class="col-xs-9">
+  <div class="col">
     <b>Toggled Values</b>
     <br>
   <pre><code>\{{ui-toggle-button
@@ -172,7 +172,7 @@
 </div>
 {{!------}}
 <div class="row">
-  <div class="col-xs-3">
+  <div class="col-4 col-lg-3">
     {{ui-toggle-button
       on='Tears of a Clown'
       off='Mirror in the Bathroom'
@@ -181,7 +181,7 @@
       onToggle=(route-action 'onToggle')
     }}
   </div>
-  <div class="col-xs-9">
+  <div class="col">
   <pre><code>\{{ui-toggle-button
     on='Tears of a Clown'
     off='Mirror in the Bathroom'
@@ -214,7 +214,7 @@
 {{/markdown-convert}}
 
 <div class="row">
-  <div class="col-xs-3">
+  <div class="col-4 col-lg-3">
     {{ui-toggle-button
       on='King Kong'
       off='Monkey'
@@ -226,7 +226,7 @@
       onError=(route-action 'onError')
     }}
   </div>
-  <div class="col-xs-9">
+  <div class="col">
     <span>
       <b>Explicit Design Pattern</b>
       <br>
@@ -262,7 +262,7 @@
 {{/markdown-convert}}
 
 <div class="row">
-  <div class="col-xs-3">
+  <div class="col-4 col-lg-3">
     {{ui-toggle-button
       title='Proxy Me'
       tooltip='stop hovering and press!'
@@ -272,7 +272,7 @@
       onToggle=(route-action 'onToggle')
     }}
   </div>
-  <div class="col-xs-9">
+  <div class="col">
     <span>
       <b>Proxy to Button</b>
       <br>
@@ -296,7 +296,7 @@
 {{/markdown-convert}}
 
 <div class="row">
-  <div class="col-xs-3">
+  <div class="col-4 col-lg-3">
     {{#ui-toggle-button
       title='Check In'
       tooltip='contextual components are great (and so are you)'
@@ -309,7 +309,7 @@
       {{toggle.button}}
     {{/ui-toggle-button}}
   </div>
-  <div class="col-xs-9">
+  <div class="col">
     <span>
       <b>Overdone Simplicity</b>
       <p class="text-muted">

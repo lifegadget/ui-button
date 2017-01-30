@@ -23,17 +23,16 @@ module.exports = {
 	},
 
   treeForStyles: function(tree) {
-    const existingStyle = this._super.treeForStyles.apply(this, arguments);
+    const bootstrapPath = path.join('node_modules', 'bootstrap/scss');
     const trees = [];
     if(tree) {
       trees.push(tree);
     }
-    const bootstrapPath = path.join('node_modules', 'bootstrap/scss');
+    const existingStyle = this._super.treeForStyles.apply(this, arguments);
     const bootstrap = new Funnel(bootstrapPath, {
       srcDir: '/',
-      destDir: '/bootstrap-source'
+      destDir: 'bootstrap-source'
     });
-    // trees.push(log(bootstrap, { output: 'tree' } ));
     trees.push(bootstrap);
     if (existingStyle) {
       trees.push(existingStyle);
