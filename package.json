@@ -61,7 +61,7 @@
     "loader.js": "^4.1.0",
     "simple-git": "^1.65.0",
     "ui-markdown": "^0.1.12",
-    "ui-navigation": "0.1.11",
+    "ui-navigation": "0.1.12",
     "ui-responsive": "0.3.7",
     "ui-tag": "0.1.6"
   },
