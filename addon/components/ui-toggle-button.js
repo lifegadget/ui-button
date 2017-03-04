@@ -22,7 +22,6 @@ export default Ember.Component.extend({
   layout,
   tagName: '',
   _initialized: false,
-  isDDAU: true, // allows switching to a non-DDAU mode (not recommended in most cases)
 
   init() {
     this._super(...arguments);
@@ -34,11 +33,7 @@ export default Ember.Component.extend({
       run.schedule('afterRender', () => {
         this.setDefaultValue(defaultValue);
       });
-    } else if(!this.DDAU && typeOf(value) === 'undefined') {
-      run.schedule('afterRender', () => {
-        this.setDefaultValue(offValue);
-      });
-    }
+    } 
     if (typeOf(value) !== 'undefined' && !a([onValue, offValue]).includes(value) && this.attrs.onError) {
       this.throwInvalidValue(value, 'at inialization');
     }
@@ -46,10 +41,6 @@ export default Ember.Component.extend({
   },
   setDefaultValue(defaultValue) {
     let approved = false;
-    if(!this.isDDAU) {
-      this.set('value', defaultValue);
-      approved = true;
-    }
     if(this.attrs.onToggle && this.attrs.onToggle.update) {
       this.attrs.onToggle.update(defaultValue);
       approved = true;
@@ -207,9 +198,6 @@ export default Ember.Component.extend({
     onClick(hash) {
       const toggled = this.get('toggled');
       const {value, onValue, offValue} = this.getProperties('value', 'onValue', 'offValue');
-      if(!this.isDDAU) {
-        this.set('value', !toggled ? onValue : offValue);
-      }
       if(this.attrs.onToggle) {
         if(this.attrs.onToggle && this.attrs.onToggle.update) {
           this.attrs.onToggle.update(!toggled ? onValue : offValue);
@@ -237,12 +225,7 @@ export default Ember.Component.extend({
           }
         }
       } else {
-        if(this.isDDAU) {
-          console.warn(`no one is listening to toggle button ${this.id}'s onToggle event`);
-        } else {
-          // the bad old way (which sometimes is irristably easy)
-          this.set('value', !toggled ? onValue : offValue);
-        }
+        console.warn(`no one is listening to toggle button ${this.id}'s onToggle event`);
       }
     }
   }

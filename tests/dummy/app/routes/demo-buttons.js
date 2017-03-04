@@ -18,6 +18,8 @@ export default Ember.Route.extend({
     controller.set('explicitSetter', ['monkey']);
     controller.set('initCardinality', []);
     controller.set('showComponent', false);
+    controller.set('fitFull', false);
+    controller.set('align', 'center');
   },
   actions: {
     onChange(hash) {
@@ -30,6 +32,9 @@ export default Ember.Route.extend({
       Ember.run.next(() => {
         this.get('flashMessages').success(htmlSafe(`The "${hash.name}" component has changed. The code was <b>${hash.code}</b>. New value is: <b>${hash.values}</b>`));
       });
+    },
+    onAlign(hash) {
+      console.log(hash);
     },
     onError(hash) {
       console.log('error: ', hash);

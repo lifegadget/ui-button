@@ -84,8 +84,8 @@ const button = Ember.Component.extend(Stylist, ddau, {
         $(`#${context.id}`).blur();
       }
       this.ddau('onClick', {
-        value: value,
-        context: context,
+        context,
+        value,
         dom: document.getElementById(this.id),
         event: evt
       }, value);

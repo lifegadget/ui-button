@@ -9,5 +9,33 @@
     transition: $transition;
   }
 }
+
+.ui-buttons {
+  display: inline-flex;
+
+  &.fill {
+    display: flex;
+    width: 100%;
+
+    & .btn {
+      flex: 1 0;
+    }
+  }
+
+  .btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .btn.align-left {
+    justify-content: flex-start;
+  }
+  .btn.align-right {
+    justify-content: flex-end;
+  }
+
+}
+
 @import 'ui-button/skins/bootstrap';
 @import 'ui-button/enhancements';

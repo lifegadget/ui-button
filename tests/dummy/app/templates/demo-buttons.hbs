@@ -61,41 +61,38 @@
     <p>
       <br>
     </p>
-    {{ui-toggle-button
-      on='fill'
-      off='fit'
-      size='small'
-      inline=true
-      outline=true
-      value=fitFull
-      onToggle=(mut fitFull)
-    }}
+    <div class="params flexi fill">
+      {{ui-toggle-button
+        on='fill'
+        off='fit'
+        size='small'
+        width='200px'
+        inline=true
+        outline=true
+        value=fitFull
+        onToggle=(mut fitFull)
+      }}
 
-    {{ui-toggle-button
-      on='horizontal'
-      off='vertical'
-      size='small'
-      inline=true
-      valuesAre='equal'
-      defaultValue='vertical'
-      outline=true
-      mood='success'
-      value=orientation
-      onToggle=(mut orientation)
-    }}
+      {{ui-toggle-button
+        on='horizontal'
+        off='vertical'
+        size='small'
+        inline=true
+        valuesAre='equal'
+        defaultValue='vertical'
+        outline=true
+        mood='success'
+        value=orientation
+        onToggle=(mut orientation)
+      }}
 
-    {{ui-toggle-button
-      on='left'
-      off='center'
-      size='small'
-      inline=true
-      valuesAre='equal'
-      defaultValue='center'
-      outline=true
-      mood='secondary'
-      value=align
-      onToggle=(mut align)
-    }}
+      {{radio-buttons
+        value=align
+        buttons='left,center,right'
+        onChange=(route-action 'onAlign')
+      }}
+
+    </div>
 
   </div>
   <div class="col-xs-6 col-md-4">
